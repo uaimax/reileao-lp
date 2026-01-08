@@ -1,0 +1,163 @@
+/**
+ * Design Tokens CSS
+ *
+ * Variáveis CSS simplificadas baseadas em shadcn/ui padrão
+ * usando apenas cores Tailwind padrão (slate, gray, yellow, green, red)
+ *
+ * IMPORTANTE: Valores devem estar no formato HSL sem "hsl()" wrapper
+ * Exemplo: "0 0% 100%" para branco, não "255 255 255"
+ */
+
+@layer base {
+  /* ========================================================================
+     SPACING TOKENS
+     ======================================================================== */
+  :root {
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+  }
+
+  /* ========================================================================
+     RADIUS TOKENS
+     ======================================================================== */
+  :root {
+    --radius-sm: 2px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-2xl: 16px;
+    --radius-full: 9999px;
+  }
+
+  /* ========================================================================
+     SHADOW TOKENS
+     ======================================================================== */
+  :root {
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+
+  /* ========================================================================
+     TRANSITION TOKENS
+     ======================================================================== */
+  :root {
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ========================================================================
+     LIGHT THEME (Landing/Inscrição)
+     Valores em formato HSL: "hue saturation% lightness%"
+     ======================================================================== */
+  :root {
+    /* Backgrounds */
+    --background: 0 0% 100%; /* white */
+    --foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    --popover: 0 0% 100%; /* white */
+    --popover-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    /* Primary - amarelo para ações */
+    --primary: 45.4 93.4% 47.5%; /* yellow-500 */
+    --primary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    /* Secondary - slate neutro */
+    --secondary: 210 40% 96.1%; /* slate-100 */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    /* Muted - slate claro */
+    --muted: 210 40% 98%; /* slate-50 */
+    --muted-foreground: 215.4 16.3% 46.9%; /* slate-500 */
+
+    /* Accent - amarelo */
+    --accent: 45.4 93.4% 47.5%; /* yellow-500 */
+    --accent-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    /* Destructive - vermelho */
+    --destructive: 0 84.2% 60.2%; /* red-500 */
+    --destructive-foreground: 0 0% 100%; /* white */
+
+    /* Borders - slate */
+    --border: 214.3 31.8% 91.4%; /* slate-200 */
+    --input: 214.3 31.8% 91.4%; /* slate-200 */
+    --ring: 45.4 93.4% 47.5%; /* yellow-500 */
+
+    /* Radius */
+    --radius: 0.5rem; /* 8px */
+  }
+
+  /* ========================================================================
+     DARK THEME (Painel)
+     Valores em formato HSL: "hue saturation% lightness%"
+     ======================================================================== */
+  .theme-painel {
+    /* Backgrounds - slate escuro */
+    --background: 222.2 84% 4.9%; /* slate-950 */
+    --foreground: 210 40% 98%; /* slate-50 */
+
+    --card: 217.2 32.6% 17.5%; /* slate-800 */
+    --card-foreground: 210 40% 98%; /* slate-50 */
+
+    --card-raised: 215.3 25% 26.7%; /* slate-700 */
+
+    --popover: 217.2 32.6% 17.5%; /* slate-800 */
+    --popover-foreground: 210 40% 98%; /* slate-50 */
+
+    /* Primary - amarelo */
+    --primary: 45.4 93.4% 47.5%; /* yellow-500 */
+    --primary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    /* Secondary - slate */
+    --secondary: 215.3 25% 26.7%; /* slate-700 */
+    --secondary-foreground: 210 40% 98%; /* slate-50 */
+
+    /* Muted - slate médio */
+    --muted: 217.2 32.6% 17.5%; /* slate-800 */
+    --muted-foreground: 215 20.2% 65.1%; /* slate-400 */
+
+    /* Accent - amarelo */
+    --accent: 45.4 93.4% 47.5%; /* yellow-500 */
+    --accent-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    /* Destructive - vermelho */
+    --destructive: 0 84.2% 60.2%; /* red-500 */
+    --destructive-foreground: 0 0% 100%; /* white */
+
+    /* Success - verde */
+    --success: 142.1 76.2% 36.3%; /* green-600 */
+    --success-foreground: 0 0% 100%; /* white */
+
+    /* Warning - laranja */
+    --warning: 24.6 95% 53.1%; /* orange-500 */
+    --warning-foreground: 0 0% 100%; /* white */
+
+    /* Borders - slate */
+    --border: 215.3 25% 26.7%; /* slate-700 */
+    --input: 215.3 19.3% 34.5%; /* slate-600 */
+    --ring: 45.4 93.4% 47.5%; /* yellow-500 */
+
+    /* Radius */
+    --radius: 0.5rem; /* 8px */
+
+    /* Sidebar */
+    --sidebar-background: 222.2 84% 4.9%; /* slate-950 */
+    --sidebar-foreground: 215 20.2% 65.1%; /* slate-400 */
+    --sidebar-primary: 45.4 93.4% 47.5%; /* yellow-500 */
+    --sidebar-primary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+    --sidebar-accent: 217.2 32.6% 17.5%; /* slate-800 */
+    --sidebar-accent-foreground: 210 40% 98%; /* slate-50 */
+    --sidebar-border: 215.3 25% 26.7%; /* slate-700 */
+    --sidebar-ring: 45.4 93.4% 47.5%; /* yellow-500 */
+  }
+}

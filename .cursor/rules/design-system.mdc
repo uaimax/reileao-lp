@@ -1,0 +1,112 @@
+---
+description: Design System Rules - Usar apenas cores Tailwind padrão
+globs: **/*.{tsx,ts,css}
+alwaysApply: true
+---
+
+# Design System Rules
+
+## Princípios Fundamentais
+
+- **Usar APENAS cores Tailwind padrão**: slate, gray, yellow, green, red, orange
+- **NÃO criar cores customizadas** sem justificativa clara e aprovação
+- **NÃO usar cores hex diretas** (`#FFEB3B`) - sempre usar classes Tailwind
+- **Manter consistência** entre `/inscricao` e `/painel`
+
+## Paleta de Cores Permitida
+
+### Backgrounds e Superfícies
+- **Light Theme**: `white`, `slate-50`, `slate-100`
+- **Dark Theme**: `slate-900`, `slate-800`, `slate-700`
+
+### Textos
+- **Light Theme**: `slate-900` (primário), `slate-600` (secundário), `slate-400` (muted)
+- **Dark Theme**: `slate-50` (primário), `slate-400` (secundário), `slate-500` (muted)
+
+### Ações e Estados
+- **Primary**: `yellow-500` (ações principais), `yellow-600` (hover)
+- **Success**: `green-500`
+- **Destructive**: `red-500`
+- **Warning**: `orange-500`
+
+### Borders
+- **Light Theme**: `slate-200`, `slate-300`
+- **Dark Theme**: `slate-700`, `slate-600`
+
+## Regras de Uso
+
+### ✅ DO
+
+```tsx
+// ✅ Correto - usar classes Tailwind padrão
+<Card className="bg-slate-800 border-slate-700">
+<Button className="bg-yellow-500 hover:bg-yellow-600">
+<Input className="bg-slate-700 border-slate-600 text-slate-50">
+```
+
+### ❌ DON'T
+
+```tsx
+// ❌ ERRADO - cores customizadas
+<Card className="bg-[#1E1E2E] border-[#374151]">
+<Button className="bg-yellow-vibrant hover:bg-yellow-hover">
+<Input className="bg-dark-bg text-soft-white">
+
+// ❌ ERRADO - cores hex diretas
+<div className="bg-[#FFEB3B]">
+<span className="text-[#9CA3AF]">
+```
+
+## Componentes Padrão
+
+### Cards Light Theme
+```tsx
+<Card className="bg-white border border-slate-200 shadow-md">
+```
+
+### Cards Dark Theme
+```tsx
+<Card className="bg-slate-800 border border-slate-700 shadow-md">
+```
+
+### Cards com Accent Bar (Painel)
+```tsx
+{/* WhatsApp */}
+<div className="bg-slate-800 border-l-4 border-l-green-500">
+
+{/* Redirect */}
+<div className="bg-slate-800 border-l-4 border-l-orange-500">
+```
+
+### Inputs Light Theme
+```tsx
+<Input className="bg-white border-slate-300 text-slate-900
+                  placeholder:text-slate-400
+                  focus:border-yellow-500 focus:ring-yellow-500" />
+```
+
+### Inputs Dark Theme
+```tsx
+<Input className="bg-slate-700 border-slate-600 text-slate-50
+                  placeholder:text-slate-400
+                  focus:border-yellow-500 focus:ring-yellow-500" />
+```
+
+## Referências
+
+- **Documentação Completa**: `docs/DESIGN-SYSTEM.md`
+- **Design Tokens TS**: `src/lib/design-system.ts`
+- **Design Tokens CSS**: `src/styles/design-tokens.css`
+
+## Quando Criar Nova Cor
+
+**APENAS** se:
+1. Não existe equivalente no Tailwind padrão
+2. É uma necessidade de negócio específica
+3. Foi aprovado e documentado em `docs/DESIGN-SYSTEM.md`
+4. Adicionado ao `tailwind.config.ts` com justificativa
+
+**NUNCA** criar cores customizadas para:
+- Substituir cores Tailwind existentes
+- "Personalização visual" sem necessidade
+- Cores que já existem na paleta Tailwind

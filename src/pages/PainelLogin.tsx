@@ -1,12 +1,12 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { apiClient } from '@/lib/api-client';
-import { SITE_NAME } from '@/lib/site-config';
+import { useLandingData } from '@/hooks/use-landing-data';
 
 const PainelLogin = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +14,13 @@ const PainelLogin = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { data: landingData } = useLandingData();
+  const eventTitle = landingData?.event?.eventTitle || 'Painel';
+
+  // Define título da página baseado no evento
+  useEffect(() => {
+    document.title = `${eventTitle} - Login`;
+  }, [eventTitle]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +47,7 @@ const PainelLogin = () => {
       <Card className="w-full max-w-md bg-slate-800 border-slate-700">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl text-slate-50">
-            Painel {SITE_NAME}
+            Painel - {eventTitle}
           </CardTitle>
         </CardHeader>
         <CardContent>

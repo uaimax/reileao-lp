@@ -42,7 +42,7 @@ const Hero = () => {
   // Definir título da página dinamicamente
   useEffect(() => {
     if (eventData?.eventTitle) {
-      document.title = `${eventData.eventTitle} | UAIZOUK`;
+      document.title = eventData.eventTitle;
     }
   }, [eventData?.eventTitle]);
 

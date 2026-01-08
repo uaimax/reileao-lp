@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RÉVEILLON em Uberlândia com Luan e Adriana | UAIZOUK</title>
+  <meta name="description" content="31/12/2025 a 04/01/2026 – liberdade, conexão e muita dança. Celebre o Réveillon em Uberlândia com atividades pensadas para criar um espaço seguro de conexão e simplicidade." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons (via CDN) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Reset e Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: 253 253 253;
+      --foreground: 0 0 0;
+      --yellow-vibrant: #FFEB3B;
+      --border: 229 229 229;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: rgb(var(--background));
+      color: rgb(var(--foreground));
+      line-height: 1.6;
+    }
+
+    /* Tipografia */
+    .font-bebas {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    .font-script {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    /* Utilitários */
+    .container {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .container {
+        max-width: 640px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 768px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 1024px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .container {
+        max-width: 1280px;
+      }
+    }
+
+    .section-padding {
+      padding: 4rem 1rem;
+    }
+
+    @media (min-width: 1024px) {
+      .section-padding {
+        padding: 6rem 2rem;
+      }
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      transition: all 0.3s;
+    }
+
+    header.scrolled {
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center 20%;
+      background-attachment: fixed;
+      background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('assets/images/hero-bg.png');
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      color: white;
+      padding: 0 1rem;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.75rem;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title {
+        font-size: 5rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-title {
+        font-size: 6rem;
+      }
+    }
+
+    .hero-subtitle {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--yellow-vibrant);
+    }
+
+    @media (min-width: 768px) {
+      .hero-subtitle {
+        font-size: 1.875rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-subtitle {
+        font-size: 2.25rem;
+      }
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator-inner {
+      width: 1.5rem;
+      height: 2.5rem;
+      border: 2px solid white;
+      border-radius: 9999px;
+      display: flex;
+      justify-content: center;
+      padding-top: 0.5rem;
+    }
+
+    .scroll-indicator-dot {
+      width: 0.25rem;
+      height: 0.75rem;
+      background-color: white;
+      border-radius: 9999px;
+      animation: pulse 2s infinite;
+    }
+
+    /* Days Counter */
+    .days-counter {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .days-counter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: rgba(255, 235, 59, 0.2);
+      color: black;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* CTA Button */
+    .cta-button {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--yellow-vibrant);
+      color: black;
+      font-weight: bold;
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      font-size: 1.125rem;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .cta-button:hover {
+      background-color: #FFC107;
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button.fixed {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      z-index: 50;
+    }
+
+    @media (min-width: 768px) {
+      .cta-button.fixed {
+        display: none;
+      }
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.25rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: black;
+    }
+
+    @media (min-width: 768px) {
+      .section-title {
+        font-size: 3rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section-title {
+        font-size: 3.75rem;
+      }
+    }
+
+    /* Benefits Grid */
+    .benefits-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .benefit-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s;
+    }
+
+    .benefit-card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .benefit-icon {
+      flex-shrink: 0;
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--yellow-vibrant);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .benefit-text {
+      font-size: 1.125rem;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    /* Text Sections */
+    .text-section {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .text-section p {
+      font-size: 1.125rem;
+      color: #374151;
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .text-section p {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* Schedule Section */
+    .schedule-notice {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid var(--yellow-vibrant);
+    }
+
+    .schedule-tips {
+      background: linear-gradient(to right, #FEF3C7, #FED7AA);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .tip-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+    }
+
+    .tip-number {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      background-color: var(--yellow-vibrant);
+      color: black;
+      font-weight: bold;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+    }
+
+    .djs-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+
+    .dj-card {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .dj-card:hover {
+      transform: scale(1.1);
+    }
+
+    .dj-image {
+      width: 8rem;
+      height: 8rem;
+      border-radius: 9999px;
+      object-fit: cover;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      border: 4px solid white;
+    }
+
+    @media (min-width: 768px) {
+      .dj-image {
+        width: 10rem;
+        height: 10rem;
+      }
+    }
+
+    /* Map Section */
+    .map-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .map-image {
+      width: 100%;
+      max-width: 42rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+      transition: opacity 0.3s;
+    }
+
+    .map-image:hover {
+      opacity: 0.9;
+    }
+
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .testimonials-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+    }
+
+    .testimonial-card {
+      position: relative;
+      cursor: pointer;
+      transform: scale(1);
+      transition: all 0.3s;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+      background: linear-gradient(to bottom, rgba(255, 235, 59, 0.2), rgba(0, 0, 0, 0.4));
+    }
+
+    .testimonial-card:hover {
+      transform: scale(1.05);
+    }
+
+    .testimonial-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+
+    .testimonial-card:hover .testimonial-thumbnail {
+      opacity: 0.9;
+    }
+
+    .testimonial-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent, rgba(0, 0, 0, 0.2));
+    }
+
+    .testimonial-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .testimonial-play-button {
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--yellow-vibrant);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (min-width: 768px) {
+      .testimonial-play-button {
+        width: 4rem;
+        height: 4rem;
+      }
+    }
+
+    .testimonial-card:hover .testimonial-play-button {
+      transform: scale(1.1);
+    }
+
+    .testimonial-title {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.75rem;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    @media (min-width: 768px) {
+      .testimonial-title {
+        font-size: 0.875rem;
+        padding: 1rem;
+      }
+    }
+
+    .testimonial-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: #DC2626;
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: bold;
+    }
+
+    /* FAQ */
+    .faq-container {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border: 1px solid #E5E7EB;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.125rem;
+      color: black;
+      transition: background-color 0.2s;
+    }
+
+    .faq-question:hover {
+      background-color: #F9FAFB;
+    }
+
+    .faq-answer {
+      padding: 1rem 1.5rem;
+      padding-top: 1rem;
+      color: #374151;
+      font-size: 1.125rem;
+      border-top: 1px solid #F3F4F6;
+      display: none;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* Last Spots */
+    .last-spots-section {
+      background: linear-gradient(to right, #FEF3C7, #FEF3C7);
+      padding: 4rem 1rem;
+    }
+
+    .progress-bar-container {
+      background-color: #E5E7EB;
+      border-radius: 9999px;
+      height: 1rem;
+      max-width: 28rem;
+      margin: 0 auto 0.5rem;
+    }
+
+    .progress-bar {
+      background: linear-gradient(to right, #FBBF24, var(--yellow-vibrant));
+      height: 1rem;
+      border-radius: 9999px;
+      transition: width 1s ease-out;
+    }
+
+    /* Footer */
+    footer {
+      background-color: black;
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.875rem;
+      color: var(--yellow-vibrant);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      font-size: 0.875rem;
+    }
+
+    .footer-links a {
+      color: #9CA3AF;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-copyright {
+      color: #9CA3AF;
+      font-size: 0.875rem;
+    }
+
+    /* Animations */
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Bird Animation */
+    .bird {
+      background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/174479/bird-cells-new.svg');
+      filter: invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
+      background-size: auto 100%;
+      width: 88px;
+      height: 125px;
+      will-change: background-position;
+      animation-name: fly-cycle;
+      animation-timing-function: steps(10);
+      animation-iteration-count: infinite;
+    }
+
+    .bird-one {
+      animation-duration: 1s;
+      animation-delay: -0.5s;
+    }
+
+    .bird-two {
+      animation-duration: 0.9s;
+      animation-delay: -0.75s;
+    }
+
+    .bird-three {
+      animation-duration: 1.25s;
+      animation-delay: -0.25s;
+    }
+
+    .bird-four {
+      animation-duration: 1.1s;
+      animation-delay: -0.5s;
+    }
+
+    .bird-container {
+      position: fixed;
+      top: 10%;
+      left: -3%;
+      transform: scale(0) translateX(-10vw);
+      will-change: transform;
+      animation-name: fly-right-one;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .bird-container-one {
+      animation-duration: 15s;
+      animation-delay: 0;
+    }
+
+    .bird-container-two {
+      animation-duration: 16s;
+      animation-delay: 1s;
+    }
+
+    .bird-container-three {
+      animation-duration: 14.6s;
+      animation-delay: 9.5s;
+    }
+
+    .bird-container-four {
+      animation-duration: 16s;
+      animation-delay: 10.25s;
+    }
+
+    @keyframes fly-cycle {
+      100% {
+        background-position: -900px 0;
+      }
+    }
+
+    @keyframes fly-right-one {
+      0% {
+        transform: scale(0.3) translateX(-10vw);
+      }
+      10% {
+        transform: translateY(2vh) translateX(10vw) scale(0.4);
+      }
+      20% {
+        transform: translateY(0vh) translateX(30vw) scale(0.5);
+      }
+      30% {
+        transform: translateY(4vh) translateX(50vw) scale(0.6);
+      }
+      40% {
+        transform: translateY(2vh) translateX(70vw) scale(0.6);
+      }
+      50% {
+        transform: translateY(0vh) translateX(90vw) scale(0.6);
+      }
+      60% {
+        transform: translateY(0vh) translateX(110vw) scale(0.6);
+      }
+      100% {
+        transform: translateY(0vh) translateX(110vw) scale(0.6);
+      }
+    }
+
+    /* Modal/Dialog */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 28rem;
+      width: 100%;
+      background-color: black;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -2.5rem;
+      right: -2.5rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .modal-close:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 0.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .modal-content {
+        max-width: 32rem;
+      }
+      .modal-close {
+        top: -3rem;
+        right: -3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="container" style="padding: 1rem; display: flex; justify-content: flex-end; align-items: center;">
+      <div style="display: none;">
+        <a href="https://wa.me/5513991737852" target="_blank" class="cta-button" style="font-size: 1rem; padding: 0.75rem 1.5rem;">
+          Converse com a Ju agora no WhatsApp
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div style="min-height: 100vh;">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <div style="color: var(--yellow-vibrant);">RÉVEILLON em Uberlândia</div>
+          <div>com Luan e Adriana</div>
+        </h1>
+        <p class="hero-subtitle">31/12/2025 a 04/01/2026 – liberdade, conexão e muita dança.</p>
+        <div class="days-counter">
+          <div class="days-counter-badge">
+            <span>⏰</span>
+            <span id="days-counter-text">Calculando...</span>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-indicator">
+        <div class="scroll-indicator-inner">
+          <div class="scroll-indicator-dot"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: white;">
+      <div class="container" style="max-width: 56rem;">
+        <h2 class="section-title">Por que esse Réveillon</h2>
+        <div class="text-section">
+          <p>O Reveillon em Uberlândia não é um congresso ou festival.</p>
+          <p>As atividades propostas são pensadas no intuito de criar um espaço seguro para todos poderem "ser" em indivíduo e comunidade durante esses dias.</p>
+          <p>Uma das intenções é fechar o ciclo do ano que está se encerrando e iniciar o próximo com boas energias.</p>
+          <p>Celebrar a vida através da simplicidade e conexão consigo e com o todo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- What Awaits Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: #F9FAFB;">
+      <div class="container" style="max-width: 72rem;">
+        <h2 class="section-title">O que te espera</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i data-lucide="coffee" style="width: 24px; height: 24px; color: black;"></i>
+            </div>
+            <p class="benefit-text">Café da manhã, almoço, jantar e ceia de Ano-Novo <strong>incluídos</strong></p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i data-lucide="tree-pine" style="width: 24px; height: 24px; color: black;"></i>
+            </div>
+            <p class="benefit-text">4000 m² de natureza, piscina e quartos suítes coletivos</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i data-lucide="music" style="width: 24px; height: 24px; color: black;"></i>
+            </div>
+            <p class="benefit-text">O que toca? <strong>De tudo</strong>. O predominante são músicas dançantes como Zouk, Forró, Samba, mas espere também Axé, Bolero, MPB e o que vier!</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i data-lucide="users" style="width: 24px; height: 24px; color: black;"></i>
+            </div>
+            <p class="benefit-text">Atividades guiadas por Luan & Adriana + interações espontâneas (violão, jogos, acroyoga…)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- For Who Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: white;">
+      <div class="container" style="max-width: 56rem;">
+        <h2 class="section-title">Para quem é?</h2>
+        <div class="text-section" style="text-align: center;">
+          <p>Gosta de ler, relaxar, descansar a cabeça, dançar sozinho ou a dois, brincar, piscina, jogos de tabuleiro, sinuca, totó, rodinhas de violão – e, acima de tudo, ter liberdade para fazer qualquer coisa no seu tempo? Então esse lugar é seu.</p>
+          <p>Pra nós o Reveillon é bem mais do que sentar no sofá e assistir as pessoas passando a virada em algum lugar. Pra nós, é mais do que uma festa de uma noite só ou um cronograma agitado. Pra nós, é uma proposta de ressignificação...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: #F9FAFB;">
+      <div class="container" style="max-width: 56rem;">
+        <h2 class="section-title">Programação</h2>
+        <div class="text-section" style="text-align: center; margin-bottom: 3rem;">
+          <p>A programação do Reveillon é tudo e nada ao mesmo tempo. Espere começando uma rodinha de violão, algumas pessoas lendo, outras na piscina.</p>
+          <p>Se você quer fazer atividades (aprendizado) com Luan e Adriana também sem seu momento, imagine um lugar para você apenas SER, ao som dos pássaros e em contato com a natureza</p>
+        </div>
+
+        <!-- Instagram Notice -->
+        <div class="schedule-notice">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <i data-lucide="instagram" style="width: 24px; height: 24px; color: #EC4899;"></i>
+            <p style="font-size: 1.125rem; font-weight: 600; text-align: center;">
+              Em breve a programação completa estará no nosso instagram
+              <a href="https://instagram.com/reileaouberlandia" target="_blank" rel="noopener noreferrer" style="color: #EC4899; font-weight: bold; text-decoration: none;">@reileaouberlandia</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="schedule-tips">
+          <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Enquanto a programação não sai, vão umas dicas:</h3>
+          <div style="max-width: 48rem; margin: 0 auto;">
+            <div class="tip-item">
+              <span class="tip-number">1</span>
+              <p style="font-size: 1.125rem; color: #374151; margin: 0;">
+                Se programe para chegar na <strong>quarta-feira (31/12) a partir das 14:59</strong>.
+              </p>
+            </div>
+            <div class="tip-item">
+              <span class="tip-number">2</span>
+              <p style="font-size: 1.125rem; color: #374151; margin: 0;">
+                Se programe para ir embora no <strong>dia 04 às 09 da manhã</strong>.
+              </p>
+            </div>
+            <div class="tip-item">
+              <span class="tip-number" style="background-color: #3B82F6; color: white;">📶</span>
+              <p style="font-size: 1.125rem; color: #374151; margin: 0;">
+                O <strong>4G ou 5G</strong> de algumas operadoras pegam normalmente no local, pra quem precisa fazer um home-office em algum momento (algumas pessoas fizeram calls de lá sem problemas).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DJs -->
+        <div style="margin-top: 3rem;">
+          <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">DJs</h3>
+          <div class="djs-container">
+            <div class="dj-card" onclick="openDjModal('jusanper')">
+              <img src="assets/images/djs/jusanper.png" alt="Ju Sanper" class="dj-image" />
+              <p style="text-align: center; margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: #374151;">Ju Sanper</p>
+            </div>
+            <div class="dj-card" onclick="openDjModal('zedolago')">
+              <img src="assets/images/djs/zedolago.png" alt="Zé do Lago" class="dj-image" />
+              <p style="text-align: center; margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: #374151;">Zé do Lago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How To Get Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: white;">
+      <div class="container" style="max-width: 56rem;">
+        <h2 class="section-title">Como chegar</h2>
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <p style="font-size: 1.125rem; color: #374151; margin-bottom: 0.5rem;">Uberlândia possui aeroporto próprio (50 min de São Paulo).</p>
+          <p style="font-size: 1.125rem; color: #374151; margin-bottom: 0.5rem;">✔️ Carro (BR-050) – trajeto tranquilo</p>
+          <p style="font-size: 1.125rem; color: #374151; margin-bottom: 0.5rem;">✔️ Ônibus (Buser, Levare etc.)</p>
+          <p style="font-size: 1.125rem; color: #374151; margin-bottom: 0.5rem;">✔️ Uber/taxi até a chácara (~30 min do centro)</p>
+        </div>
+        <div class="map-container">
+          <a href="https://maps.app.goo.gl/vTbzGSgfHNEGAG3c7" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/map.png" alt="Mapa do Espaço Atrium Eventos" class="map-image" />
+          </a>
+          <p style="font-size: 1.125rem; color: #374151; font-weight: 500; margin-top: 1rem;">Espaço Atrium Eventos - Uberlândia, MG</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: #F9FAFB;">
+      <div class="container" style="max-width: 72rem;">
+        <h2 class="section-title">O QUE DIZEM SOBRE O REVEILLON</h2>
+        <p style="font-size: 1.125rem; color: #374151; text-align: center; margin-bottom: 4rem; max-width: 56rem; margin-left: auto; margin-right: auto; line-height: 1.75;">
+          Até parece que essas pessoas se conhecem há muitos anos, algumas delas estavam no evento pela primeira vez, e construíram as amizades ali mesmo, dá pra acreditar?
+        </p>
+        <div class="testimonials-grid">
+          <div class="testimonial-card" onclick="openVideo('8W12dblQoBI')">
+            <img src="https://img.youtube.com/vi/8W12dblQoBI/hqdefault.jpg" alt="Minha primeira vez no Reveillon" class="testimonial-thumbnail" />
+            <div class="testimonial-overlay"></div>
+            <div class="testimonial-play">
+              <div class="testimonial-play-button">
+                <i data-lucide="play" style="width: 24px; height: 24px; color: black; margin-left: 2px;"></i>
+              </div>
+            </div>
+            <div class="testimonial-title">Minha primeira vez no Reveillon</div>
+            <div class="testimonial-badge">Short</div>
+          </div>
+          <div class="testimonial-card" onclick="openVideo('zUk-Z7O_1z4')">
+            <img src="https://img.youtube.com/vi/zUk-Z7O_1z4/hqdefault.jpg" alt="Eu criei muitas expectativas com o evento..." class="testimonial-thumbnail" />
+            <div class="testimonial-overlay"></div>
+            <div class="testimonial-play">
+              <div class="testimonial-play-button">
+                <i data-lucide="play" style="width: 24px; height: 24px; color: black; margin-left: 2px;"></i>
+              </div>
+            </div>
+            <div class="testimonial-title">Eu criei muitas expectativas com o evento...</div>
+            <div class="testimonial-badge">Short</div>
+          </div>
+          <div class="testimonial-card" onclick="openVideo('3NZK9qozcgQ')">
+            <img src="https://img.youtube.com/vi/3NZK9qozcgQ/hqdefault.jpg" alt="Sobre o poder se conectar profundamente..." class="testimonial-thumbnail" />
+            <div class="testimonial-overlay"></div>
+            <div class="testimonial-play">
+              <div class="testimonial-play-button">
+                <i data-lucide="play" style="width: 24px; height: 24px; color: black; margin-left: 2px;"></i>
+              </div>
+            </div>
+            <div class="testimonial-title">Sobre o poder se conectar profundamente...</div>
+            <div class="testimonial-badge">Short</div>
+          </div>
+          <div class="testimonial-card" onclick="openVideo('pGAUNM39bNk')">
+            <img src="https://img.youtube.com/vi/pGAUNM39bNk/hqdefault.jpg" alt="Me preocupo com verdadeiramente com quem está aqui..." class="testimonial-thumbnail" />
+            <div class="testimonial-overlay"></div>
+            <div class="testimonial-play">
+              <div class="testimonial-play-button">
+                <i data-lucide="play" style="width: 24px; height: 24px; color: black; margin-left: 2px;"></i>
+              </div>
+            </div>
+            <div class="testimonial-title">Me preocupo com verdadeiramente com quem está aqui...</div>
+            <div class="testimonial-badge">Short</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-padding animate-on-scroll" style="background-color: white;">
+      <div class="container faq-container">
+        <h2 class="section-title">Perguntas Frequentes</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(0)">
+              <span>Quando devo chegar?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Você poderá fazer o check-in a partir do dia 31/12 de 2025 às 14:59.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(1)">
+              <span>Como chegar?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Uberlândia é uma cidade de fácil acesso, com aeroporto próprio que fica há 50 minutos de São Paulo. Ainda saindo de São Paulo é um trajeto bem tranquilo de carro através da BR 050, ou confortavelmente de ônibus pela Buser.com.br, Levare.com.br entre outras. Chegando em Uberlândia, o acesso até a chácara é possível através de Uber, ficando apenas a aproximadamente 30 minutos do centro da cidade.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(2)">
+              <span>A hospedagem é inclusa? Posso me hospedar fora?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">A hospedagem é inclusa e pedimos para que ninguém se hospede fora, o Rei Leão se propõe a ser um evento imersivo onde viveremos por esses dias como uma comunidade.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(3)">
+              <span>A alimentação é inclusa?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Sim. As refeições inclusas são: Café da manhã, almoço, jantar e ceia de ano novo. Como as refeições possuem horários específicos, a gente recomenda que você leve uma fruta, ou snacks caso dê vontade de comer algo de madrugada ou em algum dos intervalos. O cardápio é disponibilizado dia após dia durante o evento e seguindo o tema de "comida mineira" caseira, também favorecendo saladas e com opção ovolactovegetariana, porém, se sua alimentação for mais específica pedimos que ao chegar se comunique diretamente com a Fabiana (do buffet) para que ela possa alinhar da melhor forma com você.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(4)">
+              <span>Qual a programação?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Temos atividades guiadas diariamente por Luan e Adriana e ao mesmo tempo diversas interações que acontecem naturalmente e são idealizadas pelos próprios participantes como rodas de violão (e outros instrumentos), brigas de galo na piscina, futebol, peteca, vôlei, acroyoga, jogos de tabuleiro, jogo sobre Comunicação Não violenta, e até workshop de circo nós já tivemos. Espere muita dança (de todo tipo!), e muitas surpresas ao somar participantes ultra criativos e um espaço de quase 4000m² de muita natureza.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(5)">
+              <span>É para quem dança?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Não. O Reveillon realmente une todas as tribos. Ao mesmo tempo que acontecem as atividades principais que normalmente são de meditação ativa, dança ou entretenimento, também acontecem as atividades paralelas que acontecem naturalmente podendo ser uma rodinha de violão, um bate-papo na piscina, um jogo de tabuleiro, peteca, volei, etc. Já tivemos até mesmo uma aulinha de lira circense com a Mari Martins, totalmente natural e sem se prender a uma programação fixa.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(6)">
+              <span>Quais ritmos que toca?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">O reveillon une todas as tribos, então mesmo que o Zouk seja predominante, não se assuste se de repente começar um Axé, um Forró, um Samba, ou qualquer outro ritmo. A DJ Ju Sanper com Dj Zé do Lago que comandam os momentos de baile e se orienta pela pista, livre, sem regras.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(7)">
+              <span>Quem coloca música?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Nossa DJ residente é a maravilhosa Ju Sanper que comanda o baile a noite juntamente com o TOP Dj Zé do Lago, mas durante o dia o som tá a nossa disposição pra dançar o que quisermos.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(8)">
+              <span>Vi que tem um ingresso "dupla", como funciona?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">O ingresso dupla não se refere a um quarto duplo (ainda se refere aos alojamentos compartilhados), porém se trata de um desconto ao comprar com mais uma pessoa. A única diferença entre as duas inscrições (dupla e individual) é de fato o desconto.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(9)">
+              <span>Possuo restrição alimentar, como faço?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Pedimos que ao chegar você fale no nosso primeiro bate-papo, desse modo te direcionaremos para a Fabiana que é a nossa chef, e ela poderá alinhar com você uma melhor forma.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(10)">
+              <span>Sobre as instalações, acomodações no geral</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">As acomodações/dependências são simples, de chácara mesmo. Recomendamos que tragam sua própria roupa de cama para maior conforto. Todos os quartos são suítes com banheiro.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(11)">
+              <span>Quando é check-out?</span>
+              <i data-lucide="chevron-down" style="width: 20px; height: 20px; color: #6B7280;"></i>
+            </button>
+            <div class="faq-answer">Nosso check-out será no dia 4 de janeiro de 2026 até às 8:59 da manhã.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Last Spots Section -->
+    <section class="last-spots-section animate-on-scroll">
+      <div class="container" style="max-width: 56rem; text-align: center;">
+        <h2 class="section-title">Últimas vagas</h2>
+        <div style="margin-bottom: 2rem;">
+          <p style="font-size: 1.25rem; color: #1F2937; margin-bottom: 0.5rem; font-weight: 500;">⚠️ Quartos compartilhados limitados.</p>
+          <p style="font-size: 1.25rem; color: #1F2937; margin-bottom: 0.5rem; font-weight: 500;">Garanta seu lugar antes que lote!</p>
+        </div>
+        <div style="margin-bottom: 2rem;">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar" style="width: 70%;"></div>
+          </div>
+          <p style="color: #4B5563; font-weight: 500;">70% das vagas preenchidas</p>
+        </div>
+        <a href="https://wa.me/5513991737852" target="_blank" class="cta-button" style="font-size: 1.25rem; padding: 1.5rem 3rem; max-width: 28rem; margin: 0 auto;">
+          Converse com a Ju agora no WhatsApp
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <h3 class="footer-brand">UAIZOUK</h3>
+      </div>
+      <div class="footer-links">
+        <a href="#" target="_blank" rel="noopener noreferrer">Termos</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
+      </div>
+      <p class="footer-copyright">Copyright © 2024-2025 UAIZOUK. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Fixed CTA Button (Mobile) -->
+  <a href="https://wa.me/5513991737852" target="_blank" class="cta-button fixed">
+    Converse com a Ju agora no WhatsApp
+  </a>
+
+  <!-- Bird Animations -->
+  <div class="bird-container bird-container-one">
+    <div class="bird bird-one"></div>
+  </div>
+  <div class="bird-container bird-container-two">
+    <div class="bird bird-two"></div>
+  </div>
+  <div class="bird-container bird-container-three">
+    <div class="bird bird-three"></div>
+  </div>
+  <div class="bird-container bird-container-four">
+    <div class="bird bird-four"></div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal-overlay" id="video-modal" onclick="closeVideo()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <iframe id="video-iframe" class="modal-iframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <button class="modal-close" onclick="closeVideo()">
+        <i data-lucide="x" style="width: 24px; height: 24px; color: white;"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- DJ Modal -->
+  <div class="modal-overlay" id="dj-modal" onclick="closeDjModal()">
+    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 42rem; aspect-ratio: auto; background: transparent; border: none;">
+      <img id="dj-modal-image" src="" alt="" style="width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.3);" />
+      <p id="dj-modal-name" style="text-align: center; margin-top: 1rem; font-size: 1.25rem; font-family: 'Bebas Neue', sans-serif; color: white; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);"></p>
+      <button class="modal-close" onclick="closeDjModal()">
+        <i data-lucide="x" style="width: 24px; height: 24px; color: white;"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Days Counter
+    function updateDaysCounter() {
+      const targetDate = new Date('2025-12-31T14:59:00');
+      const now = new Date();
+      const timeDiff = targetDate.getTime() - now.getTime();
+
+      if (timeDiff <= 0) {
+        document.getElementById('days-counter-text').textContent = '🎉 O evento já começou!';
+        return;
+      }
+
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+      const daysText = days === 1 ? 'dia' : 'dias';
+      const hoursText = hours === 1 ? 'hora' : 'horas';
+      const minutesText = minutes === 1 ? 'minuto' : 'minutos';
+
+      document.getElementById('days-counter-text').textContent =
+        `Faltam apenas ${days} ${daysText}, ${hours} ${hoursText}, ${minutes} ${minutesText}`;
+    }
+
+    updateDaysCounter();
+    setInterval(updateDaysCounter, 60000); // Update every minute
+
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+
+    // FAQ Toggle
+    function toggleFaq(index) {
+      const items = document.querySelectorAll('.faq-item');
+      const item = items[index];
+      const isOpen = item.classList.contains('open');
+
+      // Close all items
+      items.forEach(i => i.classList.remove('open'));
+
+      // Open clicked item if it wasn't open
+      if (!isOpen) {
+        item.classList.add('open');
+        // Update icon
+        const icon = item.querySelector('[data-lucide]');
+        if (icon) {
+          icon.setAttribute('data-lucide', 'chevron-up');
+          lucide.createIcons();
+        }
+      } else {
+        // Update icon back to down
+        const icon = item.querySelector('[data-lucide]');
+        if (icon) {
+          icon.setAttribute('data-lucide', 'chevron-down');
+          lucide.createIcons();
+        }
+      }
+    }
+
+    // Update FAQ icons on click
+    document.querySelectorAll('.faq-question').forEach((btn, index) => {
+      btn.addEventListener('click', function() {
+        const item = this.closest('.faq-item');
+        const icon = this.querySelector('[data-lucide]');
+        if (item.classList.contains('open')) {
+          icon.setAttribute('data-lucide', 'chevron-down');
+        } else {
+          icon.setAttribute('data-lucide', 'chevron-up');
+        }
+        lucide.createIcons();
+      });
+    });
+
+    // Video Modal
+    function openVideo(videoId) {
+      const modal = document.getElementById('video-modal');
+      const iframe = document.getElementById('video-iframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      modal.classList.add('open');
+    }
+
+    function closeVideo() {
+      const modal = document.getElementById('video-modal');
+      const iframe = document.getElementById('video-iframe');
+      modal.classList.remove('open');
+      iframe.src = '';
+    }
+
+    // DJ Modal
+    function openDjModal(djName) {
+      const modal = document.getElementById('dj-modal');
+      const image = document.getElementById('dj-modal-image');
+      const name = document.getElementById('dj-modal-name');
+
+      const djs = {
+        'jusanper': { image: 'assets/images/djs/jusanper.png', name: 'Ju Sanper' },
+        'zedolago': { image: 'assets/images/djs/zedolago.png', name: 'Zé do Lago' }
+      };
+
+      if (djs[djName]) {
+        image.src = djs[djName].image;
+        name.textContent = djs[djName].name;
+        modal.classList.add('open');
+      }
+    }
+
+    function closeDjModal() {
+      const modal = document.getElementById('dj-modal');
+      modal.classList.remove('open');
+    }
+  </script>
+</body>
+</html>
+

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '@/lib/api-client';
 import { useLayout } from '@/hooks/useLayout';
+import { useLandingData } from '@/hooks/use-landing-data';
 import Sidebar from '@/components/painel/Sidebar';
 import Topbar from '@/components/painel/Topbar';
 import CommandPalette from '@/components/painel/CommandPalette';
@@ -24,6 +25,7 @@ const Painel = () => {
   const [isValidating, setIsValidating] = useState(true);
   const [activeTab, setActiveTab] = useState('evento');
   const [userEmail, setUserEmail] = useState<string>('');
+  const { data: landingData } = useLandingData();
   const {
     isSidebarCollapsed,
     isMobileMenuOpen,
@@ -33,6 +35,12 @@ const Painel = () => {
     toggleCommandPalette,
     closeAllModals,
   } = useLayout();
+
+  // Define título da página baseado no evento
+  useEffect(() => {
+    const eventTitle = landingData?.event?.eventTitle || 'Painel';
+    document.title = `${eventTitle} - Painel`;
+  }, [landingData?.event?.eventTitle]);
 
   useEffect(() => {
     const validateAuth = async () => {

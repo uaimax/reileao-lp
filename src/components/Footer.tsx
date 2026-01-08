@@ -1,17 +1,21 @@
 import { useLandingData } from '@/hooks/use-landing-data';
-import { getSiteNameWithYear, getCopyrightText } from '@/lib/site-config';
 
 const Footer = () => {
   const { data: landingData } = useLandingData();
   const footerData = landingData?.footer;
   const eventData = landingData?.event;
 
+  // Usa título do evento como fonte principal
+  const displayTitle = eventData?.eventTitle || footerData?.eventTitle || 'Réveillon em Uberlândia';
+  // Copyright sempre usa o título do evento para consistência
+  const displayCopyright = `© 2025 ${displayTitle}. Todos os direitos reservados.`;
+
   return (
     <footer>
       <div className="container">
         <div style={{ marginBottom: '2rem' }}>
           <h3 className="footer-brand">
-            {footerData?.eventTitle || getSiteNameWithYear('2025')}
+            {displayTitle}
           </h3>
         </div>
         <div className="footer-links">
@@ -19,7 +23,7 @@ const Footer = () => {
           <a href="#" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
         </div>
         <p className="footer-copyright">
-          {footerData?.copyrightText || getCopyrightText('2025')}
+          {displayCopyright}
         </p>
       </div>
     </footer>

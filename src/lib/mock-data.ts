@@ -206,13 +206,13 @@ export const mockParticipationContent = {
 
 export const mockFooterContent = {
   id: 1,
-  eventTitle: 'UAIZOUK',
+  eventTitle: 'Réveillon em Uberlândia',
   eventDescription: null,
   eventDates: null,
   eventLocation: null,
   venueName: null,
   venueArea: null,
-  copyrightText: 'Copyright © 2024-2025 UAIZOUK. Todos os direitos reservados.',
+  copyrightText: 'Copyright © 2024-2025 Rei Leão Eventos. Todos os direitos reservados.',
   createdAt: new Date(),
   updatedAt: new Date(),
 };

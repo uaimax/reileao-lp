@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "title": "RÉVEILLON em Uberlândia com Luan e Adriana | UAIZOUK",
+    "description": "31/12/2025 a 04/01/2026 – liberdade, conexão e muita dança. Celebre o Réveillon em Uberlândia com atividades pensadas para criar um espaço seguro de conexão e simplicidade.",
+    "url": "https://www.uaizouk.com.br",
+    "brand": "UAIZOUK"
+  },
+  "event": {
+    "name": "Réveillon em Uberlândia",
+    "organizers": ["Luan", "Adriana"],
+    "dates": {
+      "start": "2025-12-31",
+      "end": "2026-01-04",
+      "checkIn": "2025-12-31T14:59:00",
+      "checkOut": "2026-01-04T08:59:00"
+    },
+    "location": {
+      "name": "Espaço Atrium Eventos",
+      "city": "Uberlândia",
+      "state": "MG",
+      "country": "Brasil",
+      "mapsUrl": "https://maps.app.goo.gl/vTbzGSgfHNEGAG3c7"
+    }
+  },
+  "contact": {
+    "whatsapp": {
+      "number": "5513991737852",
+      "url": "https://wa.me/5513991737852",
+      "contactName": "Ju"
+    },
+    "instagram": {
+      "handle": "@reileaouberlandia",
+      "url": "https://instagram.com/reileaouberlandia"
+    }
+  },
+  "sections": {
+    "hero": {
+      "title": "RÉVEILLON em Uberlândia\ncom Luan e Adriana",
+      "subtitle": "31/12/2025 a 04/01/2026 – liberdade, conexão e muita dança.",
+      "cta": "Converse com a Ju agora no WhatsApp"
+    },
+    "whySection": {
+      "title": "Por que esse Réveillon",
+      "paragraphs": [
+        "O Reveillon em Uberlândia não é um congresso ou festival.",
+        "As atividades propostas são pensadas no intuito de criar um espaço seguro para todos poderem \"ser\" em indivíduo e comunidade durante esses dias.",
+        "Uma das intenções é fechar o ciclo do ano que está se encerrando e iniciar o próximo com boas energias.",
+        "Celebrar a vida através da simplicidade e conexão consigo e com o todo."
+      ]
+    },
+    "whatAwaits": {
+      "title": "O que te espera",
+      "benefits": [
+        {
+          "icon": "coffee",
+          "text": "Café da manhã, almoço, jantar e ceia de Ano-Novo incluídos",
+          "highlight": "incluídos"
+        },
+        {
+          "icon": "tree-pine",
+          "text": "4000 m² de natureza, piscina e quartos suítes coletivos"
+        },
+        {
+          "icon": "music",
+          "text": "O que toca? De tudo. O predominante são músicas dançantes como Zouk, Forró, Samba, mas espere também Axé, Bolero, MPB e o que vier!",
+          "highlight": "De tudo"
+        },
+        {
+          "icon": "users",
+          "text": "Atividades guiadas por Luan & Adriana + interações espontâneas (violão, jogos, acroyoga…)"
+        }
+      ]
+    },
+    "forWho": {
+      "title": "Para quem é?",
+      "paragraphs": [
+        "Gosta de ler, relaxar, descansar a cabeça, dançar sozinho ou a dois, brincar, piscina, jogos de tabuleiro, sinuca, totó, rodinhas de violão – e, acima de tudo, ter liberdade para fazer qualquer coisa no seu tempo? Então esse lugar é seu.",
+        "Pra nós o Reveillon é bem mais do que sentar no sofá e assistir as pessoas passando a virada em algum lugar. Pra nós, é mais do que uma festa de uma noite só ou um cronograma agitado. Pra nós, é uma proposta de ressignificação..."
+      ]
+    },
+    "schedule": {
+      "title": "Programação",
+      "paragraphs": [
+        "A programação do Reveillon é tudo e nada ao mesmo tempo. Espere começando uma rodinha de violão, algumas pessoas lendo, outras na piscina.",
+        "Se você quer fazer atividades (aprendizado) com Luan e Adriana também sem seu momento, imagine um lugar para você apenas SER, ao som dos pássaros e em contato com a natureza"
+      ],
+      "instagramNotice": "Em breve a programação completa estará no nosso instagram @reileaouberlandia",
+      "tips": [
+        {
+          "number": "1",
+          "text": "Se programe para chegar na quarta-feira (31/12) a partir das 14:59."
+        },
+        {
+          "number": "2",
+          "text": "Se programe para ir embora no dia 04 às 09 da manhã."
+        },
+        {
+          "icon": "📶",
+          "text": "O 4G ou 5G de algumas operadoras pegam normalmente no local, pra quem precisa fazer um home-office em algum momento (algumas pessoas fizeram calls de lá sem problemas)."
+        }
+      ],
+      "djs": [
+        {
+          "name": "Ju Sanper",
+          "image": "assets/images/djs/jusanper.png"
+        },
+        {
+          "name": "Zé do Lago",
+          "image": "assets/images/djs/zedolago.png"
+        }
+      ]
+    },
+    "howToGet": {
+      "title": "Como chegar",
+      "info": [
+        "Uberlândia possui aeroporto próprio (50 min de São Paulo).",
+        "✔️ Carro (BR-050) – trajeto tranquilo",
+        "✔️ Ônibus (Buser, Levare etc.)",
+        "✔️ Uber/taxi até a chácara (~30 min do centro)"
+      ],
+      "mapImage": "assets/images/map.png",
+      "locationLabel": "Espaço Atrium Eventos - Uberlândia, MG"
+    },
+    "testimonials": {
+      "title": "O QUE DIZEM SOBRE O REVEILLON",
+      "description": "Até parece que essas pessoas se conhecem há muitos anos, algumas delas estavam no evento pela primeira vez, e construíram as amizades ali mesmo, dá pra acreditar?",
+      "videos": [
+        {
+          "id": "8W12dblQoBI",
+          "title": "Minha primeira vez no Reveillon"
+        },
+        {
+          "id": "zUk-Z7O_1z4",
+          "title": "Eu criei muitas expectativas com o evento..."
+        },
+        {
+          "id": "3NZK9qozcgQ",
+          "title": "Sobre o poder se conectar profundamente..."
+        },
+        {
+          "id": "pGAUNM39bNk",
+          "title": "Me preocupo com verdadeiramente com quem está aqui..."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Perguntas Frequentes",
+      "items": [
+        {
+          "question": "Quando devo chegar?",
+          "answer": "Você poderá fazer o check-in a partir do dia 31/12 de 2025 às 14:59."
+        },
+        {
+          "question": "Como chegar?",
+          "answer": "Uberlândia é uma cidade de fácil acesso, com aeroporto próprio que fica há 50 minutos de São Paulo. Ainda saindo de São Paulo é um trajeto bem tranquilo de carro através da BR 050, ou confortavelmente de ônibus pela Buser.com.br, Levare.com.br entre outras. Chegando em Uberlândia, o acesso até a chácara é possível através de Uber, ficando apenas a aproximadamente 30 minutos do centro da cidade."
+        },
+        {
+          "question": "A hospedagem é inclusa? Posso me hospedar fora?",
+          "answer": "A hospedagem é inclusa e pedimos para que ninguém se hospede fora, o Rei Leão se propõe a ser um evento imersivo onde viveremos por esses dias como uma comunidade."
+        },
+        {
+          "question": "A alimentação é inclusa?",
+          "answer": "Sim. As refeições inclusas são: Café da manhã, almoço, jantar e ceia de ano novo. Como as refeições possuem horários específicos, a gente recomenda que você leve uma fruta, ou snacks caso dê vontade de comer algo de madrugada ou em algum dos intervalos. O cardápio é disponibilizado dia após dia durante o evento e seguindo o tema de \"comida mineira\" caseira, também favorecendo saladas e com opção ovolactovegetariana, porém, se sua alimentação for mais específica pedimos que ao chegar se comunique diretamente com a Fabiana (do buffet) para que ela possa alinhar da melhor forma com você."
+        },
+        {
+          "question": "Qual a programação?",
+          "answer": "Temos atividades guiadas diariamente por Luan e Adriana e ao mesmo tempo diversas interações que acontecem naturalmente e são idealizadas pelos próprios participantes como rodas de violão (e outros instrumentos), brigas de galo na piscina, futebol, peteca, vôlei, acroyoga, jogos de tabuleiro, jogo sobre Comunicação Não violenta, e até workshop de circo nós já tivemos. Espere muita dança (de todo tipo!), e muitas surpresas ao somar participantes ultra criativos e um espaço de quase 4000m² de muita natureza."
+        },
+        {
+          "question": "É para quem dança?",
+          "answer": "Não. O Reveillon realmente une todas as tribos. Ao mesmo tempo que acontecem as atividades principais que normalmente são de meditação ativa, dança ou entretenimento, também acontecem as atividades paralelas que acontecem naturalmente podendo ser uma rodinha de violão, um bate-papo na piscina, um jogo de tabuleiro, peteca, volei, etc. Já tivemos até mesmo uma aulinha de lira circense com a Mari Martins, totalmente natural e sem se prender a uma programação fixa."
+        },
+        {
+          "question": "Quais ritmos que toca?",
+          "answer": "O reveillon une todas as tribos, então mesmo que o Zouk seja predominante, não se assuste se de repente começar um Axé, um Forró, um Samba, ou qualquer outro ritmo. A DJ Ju Sanper com Dj Zé do Lago que comandam os momentos de baile e se orienta pela pista, livre, sem regras."
+        },
+        {
+          "question": "Quem coloca música?",
+          "answer": "Nossa DJ residente é a maravilhosa Ju Sanper que comanda o baile a noite juntamente com o TOP Dj Zé do Lago, mas durante o dia o som tá a nossa disposição pra dançar o que quisermos."
+        },
+        {
+          "question": "Vi que tem um ingresso \"dupla\", como funciona?",
+          "answer": "O ingresso dupla não se refere a um quarto duplo (ainda se refere aos alojamentos compartilhados), porém se trata de um desconto ao comprar com mais uma pessoa. A única diferença entre as duas inscrições (dupla e individual) é de fato o desconto."
+        },
+        {
+          "question": "Possuo restrição alimentar, como faço?",
+          "answer": "Pedimos que ao chegar você fale no nosso primeiro bate-papo, desse modo te direcionaremos para a Fabiana que é a nossa chef, e ela poderá alinhar com você uma melhor forma."
+        },
+        {
+          "question": "Sobre as instalações, acomodações no geral",
+          "answer": "As acomodações/dependências são simples, de chácara mesmo. Recomendamos que tragam sua própria roupa de cama para maior conforto. Todos os quartos são suítes com banheiro."
+        },
+        {
+          "question": "Quando é check-out?",
+          "answer": "Nosso check-out será no dia 4 de janeiro de 2026 até às 8:59 da manhã."
+        }
+      ]
+    },
+    "lastSpots": {
+      "title": "Últimas vagas",
+      "warning": [
+        "⚠️ Quartos compartilhados limitados.",
+        "Garanta seu lugar antes que lote!"
+      ],
+      "progress": 70,
+      "progressLabel": "das vagas preenchidas"
+    },
+    "footer": {
+      "brand": "UAIZOUK",
+      "links": [
+        { "label": "Termos", "url": "#" },
+        { "label": "Política de Privacidade", "url": "#" }
+      ],
+      "copyright": "Copyright © 2024-2025 UAIZOUK. Todos os direitos reservados."
+    }
+  },
+  "design": {
+    "colors": {
+      "primary": "#FFEB3B",
+      "primaryHover": "#FFC107",
+      "background": "rgb(253, 253, 253)",
+      "foreground": "rgb(0, 0, 0)",
+      "textSecondary": "#374151",
+      "textMuted": "#6B7280",
+      "backgroundAlt": "#F9FAFB",
+      "gradientStart": "#FEF3C7",
+      "gradientEnd": "#FED7AA",
+      "error": "#DC2626"
+    },
+    "fonts": {
+      "title": "Bebas Neue",
+      "script": "Great Vibes",
+      "body": "Inter"
+    },
+    "icons": {
+      "library": "Lucide",
+      "used": ["coffee", "tree-pine", "music", "users", "instagram", "play", "chevron-down", "chevron-up", "x", "message-circle"]
+    }
+  },
+  "assets": {
+    "images": {
+      "heroBg": "assets/images/hero-bg.png",
+      "map": "assets/images/map.png",
+      "djs": [
+        "assets/images/djs/jusanper.png",
+        "assets/images/djs/zedolago.png"
+      ]
+    },
+    "external": {
+      "birdAnimation": "https://s3-us-west-2.amazonaws.com/s.cdpn.io/174479/bird-cells-new.svg",
+      "youtubeThumbnails": "https://img.youtube.com/vi/{VIDEO_ID}/hqdefault.jpg"
+    }
+  }
+}
+

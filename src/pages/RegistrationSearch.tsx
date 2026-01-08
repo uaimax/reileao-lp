@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Loader2, CheckCircle, AlertCircle, Home, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiClient } from '@/lib/api-client';
+import { SITE_NAME } from '@/lib/site-config';
 import { usePageTracking, useMetaPixelTracking } from '@/hooks/use-meta-pixel';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
@@ -187,7 +188,7 @@ const RegistrationSearch = () => {
   };
 
   const handleWhatsAppSupport = () => {
-    const message = encodeURIComponent('Oi! Preciso de ajuda para encontrar minha inscrição no UAIZOUK.');
+    const message = encodeURIComponent(`Oi! Preciso de ajuda para encontrar minha inscrição no ${SITE_NAME}.`);
     window.open(`https://wa.me/5534988364084?text=${message}`, '_blank');
   };
 

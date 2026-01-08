@@ -263,10 +263,10 @@ const AIInstructionsManager = () => {
 
   if (isLoading && instructions.length === 0) {
     return (
-      <Card className="glass-effect border-neon-purple/30">
+      <Card className="bg-slate-800 border-slate-700">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-neon-purple" />
-          <span className="ml-2 text-soft-white">Carregando instruções...</span>
+          <Loader2 className="w-6 h-6 animate-spin text-yellow-500" />
+          <span className="ml-2 text-slate-50">Carregando instruções...</span>
         </CardContent>
       </Card>
     );
@@ -276,10 +276,10 @@ const AIInstructionsManager = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <Bot className="w-8 h-8 text-neon-cyan" />
+        <Bot className="w-8 h-8 text-yellow-500" />
         <div>
-          <h1 className="text-3xl font-bold text-soft-white">Instruções Adicionais para IA</h1>
-          <p className="text-text-gray mt-1">
+          <h1 className="text-3xl font-bold text-slate-50">Instruções Adicionais para IA</h1>
+          <p className="text-slate-400 mt-1">
             Configure informações complementares que aparecerão no eventSummary para consumo por IAs
           </p>
         </div>
@@ -287,14 +287,14 @@ const AIInstructionsManager = () => {
 
       {/* Instructions Management */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-soft-white">Gerenciar Instruções</h2>
+        <h2 className="text-2xl font-bold text-slate-50">Gerenciar Instruções</h2>
         <Button
           onClick={() => {
             setShowAddForm(true);
             setEditingId(null);
             resetForm();
           }}
-          className="btn-neon"
+          className="bg-yellow-500 hover:bg-yellow-600 text-slate-900"
           disabled={isLoading}
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -303,15 +303,15 @@ const AIInstructionsManager = () => {
       </div>
 
       {(showAddForm || editingId) && (
-        <Card className="glass-effect border-neon-purple/30">
+        <Card className="bg-slate-800 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-xl text-soft-white">
+            <CardTitle className="text-xl text-slate-50">
               {editingId ? 'Editar Instrução' : 'Adicionar Nova Instrução'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-soft-white">
+              <Label htmlFor="title" className="text-slate-50">
                 Título da Instrução
               </Label>
               <Input
@@ -319,7 +319,7 @@ const AIInstructionsManager = () => {
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
                 placeholder="Ex: Informações sobre Hospedagem"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-yellow-500"
               />
             </div>
 
@@ -335,7 +335,7 @@ const AIInstructionsManager = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="order_index" className="text-soft-white">
+                <Label htmlFor="order_index" className="text-slate-50">
                   Ordem de Exibição
                 </Label>
                 <Input
@@ -344,7 +344,7 @@ const AIInstructionsManager = () => {
                   value={formData.order_index}
                   onChange={(e) => setFormData({...formData, order_index: parseInt(e.target.value) || 0})}
                   placeholder="0"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-yellow-500"
                 />
               </div>
 
@@ -353,12 +353,12 @@ const AIInstructionsManager = () => {
                   checked={formData.isActive}
                   onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
                 />
-                <Label className="text-soft-white text-sm">Ativa</Label>
+                <Label className="text-slate-50 text-sm">Ativa</Label>
               </div>
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleSave} disabled={isLoading} className="btn-neon">
+              <Button onClick={handleSave} disabled={isLoading} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900">
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
@@ -373,7 +373,7 @@ const AIInstructionsManager = () => {
                   setEditingId(null);
                 }}
                 variant="outline"
-                className="border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white"
+                className="border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-50"
                 disabled={isLoading}
               >
                 <X className="w-4 h-4 mr-2" />
@@ -387,29 +387,29 @@ const AIInstructionsManager = () => {
       {/* Instructions List */}
       <div className="grid gap-4">
         {instructions.length === 0 ? (
-          <Card className="glass-effect border-neon-purple/30">
+          <Card className="bg-slate-800 border-slate-700">
             <CardContent className="text-center py-8">
-              <Bot className="w-12 h-12 text-text-gray mx-auto mb-4" />
-              <p className="text-text-gray">Nenhuma instrução para IA cadastrada.</p>
-              <p className="text-sm text-text-gray mt-2">Clique em "Adicionar Instrução" para começar.</p>
+              <Bot className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+              <p className="text-slate-400">Nenhuma instrução para IA cadastrada.</p>
+              <p className="text-sm text-slate-400 mt-2">Clique em "Adicionar Instrução" para começar.</p>
             </CardContent>
           </Card>
         ) : (
           instructions.map((instruction, index) => (
-            <Card key={instruction.id} className="glass-effect border-neon-purple/30">
+            <Card key={instruction.id} className="bg-slate-800 border-slate-700">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <GripVertical className="w-5 h-5 text-text-gray cursor-grab mt-1" />
+                  <GripVertical className="w-5 h-5 text-slate-400 cursor-grab mt-1" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-lg font-bold text-neon-cyan">{instruction.title}</h3>
+                      <h3 className="text-lg font-bold text-slate-50">{instruction.title}</h3>
                       {!instruction.isActive && <Badge variant="secondary">Inativa</Badge>}
                     </div>
                     <div
-                      className="text-sm text-text-gray prose prose-invert prose-sm max-w-none"
+                      className="text-sm text-slate-400 prose prose-invert prose-sm max-w-none"
                       dangerouslySetInnerHTML={{ __html: instruction.content }}
                     />
-                    <p className="text-xs text-text-gray mt-2">Ordem: {instruction.order_index}</p>
+                    <p className="text-xs text-slate-400 mt-2">Ordem: {instruction.order_index}</p>
                   </div>
                   <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
@@ -417,7 +417,7 @@ const AIInstructionsManager = () => {
                         onClick={() => handleMoveUp(instruction, index)}
                         size="sm"
                         variant="outline"
-                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-dark-bg"
+                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900"
                         disabled={isLoading || index === 0}
                         title="Mover para cima"
                       >
@@ -427,7 +427,7 @@ const AIInstructionsManager = () => {
                         onClick={() => handleMoveDown(instruction, index)}
                         size="sm"
                         variant="outline"
-                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-dark-bg"
+                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900"
                         disabled={isLoading || index === instructions.length - 1}
                         title="Mover para baixo"
                       >
@@ -441,7 +441,7 @@ const AIInstructionsManager = () => {
                         variant="outline"
                         className={instruction.isActive
                           ? "border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
-                          : "border-green-500 text-green-500 hover:bg-green-500 hover:text-dark-bg"
+                          : "border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
                         }
                         disabled={isLoading}
                         title={instruction.isActive ? 'Desativar Instrução' : 'Ativar Instrução'}
@@ -452,7 +452,7 @@ const AIInstructionsManager = () => {
                         onClick={() => handleEdit(instruction)}
                         size="sm"
                         variant="outline"
-                        className="border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-dark-bg"
+                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900"
                         disabled={isLoading}
                         title="Editar Instrução"
                       >

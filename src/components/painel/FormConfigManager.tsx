@@ -5,16 +5,19 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { Save, Loader2, Plus, Trash2, Eye } from 'lucide-react';
+import { Save, Loader2, Plus, Trash2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { getSiteNameWithYear } from '@/lib/site-config';
 import { apiClient } from '@/lib/api-client';
 import { useLandingData } from '@/hooks/use-landing-data';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface TicketType {
   name: string;
   price: number;
   requiresPartner: boolean;
   description?: string;
+  isActive?: boolean; // Novo campo para controlar ativação/desativação
 }
 
 interface Product {
@@ -44,6 +47,7 @@ interface FormConfig {
 const FormConfigManager = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showInactiveTickets, setShowInactiveTickets] = useState(false);
   const { data: landingData } = useLandingData();
   const eventData = landingData?.event;
 
@@ -106,14 +110,14 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
   const [config, setConfig] = useState<FormConfig>({
     foreignerOption: { enabled: true },
     ticketTypes: [
-      { name: 'Individual', price: 350.00, requiresPartner: false, description: 'Ingresso individual para o evento' },
-      { name: 'Dupla', price: 600.00, requiresPartner: true, description: 'Ingresso para casal com desconto especial' }
+      { name: 'Individual', price: 350.00, requiresPartner: false, description: 'Ingresso individual para o evento', isActive: true },
+      { name: 'Dupla', price: 600.00, requiresPartner: true, description: 'Ingresso para casal com desconto especial', isActive: true }
     ],
     products: [
       { name: 'Camiseta', price: 85.00, options: ['P', 'M', 'G', 'GG'], availableUntil: '2025-12-31T23:59:59Z' },
       { name: 'Combo Alimentação', price: 145.00, options: ['Sim'], availableUntil: '2025-11-30T23:59:59Z' }
     ],
-    termsAndConditions: generateTermsAndConditions(eventData?.eventTitle || 'UAIZOUK 2025'),
+    termsAndConditions: generateTermsAndConditions(eventData?.eventTitle || getSiteNameWithYear('2025')),
         paymentSettings: {
           dueDateLimit: '2025-12-31',
           allowPix: true,
@@ -135,7 +139,15 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
       const response = await apiClient.getFormConfig() as any;
 
       if (response && response.configData) {
-        setConfig(response.configData);
+        // Garantir que todos os tipos de ingresso tenham isActive (default: true para compatibilidade)
+        const configData = {
+          ...response.configData,
+          ticketTypes: (response.configData.ticketTypes || []).map((ticket: TicketType) => ({
+            ...ticket,
+            isActive: ticket.isActive !== undefined ? ticket.isActive : true
+          }))
+        };
+        setConfig(configData);
       }
     } catch (error) {
       console.error('Error loading config:', error);
@@ -177,7 +189,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
   const addTicketType = () => {
     setConfig(prev => ({
       ...prev,
-      ticketTypes: [...prev.ticketTypes, { name: '', price: 0, requiresPartner: false }]
+      ticketTypes: [...prev.ticketTypes, { name: '', price: 0, requiresPartner: false, isActive: true }]
     }));
   };
 
@@ -275,8 +287,8 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold gradient-text">Configuração do Formulário</h1>
-          <p className="text-text-gray mt-1">Configure os campos e produtos do formulário de inscrição</p>
+          <h1 className="text-2xl font-bold text-slate-50">Configuração do Formulário</h1>
+          <p className="text-slate-400 mt-1">Configure os campos e produtos do formulário de inscrição</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -336,66 +348,198 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {config.ticketTypes.map((ticket, index) => (
-            <div key={index} className="border border-neon-purple/20 rounded-lg p-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium">Ingresso #{index + 1}</h4>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeTicketType(index)}
-                  className="text-red-400 hover:text-red-300"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
+          {/* Tipos Ativos */}
+          <div className="space-y-4">
+            {config.ticketTypes.filter(t => t.isActive !== false).map((ticket, index) => {
+              const actualIndex = config.ticketTypes.indexOf(ticket);
+              return (
+                <div key={actualIndex} className="border border-slate-700 rounded-lg p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <h4 className="font-medium">Ingresso #{actualIndex + 1}</h4>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id={`ticket-active-${actualIndex}`}
+                          checked={ticket.isActive !== false}
+                          onCheckedChange={(checked) => updateTicketType(actualIndex, 'isActive', checked)}
+                        />
+                        <Label htmlFor={`ticket-active-${actualIndex}`} className="text-sm text-green-400">
+                          Ativo
+                        </Label>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeTicketType(actualIndex)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor={`ticket-name-${index}`}>Nome</Label>
-                  <Input
-                    id={`ticket-name-${index}`}
-                    value={ticket.name}
-                    onChange={(e) => updateTicketType(index, 'name', e.target.value)}
-                    placeholder="Ex: Individual, Dupla"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor={`ticket-name-${actualIndex}`}>Nome</Label>
+                      <Input
+                        id={`ticket-name-${actualIndex}`}
+                        value={ticket.name}
+                        onChange={(e) => updateTicketType(actualIndex, 'name', e.target.value)}
+                        placeholder="Ex: Individual, Dupla"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor={`ticket-price-${actualIndex}`}>Preço (R$)</Label>
+                      <Input
+                        id={`ticket-price-${actualIndex}`}
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={ticket.price}
+                        onChange={(e) => updateTicketType(actualIndex, 'price', parseFloat(e.target.value) || 0)}
+                        placeholder="350.00"
+                      />
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id={`ticket-partner-${actualIndex}`}
+                        checked={ticket.requiresPartner}
+                        onCheckedChange={(checked) => updateTicketType(actualIndex, 'requiresPartner', checked)}
+                      />
+                      <Label htmlFor={`ticket-partner-${actualIndex}`}>Requer nome da dupla</Label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor={`ticket-description-${actualIndex}`}>Descrição</Label>
+                    <Textarea
+                      id={`ticket-description-${actualIndex}`}
+                      value={ticket.description || ''}
+                      onChange={(e) => updateTicketType(actualIndex, 'description', e.target.value)}
+                      placeholder="Breve descrição do tipo de ingresso..."
+                      rows={2}
+                    />
+                  </div>
                 </div>
+              );
+            })}
+          </div>
 
-                <div>
-                  <Label htmlFor={`ticket-price-${index}`}>Preço (R$)</Label>
-                  <Input
-                    id={`ticket-price-${index}`}
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={ticket.price}
-                    onChange={(e) => updateTicketType(index, 'price', parseFloat(e.target.value) || 0)}
-                    placeholder="350.00"
-                  />
+          {/* Tipos Inativos (Colapsável) */}
+          {config.ticketTypes.filter(t => t.isActive === false).length > 0 && (
+            <Collapsible open={showInactiveTickets} onOpenChange={setShowInactiveTickets}>
+              <CollapsibleTrigger className="w-full">
+                <div className="flex items-center justify-between p-3 bg-slate-800/50 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-400 text-sm font-medium">
+                      Tipos Inativos ({config.ticketTypes.filter(t => t.isActive === false).length})
+                    </span>
+                  </div>
+                  {showInactiveTickets ? (
+                    <ChevronUp className="w-4 h-4 text-slate-400" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-slate-400" />
+                  )}
                 </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-2 space-y-4">
+                {config.ticketTypes.filter(t => t.isActive === false).map((ticket, index) => {
+                  const actualIndex = config.ticketTypes.indexOf(ticket);
+                  return (
+                    <div key={actualIndex} className="border border-slate-700/50 rounded-lg p-4 space-y-4 opacity-75">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <h4 className="font-medium text-slate-400">Ingresso #{actualIndex + 1}</h4>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id={`ticket-active-inactive-${actualIndex}`}
+                              checked={false}
+                              onCheckedChange={(checked) => updateTicketType(actualIndex, 'isActive', checked)}
+                            />
+                            <Label htmlFor={`ticket-active-inactive-${actualIndex}`} className="text-sm text-slate-500">
+                              Inativo
+                            </Label>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateTicketType(actualIndex, 'isActive', true)}
+                            className="text-green-400 hover:text-green-300 border-green-500/30"
+                          >
+                            Reativar
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeTicketType(actualIndex)}
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
 
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id={`ticket-partner-${index}`}
-                    checked={ticket.requiresPartner}
-                    onCheckedChange={(checked) => updateTicketType(index, 'requiresPartner', checked)}
-                  />
-                  <Label htmlFor={`ticket-partner-${index}`}>Requer nome da dupla</Label>
-                </div>
-              </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor={`ticket-name-inactive-${actualIndex}`} className="text-slate-500">Nome</Label>
+                          <Input
+                            id={`ticket-name-inactive-${actualIndex}`}
+                            value={ticket.name}
+                            onChange={(e) => updateTicketType(actualIndex, 'name', e.target.value)}
+                            placeholder="Ex: Individual, Dupla"
+                            className="bg-slate-800/50 text-slate-400"
+                            disabled
+                          />
+                        </div>
 
-              <div>
-                <Label htmlFor={`ticket-description-${index}`}>Descrição</Label>
-                <Textarea
-                  id={`ticket-description-${index}`}
-                  value={ticket.description || ''}
-                  onChange={(e) => updateTicketType(index, 'description', e.target.value)}
-                  placeholder="Breve descrição do tipo de ingresso..."
-                  rows={2}
-                />
-              </div>
-            </div>
-          ))}
+                        <div>
+                          <Label htmlFor={`ticket-price-inactive-${actualIndex}`} className="text-slate-500">Preço (R$)</Label>
+                          <Input
+                            id={`ticket-price-inactive-${actualIndex}`}
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={ticket.price}
+                            onChange={(e) => updateTicketType(actualIndex, 'price', parseFloat(e.target.value) || 0)}
+                            placeholder="350.00"
+                            className="bg-slate-800/50 text-slate-400"
+                            disabled
+                          />
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id={`ticket-partner-inactive-${actualIndex}`}
+                            checked={ticket.requiresPartner}
+                            onCheckedChange={(checked) => updateTicketType(actualIndex, 'requiresPartner', checked)}
+                            disabled
+                          />
+                          <Label htmlFor={`ticket-partner-inactive-${actualIndex}`} className="text-slate-500">Requer nome da dupla</Label>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor={`ticket-description-inactive-${actualIndex}`} className="text-slate-500">Descrição</Label>
+                        <Textarea
+                          id={`ticket-description-inactive-${actualIndex}`}
+                          value={ticket.description || ''}
+                          onChange={(e) => updateTicketType(actualIndex, 'description', e.target.value)}
+                          placeholder="Breve descrição do tipo de ingresso..."
+                          rows={2}
+                          className="bg-slate-800/50 text-slate-400"
+                          disabled
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </CollapsibleContent>
+            </Collapsible>
+          )}
         </CardContent>
       </Card>
 
@@ -412,7 +556,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
         </CardHeader>
         <CardContent className="space-y-4">
           {config.products.map((product, index) => (
-            <div key={index} className="border border-neon-purple/20 rounded-lg p-4 space-y-4">
+            <div key={index} className="border border-slate-700 rounded-lg p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium">Produto #{index + 1}</h4>
                 <Button
@@ -470,7 +614,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
                   value={product.availableUntil ? new Date(product.availableUntil).toISOString().slice(0, 16) : ''}
                   onChange={(e) => updateProduct(index, 'availableUntil', e.target.value ? new Date(e.target.value).toISOString() : undefined)}
                 />
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   Se preenchido, o produto só estará disponível até esta data
                 </p>
               </div>
@@ -531,7 +675,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
                 rows={15}
                 className="font-mono text-sm"
               />
-              <p className="text-sm text-gray-400 mt-2">
+              <p className="text-sm text-slate-400 mt-2">
                 Este texto será exibido em um popup quando o usuário clicar em "Termos e Condições" no formulário
               </p>
             </div>
@@ -543,7 +687,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
       <Card>
         <CardHeader>
           <CardTitle>Configurações de Pagamento</CardTitle>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-slate-400">
             Configure as opções de pagamento disponíveis para os usuários
           </p>
         </CardHeader>
@@ -563,7 +707,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
                     }
                   })}
                 />
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 Data limite para vencimento de boletos e parcelas. O sistema calculará automaticamente o número máximo de parcelas que cabem dentro deste prazo.
               </p>
               {config.paymentSettings?.dueDateLimit && (
@@ -598,7 +742,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
                 })}
                 placeholder="5"
               />
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 PIX apresentado como vantagem por não ter taxa do sistema. Outros métodos mostram taxa adicional sobre o valor base.
               </p>
             </div>
@@ -621,7 +765,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
                 })}
                 placeholder="5"
               />
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 Taxa do sistema aplicada no PIX parcelado e cartão de crédito (não é taxa adicional por cartão)
               </p>
             </div>
@@ -667,7 +811,7 @@ Ao prosseguir com a inscrição, você declara ter lido, compreendido e aceito t
           <CardTitle>Pré-visualização da Configuração</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="bg-dark-bg/50 p-4 rounded-lg text-sm overflow-x-auto">
+          <pre className="bg-slate-700 p-4 rounded-lg text-sm overflow-x-auto">
             {JSON.stringify(config, null, 2)}
           </pre>
         </CardContent>

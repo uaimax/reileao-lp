@@ -1,6 +1,7 @@
 import { CheckCircle, Calendar, MapPin, Users, Gift } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLandingData } from '@/hooks/use-landing-data';
+import { getSiteNameWithYear } from '@/lib/site-config';
 
 const PrimeirinhoConfirmed = () => {
   const { data: landingData } = useLandingData();
@@ -12,7 +13,7 @@ const PrimeirinhoConfirmed = () => {
         <div className="text-center mb-12">
           {/* GIF de Celebração */}
           <div className="mb-6">
-            <img 
+            <img
               src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWk4NjBxa2Z4Z205Z2J2ZzU2bjl5dWUwdDIzamVvNmx5ZGkzM255OCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yoJC2GnSClbPOkV0eA/giphy.gif"
               alt="Celebração"
               className="mx-auto rounded-2xl shadow-2xl"
@@ -73,7 +74,7 @@ const PrimeirinhoConfirmed = () => {
             <div className="space-y-3">
               <div className="flex items-center bg-gray-700/30 rounded-lg p-4">
                 <CheckCircle className="w-5 h-5 text-green-400 mr-3 flex-shrink-0" />
-                <span className="text-white">Acesso completo ao evento {eventData?.eventTitle || 'UAIZOUK 2025'}</span>
+                <span className="text-white">Acesso completo ao evento {eventData?.eventTitle || getSiteNameWithYear('2025')}</span>
               </div>
               <div className="flex items-center bg-gray-700/30 rounded-lg p-4">
                 <CheckCircle className="w-5 h-5 text-green-400 mr-3 flex-shrink-0" />
@@ -109,7 +110,7 @@ const PrimeirinhoConfirmed = () => {
                 💳 Pagamento PIX Confirmado!
               </h3>
               <p className="text-lg text-white leading-relaxed">
-                Seu pagamento de <span className="font-bold text-green-400">R$ 90,00</span> foi confirmado 
+                Seu pagamento de <span className="font-bold text-green-400">R$ 90,00</span> foi confirmado
                 e sua vaga está 100% garantida no programa PRIMEIRINHO!
               </p>
             </div>
@@ -119,8 +120,8 @@ const PrimeirinhoConfirmed = () => {
                 ⚠️ Única Ressalva
               </h3>
               <p className="text-white leading-relaxed">
-                A única situação que poderia cancelar sua inscrição seria um 
-                <span className="font-semibold text-yellow-300"> estorno do PIX</span>. 
+                A única situação que poderia cancelar sua inscrição seria um
+                <span className="font-semibold text-yellow-300"> estorno do PIX</span>.
                 Caso contrário, sua vaga está 100% garantida!
               </p>
             </div>
@@ -130,7 +131,7 @@ const PrimeirinhoConfirmed = () => {
                 📧 Próximos Passos
               </h3>
               <p className="text-white leading-relaxed">
-                Fique atento ao seu email! Nossa equipe entrará em contato 
+                Fique atento ao seu email! Nossa equipe entrará em contato
                 com todos os detalhes do evento e próximas instruções.
               </p>
             </div>

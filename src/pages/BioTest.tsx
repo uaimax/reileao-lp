@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { useLandingData } from '@/hooks/use-landing-data';
 import { handleLinkClick } from '@/utils/link-handler';
+import { SITE_NAME, getSiteNameWithYear, getCopyrightText } from '@/lib/site-config';
 
 const BioTest = () => {
   console.log('🚀 BioTest component mounted');
@@ -9,7 +10,7 @@ const BioTest = () => {
   const eventData = landingData?.event;
 
   const testLinks = [
-    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || 'UAIZOUK 2025'}`, url: 'https://uaizouk.com.br/inscricoes' },
+    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes' },
     { id: 2, title: '📍 Localização do Evento', url: 'https://maps.google.com' },
     { id: 3, title: '🏨 Hospedagem Recomendada', url: 'https://booking.com' },
     { id: 4, title: '📱 Instagram Oficial', url: 'https://instagram.com/uaizouk' },
@@ -33,7 +34,7 @@ const BioTest = () => {
             {/* Event Info */}
             <div className="text-center mb-12 animate-fade-in">
               <h1 className="text-4xl md:text-5xl font-extrabold gradient-text neon-glow mb-4">
-                {eventData?.eventTitle || 'UAIZOUK 2025'}
+                {eventData?.eventTitle || getSiteNameWithYear('2025')}
               </h1>
               <p className="text-lg md:text-xl text-text-gray mb-4">
                 UMA IMERSÃO NAS POSSIBILIDADES DO ZOUK BRASILEIRO
@@ -84,7 +85,7 @@ const BioTest = () => {
 
             {/* Footer */}
             <div className="text-center mt-8">
-              <p className="text-text-gray text-sm">© 2025 UAIZOUK. Todos os direitos reservados.</p>
+              <p className="text-text-gray text-sm">{getCopyrightText('2025')}</p>
             </div>
           </div>
         </div>

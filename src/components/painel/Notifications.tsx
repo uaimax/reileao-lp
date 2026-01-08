@@ -124,7 +124,7 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
         <Button
           variant="ghost"
           size="sm"
-          className="text-soft-white hover:bg-neon-purple/10 relative"
+          className="text-slate-50 hover:bg-slate-700 relative"
         >
           <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
@@ -140,9 +140,9 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
 
       <DropdownMenuContent
         align="end"
-        className="w-80 bg-dark-bg border-neon-purple/30 text-soft-white"
+        className="w-80 bg-slate-800 border-slate-700 text-slate-50"
       >
-        <div className="p-3 border-b border-neon-purple/20">
+        <div className="p-3 border-b border-slate-700">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm">Notificações</h3>
             {unreadCount > 0 && (
@@ -150,7 +150,7 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-text-gray hover:text-soft-white"
+                className="text-xs text-slate-400 hover:text-slate-50"
               >
                 <Check className="w-3 h-3 mr-1" />
                 Marcar todas como lidas
@@ -161,7 +161,7 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
 
         <div className="max-h-96 overflow-y-auto">
           {notifications.length === 0 ? (
-            <div className="p-4 text-center text-text-gray text-sm">
+            <div className="p-4 text-center text-slate-400 text-sm">
               Nenhuma notificação
             </div>
           ) : (
@@ -169,8 +169,8 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
               <DropdownMenuItem
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification)}
-                className={`p-3 cursor-pointer hover:bg-neon-purple/10 ${
-                  !notification.isRead ? 'bg-neon-purple/5' : ''
+                className={`p-3 cursor-pointer hover:bg-slate-700 ${
+                  !notification.isRead ? 'bg-slate-700/50' : ''
                 }`}
               >
                 <div className="flex items-start gap-3 w-full">
@@ -181,23 +181,23 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className={`text-sm font-medium ${
-                        !notification.isRead ? 'text-soft-white' : 'text-text-gray'
+                        !notification.isRead ? 'text-slate-50' : 'text-slate-400'
                       }`}>
                         {notification.title}
                       </p>
-                      <span className="text-xs text-text-gray ml-2">
+                      <span className="text-xs text-slate-400 ml-2">
                         {formatTimeAgo(notification.createdAt)}
                       </span>
                     </div>
 
                     <p className={`text-xs mt-1 ${
-                      !notification.isRead ? 'text-soft-white' : 'text-text-gray'
+                      !notification.isRead ? 'text-slate-50' : 'text-slate-400'
                     }`}>
                       {notification.message}
                     </p>
 
                     {!notification.isRead && (
-                      <div className="w-2 h-2 bg-neon-purple rounded-full mt-2"></div>
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
                     )}
                   </div>
                 </div>
@@ -208,7 +208,7 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
 
         {notifications.length > 0 && (
           <>
-            <DropdownMenuSeparator className="bg-neon-purple/20" />
+            <DropdownMenuSeparator className="bg-slate-700" />
             <div className="p-2">
               <Button
                 variant="ghost"
@@ -217,7 +217,7 @@ const Notifications = ({ userEmail, onNavigate }: NotificationsProps) => {
                   onNavigate('/painel?tab=notifications');
                   setIsOpen(false);
                 }}
-                className="w-full text-xs text-text-gray hover:text-soft-white"
+                className="w-full text-xs text-slate-400 hover:text-slate-50"
               >
                 Ver todas as notificações
               </Button>

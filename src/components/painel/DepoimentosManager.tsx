@@ -89,11 +89,11 @@ const DepoimentosManager = () => {
           displayOrder: formData.displayOrder || 0,
           isActive: true
         });
-        
+
         await loadTestimonials();
         resetForm();
         setShowAddForm(false);
-        
+
         toast({
           title: "Depoimento adicionado!",
           description: `Depoimento de ${formData.name} foi adicionado com sucesso.`,
@@ -133,11 +133,11 @@ const DepoimentosManager = () => {
           photoUrl: formData.photoUrl,
           displayOrder: formData.displayOrder || 0
         });
-        
+
         await loadTestimonials();
         resetForm();
         setEditingId(null);
-        
+
         toast({
           title: "Depoimento atualizado!",
           description: "As alterações foram salvas com sucesso.",
@@ -160,7 +160,7 @@ const DepoimentosManager = () => {
       setIsLoading(true);
       await deleteTestimonial(id);
       await loadTestimonials();
-      
+
       toast({
         title: "Depoimento removido!",
         description: "O depoimento foi removido com sucesso.",
@@ -179,10 +179,10 @@ const DepoimentosManager = () => {
 
   if (isLoading && testimonials.length === 0) {
     return (
-      <Card className="glass-effect border-neon-purple/30">
+      <Card className="bg-slate-800 border-slate-700">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-neon-purple" />
-          <span className="ml-2 text-soft-white">Carregando depoimentos...</span>
+          <Loader2 className="w-6 h-6 animate-spin text-yellow-500" />
+          <span className="ml-2 text-slate-50">Carregando depoimentos...</span>
         </CardContent>
       </Card>
     );
@@ -191,10 +191,10 @@ const DepoimentosManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-soft-white">Gerenciar Depoimentos</h2>
-        <Button 
-          onClick={() => setShowAddForm(true)} 
-          className="btn-neon"
+        <h2 className="text-2xl font-bold text-slate-50">Gerenciar Depoimentos</h2>
+        <Button
+          onClick={() => setShowAddForm(true)}
+          className="bg-yellow-500 hover:bg-yellow-600 text-slate-900"
           disabled={isLoading}
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -203,32 +203,32 @@ const DepoimentosManager = () => {
       </div>
 
       {(showAddForm || editingId) && (
-        <Card className="glass-effect border-neon-purple/30">
+        <Card className="bg-slate-800 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-xl text-soft-white">
+            <CardTitle className="text-xl text-slate-50">
               {editingId ? 'Editar Depoimento' : 'Adicionar Novo Depoimento'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-soft-white">Nome da Pessoa</Label>
+                <Label htmlFor="name" className="text-slate-50">Nome da Pessoa</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   placeholder="Nome completo"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cityState" className="text-soft-white">Cidade e Estado</Label>
+                <Label htmlFor="cityState" className="text-slate-50">Cidade e Estado</Label>
                 <Input
                   id="cityState"
                   value={formData.cityState}
                   onChange={(e) => setFormData({...formData, cityState: e.target.value})}
                   placeholder="Ex: Uberlândia (MG)"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50"
                 />
               </div>
             </div>
@@ -247,14 +247,14 @@ const DepoimentosManager = () => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="displayOrder" className="text-soft-white">Ordem de Exibição (Número)</Label>
+              <Label htmlFor="displayOrder" className="text-slate-50">Ordem de Exibição (Número)</Label>
               <Input
                 id="displayOrder"
                 type="number"
                 value={formData.displayOrder}
                 onChange={(e) => setFormData({...formData, displayOrder: parseInt(e.target.value) || 0})}
                 placeholder="0"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50"
               />
             </div>
 
@@ -269,7 +269,7 @@ const DepoimentosManager = () => {
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={editingId ? handleSaveEdit : handleAdd} className="btn-neon" disabled={isLoading}>
+              <Button onClick={editingId ? handleSaveEdit : handleAdd} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900" disabled={isLoading}>
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
@@ -277,14 +277,14 @@ const DepoimentosManager = () => {
                 )}
                 {editingId ? 'Salvar Alterações' : 'Adicionar Depoimento'}
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   resetForm();
                   setShowAddForm(false);
                   setEditingId(null);
                 }}
                 variant="outline"
-                className="border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white"
+                className="border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-50"
                 disabled={isLoading}
               >
                 <X className="w-4 h-4 mr-2" />
@@ -297,32 +297,32 @@ const DepoimentosManager = () => {
 
       <div className="grid gap-4">
         {testimonials.map((testimonial) => (
-          <Card key={testimonial.id} className="glass-effect border-neon-purple/30">
+          <Card key={testimonial.id} className="bg-slate-800 border-slate-700">
             <CardContent className="p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-3">
                     {testimonial.photoUrl ? (
-                      <img 
-                        src={testimonial.photoUrl} 
+                      <img
+                        src={testimonial.photoUrl}
                         alt={testimonial.name}
                         className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-10 h-10 bg-gradient-to-br from-neon-magenta to-neon-purple rounded-full flex items-center justify-center">
+                      <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
                         <span className="text-sm font-bold text-white">
                           {testimonial.name[0]}
                         </span>
                       </div>
                     )}
                     <div>
-                      <h3 className="text-lg font-bold text-soft-white">{testimonial.name}</h3>
-                      <p className="text-neon-cyan text-sm">{testimonial.cityState}</p>
-                      <p className="text-xs text-text-gray">Ordem: {testimonial.displayOrder}</p>
+                      <h3 className="text-lg font-bold text-slate-50">{testimonial.name}</h3>
+                      <p className="text-yellow-500 text-sm">{testimonial.cityState}</p>
+                      <p className="text-xs text-slate-400">Ordem: {testimonial.displayOrder}</p>
                     </div>
                   </div>
-                  <div 
-                    className="text-text-gray leading-relaxed prose prose-invert prose-sm max-w-none"
+                  <div
+                    className="text-slate-400 leading-relaxed prose prose-invert prose-sm max-w-none"
                     dangerouslySetInnerHTML={{ __html: testimonial.testimonialText }}
                   />
                 </div>
@@ -331,7 +331,7 @@ const DepoimentosManager = () => {
                     onClick={() => handleEdit(testimonial)}
                     size="sm"
                     variant="outline"
-                    className="border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-dark-bg"
+                    className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900"
                     disabled={isLoading}
                   >
                     <Edit className="w-4 h-4" />

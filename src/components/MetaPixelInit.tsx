@@ -5,6 +5,7 @@
 
 import { useEffect } from 'react';
 import metaPixel from '@/lib/meta-pixel';
+import { SITE_NAME } from '@/lib/site-config';
 
 const MetaPixelInit = () => {
   useEffect(() => {
@@ -13,7 +14,7 @@ const MetaPixelInit = () => {
 
     // Track app initialization
     metaPixel.trackCustomEvent('AppInitialized', {
-      content_name: 'UAIZOUK App',
+      content_name: `${SITE_NAME} App`,
       content_category: 'app',
       app_version: '1.0.0'
     });

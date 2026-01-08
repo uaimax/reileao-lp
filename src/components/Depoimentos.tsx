@@ -1,9 +1,10 @@
 
 import { useLandingData } from '@/hooks/use-landing-data';
+import { SITE_NAME } from '@/lib/site-config';
 
 const Depoimentos = () => {
   const { data: landingData, isLoading } = useLandingData();
-  
+
   const testimonials = landingData?.testimonials || [];
   const testimonialsSection = landingData?.testimonialsSection;
 
@@ -15,30 +16,30 @@ const Depoimentos = () => {
             {testimonialsSection?.sectionTitle || "Depoimentos"}
           </h2>
           <p className="text-xl text-text-gray max-w-2xl mx-auto">
-            {testimonialsSection?.sectionSubtitle || "O que nossos participantes dizem sobre a experiência UAIZOUK"}
+            {testimonialsSection?.sectionSubtitle || `O que nossos participantes dizem sobre a experiência ${SITE_NAME}`}
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-2 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div 
+            <div
               key={testimonial.id}
               className="glass-effect rounded-2xl p-8 card-hover animate-slide-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="mb-6">
                 <div className="text-6xl text-neon-magenta opacity-30 font-serif leading-none">"</div>
-                <div 
+                <div
                   className="text-text-gray leading-relaxed text-lg -mt-4 prose prose-invert prose-lg max-w-none"
                   dangerouslySetInnerHTML={{ __html: testimonial.testimonialText }}
                 />
                 <div className="text-6xl text-neon-magenta opacity-30 font-serif leading-none text-right -mt-4">"</div>
               </div>
-              
+
               <div className="flex items-center">
                 {testimonial.photoUrl ? (
-                  <img 
-                    src={testimonial.photoUrl} 
+                  <img
+                    src={testimonial.photoUrl}
                     alt={testimonial.name}
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />

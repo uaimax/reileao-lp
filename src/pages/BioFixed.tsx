@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Play, ExternalLink } from 'lucide-react';
 import WhatsAppFloat from '@/components/ui/whatsapp-float';
 import { handleLinkClick } from '@/utils/link-handler';
+import { SITE_NAME, getSiteNameWithYear, getCopyrightText } from '@/lib/site-config';
 
 interface BioLink {
   id: number;
@@ -65,7 +66,7 @@ const BioFixed = () => {
         } else {
           console.warn('⚠️ Bio links API failed, using fallback');
           setBioLinks([
-            { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || 'UAIZOUK 2025'}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
+            { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
             { id: 2, title: '📍 Localização', url: 'https://maps.google.com', displayOrder: 2, isActive: true, isScheduled: false }
           ]);
         }
@@ -82,7 +83,7 @@ const BioFixed = () => {
         console.error('❌ Error fetching bio data:', error);
         // Fallback data
         setBioLinks([
-          { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || 'UAIZOUK 2025'}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
+          { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
           { id: 2, title: '📍 Localização', url: 'https://maps.google.com', displayOrder: 2, isActive: true, isScheduled: false }
         ]);
         setBioConfig({ id: 1, showEventDate: true, showTrailerButton: true });
@@ -108,7 +109,7 @@ const BioFixed = () => {
       } catch (error) {
         console.warn('⚠️ Event data API failed, using defaults:', error);
         setEventData({
-          eventTitle: 'UAIZOUK 2025',
+          eventTitle: getSiteNameWithYear('2025'),
           eventSubtitle: 'UMA IMERSÃO NAS POSSIBILIDADES DO ZOUK BRASILEIRO',
           eventDateDisplay: '5–7 SET 2025, Uberlândia–MG',
           whatsappEnabled: false
@@ -175,7 +176,7 @@ const BioFixed = () => {
     );
   }
 
-  const displayTitle = (bioConfig?.bioTitle && bioConfig.bioTitle.trim()) || eventData?.eventTitle || 'UAIZOUK';
+  const displayTitle = (bioConfig?.bioTitle && bioConfig.bioTitle.trim()) || eventData?.eventTitle || SITE_NAME;
   const displaySubtitle = (bioConfig?.bioSubtitle && bioConfig.bioSubtitle.trim()) || eventData?.eventSubtitle || 'UMA IMERSÃO NAS POSSIBILIDADES DO ZOUK BRASILEIRO';
   const displayDate = eventData?.eventDateDisplay || '5–7 SET 2025, Uberlândia–MG';
 
@@ -229,12 +230,12 @@ const BioFixed = () => {
               </DialogTrigger>
               <DialogContent className="max-w-md w-full p-2 bg-black/90 border-neon-magenta/20">
                 <DialogHeader className="sr-only">
-                  <DialogTitle>Trailer UAIZOUK</DialogTitle>
+                  <DialogTitle>Trailer {SITE_NAME}</DialogTitle>
                 </DialogHeader>
                 <div className="aspect-[9/16] w-full">
                   <iframe
                     src={aboutData.trailerVideoUrl}
-                    title="Trailer UAIZOUK"
+                    title={`Trailer ${SITE_NAME}`}
                     className="w-full h-full rounded-lg"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
@@ -274,7 +275,7 @@ const BioFixed = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-text-gray text-xs">
-          <p>© 2025 UAIZOUK. Todos os direitos reservados.</p>
+          <p>{getCopyrightText('2025')}</p>
         </div>
       </div>
 

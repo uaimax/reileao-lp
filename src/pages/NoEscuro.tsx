@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Check, Calendar, MapPin, Users, Sparkles, ArrowRight } from 'lucide-react';
 import { useLandingData } from '@/hooks/use-landing-data';
 import { usePageTracking, useMetaPixelTracking, useButtonTracking } from '@/hooks/use-meta-pixel';
+import { SITE_NAME, getSiteNameWithYear } from '@/lib/site-config';
 
 const NoEscuro = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const NoEscuro = () => {
     trackCustomEvent('NoEscuroPageView', {
       content_name: 'O Pacote no Escuro',
       content_category: 'special-offer',
-      event_name: eventData?.eventTitle || 'UAIZOUK 2026',
+      event_name: eventData?.eventTitle || getSiteNameWithYear('2026'),
       offer_type: 'early-bird',
       price: 449,
       currency: 'BRL'
@@ -68,7 +69,7 @@ const NoEscuro = () => {
           <div className="flex items-center justify-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
             <span className="text-purple-400 text-sm font-medium tracking-wider uppercase">
-              {eventData?.eventTitle || 'UAIZOUK 2026'}
+              {eventData?.eventTitle || getSiteNameWithYear('2026')}
             </span>
           </div>
 
@@ -110,7 +111,7 @@ const NoEscuro = () => {
                   <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{eventData?.eventTitle || 'UAIZOUK 2026'}</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">{eventData?.eventTitle || getSiteNameWithYear('2026')}</h3>
                   <p className="text-gray-300 leading-relaxed">
                     Construindo juntos uma comunidade que abraça<br />
                     <span className="text-purple-400">(através do Zouk e além dele)</span>
@@ -205,7 +206,7 @@ const NoEscuro = () => {
                     content_name: 'GARANTIR MINHA VAGA',
                     content_category: 'cta',
                     button_text: 'GARANTIR MINHA VAGA',
-                    event_name: eventData?.eventTitle || 'UAIZOUK 2026',
+                    event_name: eventData?.eventTitle || getSiteNameWithYear('2026'),
                     offer_type: 'early-bird',
                     price: 449,
                     currency: 'BRL',
@@ -243,7 +244,7 @@ const NoEscuro = () => {
                   Teremos algum campeonato ou competição oficial?
                 </h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Olha, nós AMAMOS a energia de uma boa competição! Mas percebemos que o {eventData?.eventTitle || 'UAIZOUK'} brilha mais quando cada pessoa se sente livre para ser ela mesma, sem pressão sobre performance.<br /><br />
+                  Olha, nós AMAMOS a energia de uma boa competição! Mas percebemos que o {eventData?.eventTitle || SITE_NAME} brilha mais quando cada pessoa se sente livre para ser ela mesma, sem pressão sobre performance.<br /><br />
                   Este ano focaremos em:<br /><br />
                   • Brincadeiras e dinâmicas (não competições com pontuação)<br />
                   • Momentos de troca e vulnerabilidade<br />

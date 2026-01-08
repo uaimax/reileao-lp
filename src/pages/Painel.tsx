@@ -67,8 +67,8 @@ const Painel = () => {
 
   if (isValidating) {
     return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
-        <div className="text-soft-white">Validando acesso...</div>
+      <div className="theme-painel min-h-screen bg-background flex items-center justify-center">
+        <div className="text-slate-50">Validando acesso...</div>
       </div>
     );
   }
@@ -106,7 +106,7 @@ const Painel = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg">
+    <div className="theme-painel min-h-screen bg-background">
       {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}

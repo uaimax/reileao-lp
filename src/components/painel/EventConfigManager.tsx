@@ -8,6 +8,7 @@ import { Save, Loader2, ChevronDown, ChevronUp, TestTube, CheckCircle, XCircle, 
 import { useToast } from '@/hooks/use-toast';
 import { getEventConfig, updateEventConfig, getHeroContent, updateHeroContent } from '@/lib/api';
 import { FileUpload } from '@/components/ui/file-upload';
+import { getSiteNameWithYear, getWhatsAppMessage } from '@/lib/site-config';
 
 const EventConfigManager = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -222,10 +223,10 @@ const EventConfigManager = () => {
 
   if (isLoading && !eventData.eventTitle) {
     return (
-      <Card className="glass-effect border-neon-purple/30">
+      <Card className="bg-slate-800 border-slate-700">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-neon-purple" />
-          <span className="ml-2 text-soft-white">Carregando configurações...</span>
+          <Loader2 className="w-6 h-6 animate-spin text-yellow-500" />
+          <span className="ml-2 text-slate-50">Carregando configurações...</span>
         </CardContent>
       </Card>
     );
@@ -233,9 +234,9 @@ const EventConfigManager = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="glass-effect border-neon-purple/30">
-        <CardHeader>
-          <CardTitle className="text-xl text-soft-white">
+      <Card className="bg-slate-800 border-slate-700 shadow-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold text-slate-50">
             Configurações Gerais do Evento
           </CardTitle>
         </CardHeader>
@@ -243,19 +244,19 @@ const EventConfigManager = () => {
           {/* Informações básicas do evento */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="eventTitle" className="text-soft-white">
+              <Label htmlFor="eventTitle" className="text-slate-50 text-sm font-medium">
                 Título do Evento
               </Label>
               <Input
                 id="eventTitle"
                 value={eventData.eventTitle}
                 onChange={(e) => handleChange('eventTitle', e.target.value)}
-                placeholder="UAIZOUK 2025"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                placeholder={getSiteNameWithYear('2025')}
+                className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="eventDateDisplay" className="text-soft-white">
+              <Label htmlFor="eventDateDisplay" className="text-slate-50 text-sm font-medium">
                 Data de Exibição
               </Label>
               <Input
@@ -263,13 +264,13 @@ const EventConfigManager = () => {
                 value={eventData.eventDateDisplay}
                 onChange={(e) => handleChange('eventDateDisplay', e.target.value)}
                 placeholder="5–7 SET 2025, Uberlândia–MG"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="eventSubtitle" className="text-soft-white">
+            <Label htmlFor="eventSubtitle" className="text-slate-50 text-sm font-medium">
               Subtítulo do Evento
             </Label>
             <Input
@@ -277,12 +278,12 @@ const EventConfigManager = () => {
               value={eventData.eventSubtitle}
               onChange={(e) => handleChange('eventSubtitle', e.target.value)}
               placeholder="UMA IMERSÃO NAS POSSIBILIDADES DO ZOUK BRASILEIRO"
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="eventTagline" className="text-soft-white">
+            <Label htmlFor="eventTagline" className="text-slate-50 text-sm font-medium">
               Tagline
             </Label>
             <Input
@@ -290,14 +291,14 @@ const EventConfigManager = () => {
               value={eventData.eventTagline}
               onChange={(e) => handleChange('eventTagline', e.target.value)}
               placeholder="Muita aula. Muita dança. Muito Zouk."
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
             />
           </div>
 
           {/* Data e Countdown */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="eventCountdownTarget" className="text-soft-white">
+              <Label htmlFor="eventCountdownTarget" className="text-slate-50 text-sm font-medium">
                 Data/Hora do Evento (Countdown)
               </Label>
               <Input
@@ -305,14 +306,14 @@ const EventConfigManager = () => {
                 type="datetime-local"
                 value={eventData.eventCountdownTarget}
                 onChange={(e) => handleChange('eventCountdownTarget', e.target.value)}
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
               />
-              <p className="text-text-gray text-sm">
+              <p className="text-slate-400 text-sm">
                 Data e horário que será usado no countdown da página
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="eventCountdownText" className="text-soft-white">
+              <Label htmlFor="eventCountdownText" className="text-slate-50 text-sm font-medium">
                 Texto do Countdown
               </Label>
               <Input
@@ -320,14 +321,14 @@ const EventConfigManager = () => {
                 value={eventData.eventCountdownText}
                 onChange={(e) => handleChange('eventCountdownText', e.target.value)}
                 placeholder="A experiência completa inicia em:"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
               />
             </div>
           </div>
 
           {/* URLs e Mídias */}
           <div className="space-y-2">
-            <Label htmlFor="heroVideoUrl" className="text-soft-white">
+            <Label htmlFor="heroVideoUrl" className="text-slate-50 text-sm font-medium">
               URL do Vídeo (Youtube)
             </Label>
             <Input
@@ -335,15 +336,15 @@ const EventConfigManager = () => {
               value={eventData.heroVideoUrl}
               onChange={(e) => handleChange('heroVideoUrl', e.target.value)}
               placeholder="https://www.youtube.com/watch?v=U2QPiVaMAVc"
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
             />
-            <p className="text-text-gray text-sm">
+            <p className="text-slate-400 text-sm">
               URL do YouTube (será convertida automaticamente para embed)
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="registrationUrl" className="text-soft-white">
+            <Label htmlFor="registrationUrl" className="text-slate-50">
               URL de Inscrição
             </Label>
             <Input
@@ -352,16 +353,16 @@ const EventConfigManager = () => {
               value={eventData.registrationUrl}
               onChange={(e) => handleChange('registrationUrl', e.target.value)}
               placeholder="https://uaizouk.com.br/inscricoes"
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50"
             />
-            <p className="text-text-gray text-sm">
+            <p className="text-slate-400 text-sm">
               Link para onde o botão "QUERO PARTICIPAR" irá direcionar
             </p>
           </div>
 
           {/* Configurações do WhatsApp */}
-          <div className="space-y-4 p-4 bg-dark-bg/30 rounded-lg border border-green-500/20">
-            <h4 className="text-lg font-semibold text-green-400 flex items-center gap-2">
+          <div className="space-y-6 p-6 bg-slate-800 rounded-lg border-l-4 border-l-green-500 shadow-md">
+            <h4 className="text-lg font-semibold text-green-500 flex items-center gap-2">
               <MessageCircle size={20} />
               WhatsApp Flutuante
             </h4>
@@ -372,9 +373,9 @@ const EventConfigManager = () => {
                 id="whatsappEnabled"
                 checked={eventData.whatsappEnabled}
                 onChange={(e) => handleChange('whatsappEnabled', e.target.checked)}
-                className="rounded border-green-500/30"
+                className="rounded border-slate-600"
               />
-              <Label htmlFor="whatsappEnabled" className="text-soft-white">
+              <Label htmlFor="whatsappEnabled" className="text-slate-50">
                 Exibir botão flutuante do WhatsApp
               </Label>
             </div>
@@ -382,7 +383,7 @@ const EventConfigManager = () => {
             {eventData.whatsappEnabled && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="whatsappNumber" className="text-soft-white">
+                  <Label htmlFor="whatsappNumber" className="text-slate-50">
                     Número do WhatsApp (com código do país)
                   </Label>
                   <Input
@@ -391,23 +392,23 @@ const EventConfigManager = () => {
                     value={eventData.whatsappNumber}
                     onChange={(e) => handleChange('whatsappNumber', e.target.value)}
                     placeholder="5534988364084"
-                    className="bg-dark-bg/50 border-green-500/30 text-soft-white"
+                    className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
                   />
-                  <p className="text-text-gray text-sm">
+                  <p className="text-slate-400 text-sm">
                     Ex: 5534988364084 (Brasil + DDD + número)
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="whatsappMessage" className="text-soft-white">
+                  <Label htmlFor="whatsappMessage" className="text-slate-50">
                     Mensagem padrão
                   </Label>
                   <Textarea
                     id="whatsappMessage"
                     value={eventData.whatsappMessage}
                     onChange={(e) => handleChange('whatsappMessage', e.target.value)}
-                    placeholder="Oi! Quero mais informações sobre o UAIZOUK"
-                    className="bg-dark-bg/50 border-green-500/30 text-soft-white"
+                    placeholder={getWhatsAppMessage()}
+                    className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
                     rows={3}
                   />
                 </div>
@@ -416,14 +417,14 @@ const EventConfigManager = () => {
           </div>
 
           {/* Redirecionamento Temporário */}
-          <div className="space-y-4 p-4 bg-dark-bg/30 rounded-lg border border-orange-500/20">
-            <h4 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
-              <span className="text-orange-400">🔄</span>
+          <div className="space-y-6 p-6 bg-slate-800 rounded-lg border-l-4 border-l-orange-500 shadow-md">
+            <h4 className="text-lg font-semibold text-orange-500 flex items-center gap-2">
+              <span className="text-orange-500">🔄</span>
               Redirecionamento Temporário
             </h4>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="temporaryRedirectUrl" className="text-soft-white">
+              <Label htmlFor="temporaryRedirectUrl" className="text-slate-50">
                 URL de Redirecionamento Temporário
               </Label>
               <Input
@@ -431,10 +432,10 @@ const EventConfigManager = () => {
                 value={eventData.temporaryRedirectUrl}
                 onChange={(e) => handleChange('temporaryRedirectUrl', e.target.value)}
                 placeholder="https://uaizouk.com.br/no-escuro"
-                className="bg-dark-bg/50 border-orange-500/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
               />
-              <p className="text-text-gray text-sm">
-                Se preenchido, redireciona APENAS a página principal "/" para esta URL. 
+              <p className="text-slate-400 text-sm">
+                Se preenchido, redireciona APENAS a página principal "/" para esta URL.
                 Outras páginas como "/painel", "/inscricao", etc. continuam funcionando normalmente.
               </p>
             </div>
@@ -443,7 +444,7 @@ const EventConfigManager = () => {
           {/* Textos dos botões */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="ctaPrimaryText" className="text-soft-white">
+              <Label htmlFor="ctaPrimaryText" className="text-slate-50">
                 Texto do Botão Principal
               </Label>
               <Input
@@ -451,11 +452,11 @@ const EventConfigManager = () => {
                 value={eventData.ctaPrimaryText}
                 onChange={(e) => handleChange('ctaPrimaryText', e.target.value)}
                 placeholder="QUERO SABER MAIS"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ctaSecondaryText" className="text-soft-white">
+              <Label htmlFor="ctaSecondaryText" className="text-slate-50">
                 Texto do Botão Secundário
               </Label>
               <Input
@@ -463,18 +464,18 @@ const EventConfigManager = () => {
                 value={eventData.ctaSecondaryText}
                 onChange={(e) => handleChange('ctaSecondaryText', e.target.value)}
                 placeholder="PULAR PARA INGRESSOS"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50"
               />
             </div>
           </div>
 
           {/* Advanced Settings Toggle */}
-          <div className="border-t border-neon-purple/20 pt-6">
+          <div className="border-t border-slate-700 pt-6">
             <Button
               type="button"
               variant="outline"
               onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-              className="border-neon-purple/30 text-neon-purple hover:bg-neon-purple/10"
+              className="border-slate-600 text-yellow-500 hover:bg-slate-700"
             >
               {showAdvancedSettings ? (
                 <ChevronUp className="w-4 h-4 mr-2" />
@@ -487,18 +488,18 @@ const EventConfigManager = () => {
 
           {/* Advanced Settings Section */}
           {showAdvancedSettings && (
-            <div className="space-y-6 border border-neon-purple/20 rounded-lg p-6 bg-dark-bg/30">
+            <div className="space-y-6 border border-slate-700 rounded-lg p-6 bg-slate-800/50">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-soft-white">Configurações S3</h3>
+                <h3 className="text-lg font-semibold text-slate-50">Configurações S3</h3>
                 <div className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     id="s3Enabled"
                     checked={eventData.s3Enabled}
                     onChange={(e) => handleChange('s3Enabled', e.target.checked)}
-                    className="rounded border-neon-purple/30"
+                    className="rounded border-slate-600"
                   />
-                  <Label htmlFor="s3Enabled" className="text-soft-white">
+                  <Label htmlFor="s3Enabled" className="text-slate-50">
                     Ativar S3
                   </Label>
                 </div>
@@ -508,7 +509,7 @@ const EventConfigManager = () => {
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="s3Endpoint" className="text-soft-white">
+                      <Label htmlFor="s3Endpoint" className="text-slate-50">
                         S3 Endpoint
                       </Label>
                       <Input
@@ -516,11 +517,11 @@ const EventConfigManager = () => {
                         value={eventData.s3Endpoint}
                         onChange={(e) => handleChange('s3Endpoint', e.target.value)}
                         placeholder="https://account-id.r2.cloudflarestorage.com"
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="s3BucketName" className="text-soft-white">
+                      <Label htmlFor="s3BucketName" className="text-slate-50">
                         Bucket Name
                       </Label>
                       <Input
@@ -528,14 +529,14 @@ const EventConfigManager = () => {
                         value={eventData.s3BucketName}
                         onChange={(e) => handleChange('s3BucketName', e.target.value)}
                         placeholder="my-bucket"
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="s3AccessKey" className="text-soft-white">
+                      <Label htmlFor="s3AccessKey" className="text-slate-50">
                         Access Key ID
                       </Label>
                       <Input
@@ -544,11 +545,11 @@ const EventConfigManager = () => {
                         value={eventData.s3AccessKey}
                         onChange={(e) => handleChange('s3AccessKey', e.target.value)}
                         placeholder="Access Key ID"
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="s3SecretKey" className="text-soft-white">
+                      <Label htmlFor="s3SecretKey" className="text-slate-50">
                         Secret Access Key
                       </Label>
                       <Input
@@ -557,14 +558,14 @@ const EventConfigManager = () => {
                         value={eventData.s3SecretKey}
                         onChange={(e) => handleChange('s3SecretKey', e.target.value)}
                         placeholder="Secret Access Key"
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="s3Region" className="text-soft-white">
+                      <Label htmlFor="s3Region" className="text-slate-50">
                         Region
                       </Label>
                       <Input
@@ -572,11 +573,11 @@ const EventConfigManager = () => {
                         value={eventData.s3Region}
                         onChange={(e) => handleChange('s3Region', e.target.value)}
                         placeholder="auto (for Cloudflare R2)"
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="s3PublicDomain" className="text-soft-white">
+                      <Label htmlFor="s3PublicDomain" className="text-slate-50">
                         Domínio Público (Opcional)
                       </Label>
                       <Input
@@ -584,9 +585,9 @@ const EventConfigManager = () => {
                         value={eventData.s3PublicDomain}
                         onChange={(e) => handleChange('s3PublicDomain', e.target.value)}
                         placeholder="https://pub-123.r2.dev"
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
-                      <p className="text-text-gray text-xs">
+                      <p className="text-slate-400 text-xs">
                         URL pública personalizada para acesso direto aos arquivos (ex: R2 custom domain)
                       </p>
                     </div>
@@ -598,7 +599,7 @@ const EventConfigManager = () => {
                       onClick={testS3Connection}
                       disabled={testingS3 || !eventData.s3Endpoint || !eventData.s3AccessKey || !eventData.s3SecretKey || !eventData.s3BucketName}
                       variant="outline"
-                      className="border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-dark-bg"
+                      className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900"
                     >
                       {testingS3 ? (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -628,7 +629,7 @@ const EventConfigManager = () => {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="metaTitle" className="text-soft-white">
+            <Label htmlFor="metaTitle" className="text-slate-50">
               Meta Title (SEO)
             </Label>
             <Input
@@ -636,11 +637,11 @@ const EventConfigManager = () => {
               value={eventData.metaTitle}
               onChange={(e) => handleChange('metaTitle', e.target.value)}
               placeholder="Título para SEO (pode ser igual ao título do evento)"
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="metaDescription" className="text-soft-white">
+            <Label htmlFor="metaDescription" className="text-slate-50">
               Meta Description (SEO)
             </Label>
             <Textarea
@@ -648,14 +649,14 @@ const EventConfigManager = () => {
               value={eventData.metaDescription}
               onChange={(e) => handleChange('metaDescription', e.target.value)}
               placeholder="Descrição para SEO (pode ser igual ao subtítulo do evento)"
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50"
               rows={3}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="metaImageUrl" className="text-soft-white">
+            <Label htmlFor="metaImageUrl" className="text-slate-50">
               Meta Image (SEO / Open Graph)
-              <span className="ml-2 text-xs text-text-gray">Adicione uma imagem de 1200x630 px para melhor resultado em compartilhamento</span>
+              <span className="ml-2 text-xs text-slate-400">Adicione uma imagem de 1200x630 px para melhor resultado em compartilhamento</span>
             </Label>
             {/* Se S3 estiver habilitado, usar upload, senão input de URL */}
             {eventData.s3Enabled ? (
@@ -674,18 +675,18 @@ const EventConfigManager = () => {
                 value={eventData.metaImageUrl}
                 onChange={(e) => handleChange('metaImageUrl', e.target.value)}
                 placeholder="Cole a URL da imagem para SEO"
-                className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                className="bg-slate-700 border-slate-600 text-slate-50"
               />
             )}
             {/* Preview da imagem */}
             {eventData.metaImageUrl && (
               <div className="mt-2">
-                <img src={eventData.metaImageUrl} alt="Prévia da imagem SEO" className="max-h-32 rounded border border-neon-purple/30" />
+                <img src={eventData.metaImageUrl} alt="Prévia da imagem SEO" className="max-h-32 rounded border border-slate-600" />
               </div>
             )}
           </div>
 
-          <Button onClick={handleSave} disabled={isLoading} className="btn-neon">
+          <Button onClick={handleSave} disabled={isLoading} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900">
             {isLoading ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (

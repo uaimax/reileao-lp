@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface SEOHeadProps {
   title?: string;
@@ -16,10 +17,10 @@ export const SEOHead = ({
   image,
   url,
   type = 'website',
-  siteName = 'UAIZOUK'
+  siteName = SITE_NAME
 }: SEOHeadProps) => {
   // Fallbacks dinâmicos baseados no evento
-  const defaultTitle = title || 'UAIZOUK - Congresso de Zouk Brasileiro';
+  const defaultTitle = title || `${SITE_NAME} - Congresso de Zouk Brasileiro`;
   const defaultDescription = description || 'Uma imersão completa nas possibilidades do Zouk Brasileiro em Uberlândia, MG.';
   const defaultImage = image || '/og-image-default.jpg';
   const currentUrl = url || window.location.href;
@@ -34,7 +35,7 @@ export const SEOHead = ({
       {/* Meta tags básicas */}
       <title>{defaultTitle}</title>
       <meta name="description" content={defaultDescription} />
-      <meta name="author" content="UAIZOUK" />
+      <meta name="author" content={SITE_NAME} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />

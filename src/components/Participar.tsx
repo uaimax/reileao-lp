@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useLandingData } from '@/hooks/use-landing-data';
 import { useMetaPixelTracking, useButtonTracking } from '@/hooks/use-meta-pixel';
+import { SITE_NAME } from '@/lib/site-config';
 
 const Participar = () => {
   const { data: landingData } = useLandingData();
@@ -26,7 +27,7 @@ const Participar = () => {
           <div className="glass-effect rounded-2xl p-8 md:p-12 text-center animate-slide-up">
             <div className="mb-8">
               <h3 className="text-3xl font-bold text-neon-magenta neon-glow mb-6">
-                {participationData?.mainTitle || "Você NÃO PRECISA de um par para se inscrever no UAIZOUK"}
+                {participationData?.mainTitle || `Você NÃO PRECISA de um par para se inscrever no ${SITE_NAME}`}
               </h3>
 
               <div className="space-y-6 text-lg text-text-gray leading-relaxed">
@@ -71,7 +72,7 @@ const Participar = () => {
                     content_name: 'QUERO PARTICIPAR',
                     content_category: 'cta',
                     button_text: participationData?.ctaButtonText || "QUERO PARTICIPAR",
-                    event_name: eventData?.eventTitle || 'UAIZOUK'
+                    event_name: eventData?.eventTitle || SITE_NAME
                   });
 
                   // Open registration page

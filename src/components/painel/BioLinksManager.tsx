@@ -6,13 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, Edit, Trash2, Save, X, Loader2, ExternalLink, Eye, EyeOff, 
+import {
+  Plus, Edit, Trash2, Save, X, Loader2, ExternalLink, Eye, EyeOff,
   GripVertical, BarChart3, Calendar, Upload
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { FileUpload } from '@/components/ui/file-upload';
 import { useDebounce } from '@/hooks/use-debounce';
+import { getSiteNameWithYear } from '@/lib/site-config';
 import { useLandingData } from '@/hooks/use-landing-data';
 
 interface BioLink {
@@ -50,7 +51,7 @@ const BioLinksManager = () => {
   const [bioLinks, setBioLinks] = useState<BioLink[]>([]);
   const { data: landingData } = useLandingData();
   const eventData = landingData?.event;
-  
+
   // Helper function to check if a link is expired
   const isLinkExpired = (link: BioLink): boolean => {
     if (!link.isScheduled || !link.scheduleEnd) return false;
@@ -121,7 +122,7 @@ const BioLinksManager = () => {
 
       if (linksResponse.ok) {
         const links = await linksResponse.json();
-        
+
         // Merge analytics data if available
         if (analyticsResponse.ok) {
           const analytics = await analyticsResponse.json();
@@ -167,7 +168,7 @@ const BioLinksManager = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title.trim() || !formData.url.trim()) {
       toast({
         title: "Campos obrigatórios",
@@ -179,7 +180,7 @@ const BioLinksManager = () => {
 
     try {
       setIsLoading(true);
-      
+
       const payload = {
         ...formData,
         scheduleStart: formData.isScheduled && formData.scheduleStart ? new Date(formData.scheduleStart).toISOString() : null,
@@ -254,13 +255,13 @@ const BioLinksManager = () => {
     try {
       setIsLoading(true);
       const updatedConfig = { ...bioConfig, ...updates };
-      
+
       await fetch('/api/bio-config', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedConfig),
       });
-      
+
       setBioConfig(updatedConfig);
       toast({ title: "Configuração atualizada!" });
     } catch (error) {
@@ -279,9 +280,9 @@ const BioLinksManager = () => {
   return (
     <div className="space-y-6">
       {/* Bio Configuration */}
-      <Card className="glass-effect border-neon-purple/30">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-neon-magenta">Configurações da Bio</CardTitle>
+          <CardTitle className="text-slate-50">Configurações da Bio</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -293,47 +294,47 @@ const BioLinksManager = () => {
                 folder="bio"
                 accept="image/*"
               />
-              
+
               <div>
-                <Label className="text-soft-white">Título Personalizado</Label>
+                <Label className="text-slate-50">Título Personalizado</Label>
                 <Input
                   value={localBioTitle}
                   onChange={(e) => setLocalBioTitle(e.target.value)}
                   placeholder="Deixe em branco para usar o título do evento"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50"
                 />
               </div>
-              
+
               <div>
-                <Label className="text-soft-white">Subtítulo Personalizado</Label>
+                <Label className="text-slate-50">Subtítulo Personalizado</Label>
                 <Input
                   value={localBioSubtitle}
                   onChange={(e) => setLocalBioSubtitle(e.target.value)}
                   placeholder="Deixe em branco para usar o subtítulo do evento"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50"
                 />
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-soft-white">Mostrar Data do Evento</Label>
+                <Label className="text-slate-50">Mostrar Data do Evento</Label>
                 <Switch
                   checked={bioConfig.showEventDate}
                   onCheckedChange={(checked) => handleConfigUpdate({ showEventDate: checked })}
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
-                <Label className="text-soft-white">Mostrar Botão do Trailer</Label>
+                <Label className="text-slate-50">Mostrar Botão do Trailer</Label>
                 <Switch
                   checked={bioConfig.showTrailerButton}
                   onCheckedChange={(checked) => handleConfigUpdate({ showTrailerButton: checked })}
                 />
               </div>
-              
-              <div className="p-4 bg-neon-cyan/10 rounded-lg border border-neon-cyan/30">
-                <p className="text-sm text-neon-cyan">
+
+              <div className="p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/30">
+                <p className="text-sm text-yellow-500">
                   <strong>Visualizar:</strong> Acesse <a href="/bio" target="_blank" className="underline">/bio</a> para ver como a página está ficando.
                 </p>
               </div>
@@ -343,13 +344,13 @@ const BioLinksManager = () => {
       </Card>
 
       {/* Links Management */}
-      <Card className="glass-effect border-neon-purple/30">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle className="text-neon-magenta">Links da Bio</CardTitle>
+            <CardTitle className="text-slate-50">Links da Bio</CardTitle>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Label className="text-soft-white text-sm">Apenas ativos</Label>
+                <Label className="text-slate-50 text-sm">Apenas ativos</Label>
                 <Switch
                   checked={showOnlyActive}
                   onCheckedChange={setShowOnlyActive}
@@ -357,7 +358,7 @@ const BioLinksManager = () => {
               </div>
               <Button
                 onClick={() => setShowAddForm(true)}
-                className="bg-neon-purple hover:bg-neon-purple/80"
+                className="bg-yellow-500 hover:bg-yellow-600"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Link
@@ -367,9 +368,9 @@ const BioLinksManager = () => {
         </CardHeader>
         <CardContent>
           {showAddForm && (
-            <Card className="mb-6 border-neon-cyan/30">
+            <Card className="mb-6 border-slate-600">
               <CardHeader>
-                <CardTitle className="text-neon-cyan text-lg">
+                <CardTitle className="text-yellow-500 text-lg">
                   {editingId ? 'Editar Link' : 'Novo Link'}
                 </CardTitle>
               </CardHeader>
@@ -377,86 +378,86 @@ const BioLinksManager = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-soft-white">Título *</Label>
+                      <Label className="text-slate-50">Título *</Label>
                       <Input
                         value={formData.title}
                         onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                        placeholder={`ex: 🎫 Inscrições ${eventData?.eventTitle || 'UAIZOUK 2025'}`}
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        placeholder={`ex: 🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`}
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                         required
                       />
                     </div>
-                    
+
                     <div>
-                      <Label className="text-soft-white">URL *</Label>
+                      <Label className="text-slate-50">URL *</Label>
                       <Input
                         type="url"
                         value={formData.url}
                         onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
                         placeholder="https://..."
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                         required
                       />
                     </div>
-                    
+
                     <div>
-                      <Label className="text-soft-white">Ordem de Exibição</Label>
+                      <Label className="text-slate-50">Ordem de Exibição</Label>
                       <Input
                         type="number"
                         value={formData.displayOrder}
                         onChange={(e) => setFormData(prev => ({ ...prev, displayOrder: parseInt(e.target.value) || 0 }))}
-                        className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                        className="bg-slate-700 border-slate-600 text-slate-50"
                       />
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
                         <Switch
                           checked={formData.isActive}
                           onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
                         />
-                        <Label className="text-soft-white text-sm">Ativo</Label>
+                        <Label className="text-slate-50 text-sm">Ativo</Label>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <Switch
                           checked={formData.isScheduled}
                           onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isScheduled: checked }))}
                         />
-                        <Label className="text-soft-white text-sm">Agendado</Label>
+                        <Label className="text-slate-50 text-sm">Agendado</Label>
                       </div>
                     </div>
                   </div>
-                  
+
                   {formData.isScheduled && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-neon-purple/10 rounded-lg border border-neon-purple/30">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
                       <div>
-                        <Label className="text-soft-white">Data/Hora de Início</Label>
+                        <Label className="text-slate-50">Data/Hora de Início</Label>
                         <Input
                           type="datetime-local"
                           value={formData.scheduleStart}
                           onChange={(e) => setFormData(prev => ({ ...prev, scheduleStart: e.target.value }))}
-                          className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                          className="bg-slate-700 border-slate-600 text-slate-50"
                         />
                       </div>
-                      
+
                       <div>
-                        <Label className="text-soft-white">Data/Hora de Fim</Label>
+                        <Label className="text-slate-50">Data/Hora de Fim</Label>
                         <Input
                           type="datetime-local"
                           value={formData.scheduleEnd}
                           onChange={(e) => setFormData(prev => ({ ...prev, scheduleEnd: e.target.value }))}
-                          className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                          className="bg-slate-700 border-slate-600 text-slate-50"
                         />
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="flex gap-2">
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="bg-neon-cyan hover:bg-neon-cyan/80"
+                      className="bg-yellow-500 hover:bg-yellow-600"
                     >
                       {isLoading ? (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -469,7 +470,7 @@ const BioLinksManager = () => {
                       type="button"
                       variant="outline"
                       onClick={resetForm}
-                      className="border-text-gray text-text-gray hover:bg-text-gray hover:text-dark-bg"
+                      className="border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-50"
                     >
                       <X className="w-4 h-4 mr-2" />
                       Cancelar
@@ -482,30 +483,30 @@ const BioLinksManager = () => {
 
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-neon-purple" />
+              <Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
             </div>
           ) : (
             <div className="space-y-3">
               {filteredLinks.length === 0 ? (
-                <div className="text-center py-8 text-text-gray">
+                <div className="text-center py-8 text-slate-400">
                   Nenhum link encontrado.
                 </div>
               ) : (
                 filteredLinks.map((link) => (
                   <div
                     key={link.id}
-                    className="flex items-center justify-between p-4 bg-dark-bg/50 rounded-lg border border-neon-purple/20 hover:border-neon-purple/40 transition-colors"
+                    className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg border border-slate-600 hover:border-slate-500 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <GripVertical className="w-5 h-5 text-text-gray cursor-grab" />
+                      <GripVertical className="w-5 h-5 text-slate-400 cursor-grab" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-soft-white font-medium">{link.title}</span>
+                          <span className="text-slate-50 font-medium">{link.title}</span>
                           {!link.isActive && <Badge variant="secondary">Inativo</Badge>}
-                          {link.isScheduled && !isLinkExpired(link) && <Badge className="bg-neon-cyan/20 text-neon-cyan"><Calendar className="w-3 h-3 mr-1" />Agendado</Badge>}
+                          {link.isScheduled && !isLinkExpired(link) && <Badge className="bg-yellow-500/20 text-yellow-500"><Calendar className="w-3 h-3 mr-1" />Agendado</Badge>}
                           {isLinkExpired(link) && <Badge className="bg-red-500/20 text-red-400 border border-red-500/30">Expirado</Badge>}
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-text-gray">
+                        <div className="flex items-center gap-2 text-sm text-slate-400">
                           <span>{link.url}</span>
                           {link.clickCount !== undefined && (
                             <span className="flex items-center gap-1">
@@ -516,13 +517,13 @@ const BioLinksManager = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => window.open(link.url, '_blank')}
-                        className="border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan hover:text-dark-bg"
+                        className="border-slate-600 text-yellow-500 hover:bg-yellow-500 hover:text-slate-900"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </Button>
@@ -530,7 +531,7 @@ const BioLinksManager = () => {
                         size="sm"
                         variant="outline"
                         onClick={() => handleEdit(link)}
-                        className="border-neon-purple/30 text-neon-purple hover:bg-neon-purple hover:text-white"
+                        className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>

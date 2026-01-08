@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Notifications from './Notifications';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface TopbarProps {
   onLogout: () => void;
@@ -35,22 +36,22 @@ const Topbar = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-dark-bg/95 backdrop-blur-sm border-b border-neon-purple/20">
+    <header className="sticky top-0 z-40 bg-slate-800 backdrop-blur-sm border-b border-slate-700">
       <div className="flex items-center justify-between h-16 px-4 lg:px-6">
-        {/* Left side - Mobile menu + Logo */}
+        {/* Left side - Mobile menu + Breadcrumb */}
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={onMobileMenuToggle}
-            className="lg:hidden text-soft-white hover:bg-neon-purple/10"
+            className="lg:hidden text-slate-400 hover:bg-slate-700 hover:text-slate-50"
           >
             <Menu className="w-5 h-5" />
           </Button>
 
           <div className="hidden lg:block">
-            <h1 className="text-xl font-bold gradient-text">
-              UAIZOUK Admin
+            <h1 className="text-xl font-semibold text-slate-50">
+              {SITE_NAME} Admin
             </h1>
           </div>
         </div>
@@ -58,20 +59,20 @@ const Topbar = ({
         {/* Center - Search */}
         <div className="flex-1 max-w-md mx-4">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-gray" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
               type="text"
               placeholder="Buscar... (⌘K)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-dark-bg/50 border-neon-purple/30 text-soft-white placeholder:text-text-gray focus:border-neon-purple"
+              className="pl-10 bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
             />
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={onCommandPaletteOpen}
-              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-text-gray hover:text-soft-white"
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-slate-400 hover:text-slate-50 hover:bg-slate-700"
             >
               <Command className="w-4 h-4" />
             </Button>
@@ -88,10 +89,10 @@ const Topbar = ({
           {/* User menu */}
           <div className="flex items-center gap-2">
             <div className="hidden sm:block text-right">
-              <div className="text-sm font-medium text-soft-white">
+              <div className="text-sm font-medium text-slate-50">
                 {userEmail || 'Admin'}
               </div>
-              <div className="text-xs text-text-gray">
+              <div className="text-xs text-slate-400">
                 Administrador
               </div>
             </div>
@@ -99,7 +100,7 @@ const Topbar = ({
             <Button
               variant="ghost"
               size="sm"
-              className="text-soft-white hover:bg-neon-purple/10"
+              className="text-slate-400 hover:bg-slate-700 hover:text-slate-50"
             >
               <User className="w-5 h-5" />
             </Button>
@@ -108,7 +109,7 @@ const Topbar = ({
               onClick={onLogout}
               variant="outline"
               size="sm"
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500"
+              className="border-red-500 text-red-500 hover:bg-red-500/10 hover:border-red-500"
             >
               <LogOut className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Sair</span>

@@ -213,8 +213,8 @@ const RegistrationsView = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neon-purple mx-auto mb-4"></div>
-          <p className="text-gray-400">Carregando inscrições...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+          <p className="text-slate-400">Carregando inscrições...</p>
         </div>
       </div>
     );
@@ -225,14 +225,14 @@ const RegistrationsView = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Inscrições</h1>
-          <p className="text-gray-400">Visualize e gerencie todas as inscrições do evento</p>
+          <p className="text-slate-400">Visualize e gerencie todas as inscrições do evento</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={loadRegistrations} variant="outline" size="sm">
             <RefreshCw className="w-4 h-4 mr-2" />
             Atualizar
           </Button>
-          <Button onClick={exportToCSV} className="bg-neon-purple hover:bg-neon-purple/80">
+          <Button onClick={exportToCSV} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900">
             <Download className="w-4 h-4 mr-2" />
             Exportar CSV
           </Button>
@@ -240,12 +240,12 @@ const RegistrationsView = () => {
       </div>
 
       {/* Filtros */}
-      <Card className="bg-gray-800 border-gray-700">
+      <Card className="bg-gray-800 border-slate-700">
         <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
                   placeholder="Buscar por nome, email, CPF ou WhatsApp..."
                   value={searchTerm}
@@ -273,11 +273,11 @@ const RegistrationsView = () => {
       {/* Lista de inscrições */}
       <div className="space-y-4">
         {filteredRegistrations.length === 0 ? (
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-gray-800 border-slate-700">
             <CardContent className="p-8 text-center">
-              <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <User className="w-12 h-12 text-slate-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Nenhuma inscrição encontrada</h3>
-              <p className="text-gray-400">
+              <p className="text-slate-400">
                 {searchTerm || statusFilter !== 'all'
                   ? 'Tente ajustar os filtros de busca'
                   : 'Ainda não há inscrições para este evento'
@@ -287,7 +287,7 @@ const RegistrationsView = () => {
           </Card>
         ) : (
           filteredRegistrations.map((registration) => (
-            <Card key={registration.id} className="bg-gray-800 border-gray-700">
+            <Card key={registration.id} className="bg-gray-800 border-slate-700">
               <CardContent className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div className="flex-1">
@@ -297,37 +297,37 @@ const RegistrationsView = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                      <div className="flex items-center gap-2 text-gray-300">
+                      <div className="flex items-center gap-2 text-slate-300">
                         <Mail className="w-4 h-4" />
                         <span>{registration.email}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-300">
+                      <div className="flex items-center gap-2 text-slate-300">
                         <Phone className="w-4 h-4" />
                         <span>{registration.whatsapp}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-300">
+                      <div className="flex items-center gap-2 text-slate-300">
                         <User className="w-4 h-4" />
                         <span>{registration.isForeigner ? 'Estrangeiro' : registration.cpf}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-300">
+                      <div className="flex items-center gap-2 text-slate-300">
                         <Calendar className="w-4 h-4" />
                         <span>{format(new Date(registration.createdAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-300">
+                      <div className="flex items-center gap-2 text-slate-300">
                         <CreditCard className="w-4 h-4" />
                         <span>R$ {getTotalAsNumber(registration.total).toFixed(2)}</span>
                       </div>
-                      <div className="text-gray-300">
+                      <div className="text-slate-300">
                         <span className="font-medium">{registration.ticketType}</span>
                         {registration.partnerName && (
-                          <span className="text-gray-400"> + {registration.partnerName}</span>
+                          <span className="text-slate-400"> + {registration.partnerName}</span>
                         )}
                       </div>
                     </div>
 
                     {Object.keys(registration.selectedProducts || {}).length > 0 && (
                       <div className="mt-3">
-                        <p className="text-sm text-gray-400 mb-1">Produtos adicionais:</p>
+                        <p className="text-sm text-slate-400 mb-1">Produtos adicionais:</p>
                         <div className="flex flex-wrap gap-2">
                           {Object.entries(registration.selectedProducts || {}).map(([name, option], index) => (
                             <Badge key={index} variant="outline" className="text-xs">
@@ -387,33 +387,33 @@ const RegistrationsView = () => {
       </div>
 
       {/* Estatísticas */}
-      <Card className="bg-gray-800 border-gray-700">
+      <Card className="bg-gray-800 border-slate-700">
         <CardHeader>
           <CardTitle className="text-white">Estatísticas</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-neon-purple">{registrations.length}</div>
-              <div className="text-sm text-gray-400">Total de Inscrições</div>
+              <div className="text-2xl font-bold text-yellow-500">{registrations.length}</div>
+              <div className="text-sm text-slate-400">Total de Inscrições</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-400">
                 {registrations.filter(r => (r.paymentStatus || 'pending') === 'paid').length}
               </div>
-              <div className="text-sm text-gray-400">Pagas</div>
+              <div className="text-sm text-slate-400">Pagas</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-400">
                 {registrations.filter(r => (r.paymentStatus || 'pending') === 'pending').length}
               </div>
-              <div className="text-sm text-gray-400">Pendentes</div>
+              <div className="text-sm text-slate-400">Pendentes</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-white">
                 R$ {registrations.reduce((sum, r) => sum + getTotalAsNumber(r.total), 0).toFixed(2)}
               </div>
-              <div className="text-sm text-gray-400">Valor Total</div>
+              <div className="text-sm text-slate-400">Valor Total</div>
             </div>
           </div>
         </CardContent>
@@ -421,7 +421,7 @@ const RegistrationsView = () => {
 
       {/* Dialog de Detalhes */}
       <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
-        <DialogContent className="max-w-2xl bg-gray-800 border-gray-700 text-white">
+        <DialogContent className="max-w-2xl bg-gray-800 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Detalhes da Inscrição</DialogTitle>
           </DialogHeader>
@@ -429,69 +429,69 @@ const RegistrationsView = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-gray-400">Nome Completo</label>
+                  <label className="text-sm text-slate-400">Nome Completo</label>
                   <p className="text-white">{selectedRegistration.fullName}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Email</label>
+                  <label className="text-sm text-slate-400">Email</label>
                   <p className="text-white">{selectedRegistration.email}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">WhatsApp</label>
+                  <label className="text-sm text-slate-400">WhatsApp</label>
                   <p className="text-white">{selectedRegistration.whatsapp}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">CPF/Estrangeiro</label>
+                  <label className="text-sm text-slate-400">CPF/Estrangeiro</label>
                   <p className="text-white">
                     {selectedRegistration.isForeigner ? 'Estrangeiro' : selectedRegistration.cpf}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Data de Nascimento</label>
+                  <label className="text-sm text-slate-400">Data de Nascimento</label>
                   <p className="text-white">
                     {format(new Date(selectedRegistration.birthDate), 'dd/MM/yyyy', { locale: ptBR })}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Estado</label>
+                  <label className="text-sm text-slate-400">Estado</label>
                   <p className="text-white">{selectedRegistration.state || 'N/A'}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Cidade</label>
+                  <label className="text-sm text-slate-400">Cidade</label>
                   <p className="text-white">{selectedRegistration.city || 'N/A'}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Tipo de Ingresso</label>
+                  <label className="text-sm text-slate-400">Tipo de Ingresso</label>
                   <p className="text-white">{selectedRegistration.ticketType}</p>
                 </div>
                 {selectedRegistration.partnerName && (
                   <div>
-                    <label className="text-sm text-gray-400">Nome da Dupla</label>
+                    <label className="text-sm text-slate-400">Nome da Dupla</label>
                     <p className="text-white">{selectedRegistration.partnerName}</p>
                   </div>
                 )}
                 <div>
-                  <label className="text-sm text-gray-400">Status do Pagamento</label>
+                  <label className="text-sm text-slate-400">Status do Pagamento</label>
                   <div className="mt-1">{getStatusBadge(selectedRegistration.paymentStatus)}</div>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Método de Pagamento</label>
+                  <label className="text-sm text-slate-400">Método de Pagamento</label>
                   <p className="text-white">{selectedRegistration.paymentMethod}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Parcelas</label>
+                  <label className="text-sm text-slate-400">Parcelas</label>
                   <p className="text-white">{selectedRegistration.installments}x</p>
                 </div>
               </div>
 
               {/* Breakdown de Valores */}
-              <div className="border-t border-gray-700 pt-4 mt-4">
-                <label className="text-sm text-gray-400 mb-3 block font-semibold">Detalhamento do Valor</label>
-                <div className="bg-gray-700/50 rounded-lg p-4 space-y-2">
+              <div className="border-t border-slate-700 pt-4 mt-4">
+                <label className="text-sm text-slate-400 mb-3 block font-semibold">Detalhamento do Valor</label>
+                <div className="bg-slate-700/50 rounded-lg p-4 space-y-2">
                   {/* Ingresso */}
                   {selectedRegistration.ticketPrice !== undefined && (
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">
+                      <span className="text-slate-300">
                         Ingresso ({selectedRegistration.ticketType}):
                       </span>
                       <span className="text-white">R$ {getTotalAsNumber(selectedRegistration.ticketPrice).toFixed(2)}</span>
@@ -503,7 +503,7 @@ const RegistrationsView = () => {
                     <>
                       {selectedRegistration.productsSnapshot.map((product, idx) => (
                         <div key={idx} className="flex justify-between items-center">
-                          <span className="text-gray-300 text-sm">
+                          <span className="text-slate-300 text-sm">
                             {product.name} ({product.option}):
                           </span>
                           <span className="text-white">
@@ -519,7 +519,7 @@ const RegistrationsView = () => {
                     <>
                       <div className="border-t border-gray-600 my-2"></div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-300 font-medium">Subtotal:</span>
+                        <span className="text-slate-300 font-medium">Subtotal:</span>
                         <span className="text-white font-medium">R$ {getTotalAsNumber(selectedRegistration.baseTotal).toFixed(2)}</span>
                       </div>
                     </>
@@ -557,10 +557,10 @@ const RegistrationsView = () => {
                   {/* Valor por parcela (se parcelado) */}
                   {selectedRegistration.installments > 1 && (
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-400">
+                      <span className="text-slate-400">
                         {selectedRegistration.installments}x de:
                       </span>
-                      <span className="text-gray-300">
+                      <span className="text-slate-300">
                         R$ {(getTotalAsNumber(selectedRegistration.total) / selectedRegistration.installments).toFixed(2)}
                       </span>
                     </div>
@@ -568,9 +568,9 @@ const RegistrationsView = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-700 mt-4">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700 mt-4">
                 <div>
-                  <label className="text-sm text-gray-400">Data de Inscrição</label>
+                  <label className="text-sm text-slate-400">Data de Inscrição</label>
                   <p className="text-white">
                     {format(new Date(selectedRegistration.createdAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                   </p>
@@ -583,7 +583,7 @@ const RegistrationsView = () => {
 
       {/* Dialog de Edição */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl bg-gray-800 border-gray-700 text-white">
+        <DialogContent className="max-w-2xl bg-gray-800 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Editar Inscrição</DialogTitle>
           </DialogHeader>
@@ -591,7 +591,7 @@ const RegistrationsView = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-gray-400">Nome Completo</label>
+                  <label className="text-sm text-slate-400">Nome Completo</label>
                   <Input
                     value={editingRegistration.fullName}
                     onChange={(e) => setEditingRegistration({...editingRegistration, fullName: e.target.value})}
@@ -599,7 +599,7 @@ const RegistrationsView = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Email</label>
+                  <label className="text-sm text-slate-400">Email</label>
                   <Input
                     value={editingRegistration.email}
                     onChange={(e) => setEditingRegistration({...editingRegistration, email: e.target.value})}
@@ -607,7 +607,7 @@ const RegistrationsView = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">WhatsApp</label>
+                  <label className="text-sm text-slate-400">WhatsApp</label>
                   <Input
                     value={editingRegistration.whatsapp}
                     onChange={(e) => setEditingRegistration({...editingRegistration, whatsapp: e.target.value})}
@@ -615,7 +615,7 @@ const RegistrationsView = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400">Total</label>
+                  <label className="text-sm text-slate-400">Total</label>
                   <Input
                     type="number"
                     step="0.01"
@@ -634,7 +634,7 @@ const RegistrationsView = () => {
                   Cancelar
                 </Button>
                 <Button
-                  className="bg-neon-purple hover:bg-neon-purple/80"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-slate-900"
                   onClick={async () => {
                     if (!editingRegistration) return;
 

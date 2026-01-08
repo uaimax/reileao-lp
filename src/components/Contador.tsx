@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLandingData } from '@/hooks/use-landing-data';
+import { SITE_NAME } from '@/lib/site-config';
 
 const Contador = () => {
   const { data: landingData } = useLandingData();
@@ -55,13 +56,13 @@ const Contador = () => {
     const timer = setInterval(() => {
       frame++;
       const progress = frame / totalFrames;
-      
+
       // Easing function for smooth acceleration and deceleration
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      
+
       setCounts(prevCounts => {
         const newCounts = { ...prevCounts };
-        
+
         Object.keys(finalCounts).forEach(key => {
           const finalValue = finalCounts[key as keyof typeof finalCounts];
           const currentValue = Math.floor(finalValue * easeOutQuart);
@@ -107,19 +108,19 @@ const Contador = () => {
       <div className="section-container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-soft-white mb-8 animate-fade-in">
-            {statsData?.sectionTitle || "Já passaram pelo UAIZOUK mais de"}
+            {statsData?.sectionTitle || `Já passaram pelo ${SITE_NAME} mais de`}
           </h2>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
-            <div 
+            <div
               key={stat.label}
               className="glass-effect rounded-2xl p-8 text-center card-hover animate-flip-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className={`text-5xl md:text-6xl font-extrabold ${stat.color} neon-glow mb-4 font-mono overflow-hidden`}>
-                <span 
+                <span
                   className={`inline-block transition-all duration-300 ${isAnimating ? 'animate-pulse' : ''}`}
                   style={{
                     transform: isAnimating ? 'translateY(-2px)' : 'translateY(0)',

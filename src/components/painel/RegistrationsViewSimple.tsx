@@ -45,8 +45,8 @@ const RegistrationsViewSimple = () => {
         <h1 className="text-2xl font-bold text-white mb-4">Inscrições</h1>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neon-purple mx-auto mb-4"></div>
-            <p className="text-gray-400">Carregando inscrições...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+            <p className="text-slate-400">Carregando inscrições...</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ const RegistrationsViewSimple = () => {
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-8 text-center">
               <h3 className="text-lg font-semibold text-white mb-2">Nenhuma inscrição encontrada</h3>
-              <p className="text-gray-400">Ainda não há inscrições para este evento</p>
+              <p className="text-slate-400">Ainda não há inscrições para este evento</p>
             </CardContent>
           </Card>
         ) : (
@@ -77,12 +77,12 @@ const RegistrationsViewSimple = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-semibold text-white">{registration.fullName}</h3>
-                    <p className="text-gray-400">{registration.email}</p>
-                    <p className="text-gray-300">R$ {getTotalAsNumber(registration.total).toFixed(2)}</p>
+                    <p className="text-slate-400">{registration.email}</p>
+                    <p className="text-slate-300">R$ {getTotalAsNumber(registration.total).toFixed(2)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-400">Status: {registration.paymentStatus || 'pending'}</p>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-slate-400">Status: {registration.paymentStatus || 'pending'}</p>
+                    <p className="text-sm text-slate-400">
                       {new Date(registration.createdAt).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
@@ -101,26 +101,26 @@ const RegistrationsViewSimple = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-neon-purple">{registrations.length}</div>
-                <div className="text-sm text-gray-400">Total</div>
+                <div className="text-2xl font-bold text-yellow-500">{registrations.length}</div>
+                <div className="text-sm text-slate-400">Total</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-400">
                   {registrations.filter(r => (r.paymentStatus || 'pending') === 'paid').length}
                 </div>
-                <div className="text-sm text-gray-400">Pagas</div>
+                <div className="text-sm text-slate-400">Pagas</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-yellow-400">
                   {registrations.filter(r => (r.paymentStatus || 'pending') === 'pending').length}
                 </div>
-                <div className="text-sm text-gray-400">Pendentes</div>
+                <div className="text-sm text-slate-400">Pendentes</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">
                   R$ {registrations.reduce((sum, r) => sum + getTotalAsNumber(r.total), 0).toFixed(2)}
                 </div>
-                <div className="text-sm text-gray-400">Valor Total</div>
+                <div className="text-sm text-slate-400">Valor Total</div>
               </div>
             </div>
           </CardContent>

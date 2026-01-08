@@ -20,8 +20,11 @@ export default {
 		extend: {
 			fontFamily: {
 				'inter': ['Inter', 'sans-serif'],
+				'bebas': ['Bebas Neue', 'sans-serif'],
+				'script': ['Great Vibes', 'cursive'],
 			},
 			colors: {
+				// shadcn/ui core colors (via CSS variables)
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -65,15 +68,8 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// UAIZOUK Custom Colors - YOLO Enhanced
-				'neon-magenta': '#ff1c8e',
-				'neon-purple': '#9225ff',
-				'neon-cyan': '#14b9ff',
-				'neon-green': '#00ff88',
-				'dark-bg': '#0C0C1F',
-				'soft-white': '#F8F9FF',
-				'text-gray': '#B0B3D0',
-				'yolo-accent': '#ff6b35'
+				// Nota: Usar cores Tailwind padrão (slate, gray, yellow, green, red)
+				// diretamente ao invés de cores customizadas
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

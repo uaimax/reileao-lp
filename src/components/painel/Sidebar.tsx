@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { SITE_NAME } from '@/lib/site-config';
 import {
   Settings,
   Users,
@@ -113,12 +114,23 @@ const Sidebar = ({
 
     return (
       <div key={item.id}>
+        {level === 0 && (
+          <div className="px-3 py-2 mb-1">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+              {item.label}
+            </span>
+          </div>
+        )}
         <Button
           variant="ghost"
           className={cn(
-            "w-full justify-start text-left h-auto p-3 hover:bg-neon-purple/10 transition-colors min-w-0",
-            level > 0 && "ml-4",
-            isActive && "bg-neon-purple/20 text-neon-purple border-r-2 border-neon-purple",
+            "w-full justify-start text-left h-auto p-3 transition-all duration-200 min-w-0",
+            level > 0 && "ml-4 pl-6",
+            level === 0 && "mb-1",
+            isActive && level === 0 && "bg-yellow-500 text-slate-900 font-semibold",
+            !isActive && level === 0 && "text-slate-400 hover:bg-slate-800 hover:text-slate-50",
+            isActive && level > 0 && "bg-slate-800 text-yellow-500 border-l-2 border-yellow-500",
+            !isActive && level > 0 && "text-slate-400 hover:bg-slate-800 hover:text-slate-50",
             isCollapsed && "px-2"
           )}
           onClick={() => {
@@ -132,7 +144,7 @@ const Sidebar = ({
           <item.icon className={cn("w-5 h-5 flex-shrink-0", isCollapsed && "mx-auto")} />
           {!isCollapsed && (
             <>
-              <span className="ml-3 flex-1 text-sm font-medium">{item.label}</span>
+              <span className="ml-3 flex-1 text-sm">{item.label}</span>
               {hasChildren && (
                 isExpanded ? (
                   <ChevronDown className="w-4 h-4" />
@@ -145,14 +157,15 @@ const Sidebar = ({
         </Button>
 
         {hasChildren && isExpanded && !isCollapsed && (
-          <div className="ml-4 space-y-1">
+          <div className="ml-4 space-y-0.5 mt-1">
             {item.children?.map(child => (
               <Button
                 key={child.id}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start text-left h-auto p-2 hover:bg-neon-purple/10 transition-colors",
-                  activeTab === child.id && "bg-neon-purple/20 text-neon-purple"
+                  "w-full justify-start text-left h-auto p-2.5 transition-all duration-200",
+                  activeTab === child.id && "bg-slate-800 text-yellow-500 border-l-2 border-yellow-500",
+                  activeTab !== child.id && "text-slate-400 hover:bg-slate-800 hover:text-slate-50"
                 )}
                 onClick={() => handleItemClick(child.id)}
               >
@@ -178,21 +191,21 @@ const Sidebar = ({
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed left-0 top-0 h-full bg-dark-bg/95 backdrop-blur-sm border-r border-neon-purple/20 z-50 transition-all duration-300 overflow-hidden",
+        "fixed left-0 top-0 h-full bg-slate-900 backdrop-blur-sm border-r border-slate-700 z-50 transition-all duration-300 overflow-hidden",
         isCollapsed ? "w-16" : "w-64",
         isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-neon-purple/20 min-w-0">
+        <div className="flex items-center justify-between p-4 border-b border-slate-700 min-w-0">
           {!isCollapsed && (
-            <h2 className="text-lg font-bold gradient-text truncate">Painel UAIZOUK</h2>
+            <h2 className="text-lg font-semibold text-slate-50 truncate">Painel {SITE_NAME}</h2>
           )}
           <div className="flex items-center gap-2 flex-shrink-0">
             <Button
               variant="ghost"
               size="sm"
               onClick={onToggleCollapse}
-              className="hidden lg:flex text-soft-white hover:bg-neon-purple/10"
+              className="hidden lg:flex text-slate-400 hover:bg-slate-800 hover:text-slate-50"
             >
               {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </Button>
@@ -200,7 +213,7 @@ const Sidebar = ({
               variant="ghost"
               size="sm"
               onClick={onMobileToggle}
-              className="lg:hidden text-soft-white hover:bg-neon-purple/10"
+              className="lg:hidden text-slate-400 hover:bg-slate-800 hover:text-slate-50"
             >
               <X className="w-4 h-4" />
             </Button>
@@ -214,9 +227,9 @@ const Sidebar = ({
 
         {/* Footer */}
         {!isCollapsed && (
-          <div className="p-4 border-t border-neon-purple/20 min-w-0">
-            <div className="text-xs text-text-gray truncate">
-              UAIZOUK Admin v1.0
+          <div className="p-4 border-t border-slate-700 min-w-0 bg-slate-800">
+            <div className="text-xs text-slate-400 font-medium truncate">
+              {SITE_NAME} Admin v1.0
             </div>
           </div>
         )}

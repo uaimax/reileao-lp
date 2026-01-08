@@ -1,5 +1,6 @@
 import { useLandingData } from '@/hooks/use-landing-data';
 import { handleLinkClick } from '@/utils/link-handler';
+import { SITE_NAME, getSiteNameWithYear } from '@/lib/site-config';
 
 const BioSimple = () => {
   console.log('🚀 BioSimple component rendered');
@@ -7,7 +8,7 @@ const BioSimple = () => {
   const eventData = landingData?.event;
 
   const testData = [
-    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || 'UAIZOUK 2025'}`, url: 'https://uaizouk.com.br' },
+    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br' },
     { id: 2, title: "📍 Localização", url: "https://maps.google.com" },
     { id: 3, title: "📱 Instagram", url: "https://instagram.com/uaizouk" }
   ];
@@ -16,7 +17,7 @@ const BioSimple = () => {
     <div className="min-h-screen bg-dark-bg">
       <div className="container mx-auto px-4 py-8 max-w-md">
         <h1 className="text-white text-2xl font-bold mb-6 text-center">
-          UAIZOUK 2025 - Bio
+          {getSiteNameWithYear('2025')} - Bio
         </h1>
 
         <div className="space-y-4">

@@ -6,6 +6,7 @@ import { CheckCircle, Loader2, AlertCircle, Printer, Home, RefreshCw, CreditCard
 import { useToast } from '@/hooks/use-toast';
 import { apiClient } from '@/lib/api-client';
 import { usePageTracking, useMetaPixelTracking } from '@/hooks/use-meta-pixel';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface RegistrationData {
   id: number;
@@ -182,7 +183,7 @@ const RegistrationConfirmation = () => {
     // Gerar protocolo único baseado no ID
     const timestamp = new Date().getTime().toString(36);
     const idStr = id.toString().padStart(4, '0');
-    return `UAIZOUK-${idStr}-${timestamp.toUpperCase()}`;
+    return `${SITE_NAME}-${idStr}-${timestamp.toUpperCase()}`;
   };
 
   const handlePrint = () => {
@@ -438,7 +439,7 @@ const RegistrationConfirmation = () => {
 
                         {/* Celebration Message */}
                         <div className="text-lg text-green-100">
-                          Você está oficialmente inscrito no UAIZOUK! 🚀
+                          Você está oficialmente inscrito no {SITE_NAME}! 🚀
                         </div>
                       </div>
                     </div>
@@ -586,7 +587,7 @@ const RegistrationConfirmation = () => {
                       {Array.from({ length: installments.totalInstallments }, (_, index) => {
                         const installment = installments.installments.find(i => i.installmentNumber === index + 1);
                         const isCreditCard = installment?.billingType === 'CREDIT_CARD';
-                        const isPaid = isCreditCard 
+                        const isPaid = isCreditCard
                           ? installment?.status === 'CONFIRMED'
                           : installment?.status === 'PAID' || installment?.status === 'RECEIVED';
                         const isPending = installment?.status === 'PENDING';
@@ -629,10 +630,10 @@ const RegistrationConfirmation = () => {
                     <div className="space-y-3">
                       {installments.installments.map((installment) => {
                         const isCreditCard = installment.billingType === 'CREDIT_CARD';
-                        const isPaid = isCreditCard 
+                        const isPaid = isCreditCard
                           ? installment.status === 'CONFIRMED'
                           : installment.status === 'PAID' || installment.status === 'RECEIVED';
-                        
+
                         return (
                         <div
                           key={installment.id}

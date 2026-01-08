@@ -55,25 +55,25 @@ const TestimonialCarousel = () => {
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg md:text-xl font-medium text-text-gray mb-2">
+        <h3 className="text-lg md:text-xl font-semibold text-slate-900 mb-2">
           O que nossos participantes dizem
         </h3>
-        <p className="text-sm text-text-gray/70">
+        <p className="text-sm text-slate-500">
           Depoimentos reais de quem já viveu a experiência
         </p>
       </div>
 
       <div
-        className="relative bg-dark-bg/20 rounded-xl p-4 md:p-6 border border-gray-700/30 hover:border-gray-600/50 transition-all duration-500"
+        className="relative bg-white rounded-xl p-4 md:p-6 border-2 border-slate-200 hover:border-yellow-500 shadow-md hover:shadow-lg transition-all duration-300"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
         {/* Testimonial Content */}
         <div className="text-center">
           <div className="mb-4">
-            <Quote className="w-5 h-5 text-gray-500 opacity-40 mx-auto mb-3" />
+            <Quote className="w-6 h-6 text-yellow-500 opacity-60 mx-auto mb-3" />
             <div
-              className="text-text-gray/80 leading-relaxed text-sm md:text-base italic max-w-2xl mx-auto"
+              className="text-slate-900 leading-relaxed text-sm md:text-base italic max-w-2xl mx-auto"
               dangerouslySetInnerHTML={{ __html: currentTestimonial.testimonialText }}
             />
           </div>
@@ -84,20 +84,20 @@ const TestimonialCarousel = () => {
               <img
                 src={currentTestimonial.photoUrl}
                 alt={currentTestimonial.name}
-                className="w-8 h-8 rounded-full object-cover mr-3"
+                className="w-10 h-10 rounded-full object-cover mr-3 border-2 border-slate-200"
               />
             ) : (
-              <div className="w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-700 rounded-full flex items-center justify-center mr-3">
-                <span className="text-sm font-medium text-gray-300">
+              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mr-3 border-2 border-slate-200">
+                <span className="text-sm font-semibold text-slate-900">
                   {currentTestimonial.name[0]}
                 </span>
               </div>
             )}
             <div className="text-left">
-              <h4 className="text-text-gray font-medium text-sm">
+              <h4 className="text-slate-900 font-semibold text-sm">
                 {currentTestimonial.name}
               </h4>
-              <p className="text-text-gray/60 text-xs">
+              <p className="text-slate-500 text-xs">
                 {currentTestimonial.cityState}
               </p>
             </div>
@@ -110,30 +110,30 @@ const TestimonialCarousel = () => {
             {/* Arrow Navigation */}
             <button
               onClick={goToPrevious}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-dark-bg/60 hover:bg-dark-bg/80 border border-gray-600/20 hover:border-gray-500/40 rounded-full p-1.5 transition-all duration-300 opacity-60 hover:opacity-100"
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white hover:bg-slate-50 border-2 border-slate-300 hover:border-yellow-500 rounded-full p-2 transition-all duration-300 shadow-md hover:shadow-lg"
               aria-label="Depoimento anterior"
             >
-              <ChevronLeft className="w-4 h-4 text-gray-400" />
+              <ChevronLeft className="w-5 h-5 text-slate-900" />
             </button>
 
             <button
               onClick={goToNext}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-dark-bg/60 hover:bg-dark-bg/80 border border-gray-600/20 hover:border-gray-500/40 rounded-full p-1.5 transition-all duration-300 opacity-60 hover:opacity-100"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white hover:bg-slate-50 border-2 border-slate-300 hover:border-yellow-500 rounded-full p-2 transition-all duration-300 shadow-md hover:shadow-lg"
               aria-label="Próximo depoimento"
             >
-              <ChevronRight className="w-4 h-4 text-gray-400" />
+              <ChevronRight className="w-5 h-5 text-slate-900" />
             </button>
 
             {/* Dots Navigation */}
-            <div className="flex justify-center mt-4 space-x-1.5">
+            <div className="flex justify-center mt-4 space-x-2">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
                     index === currentIndex
-                      ? 'bg-gray-400 scale-110'
-                      : 'bg-gray-600/40 hover:bg-gray-500/60'
+                      ? 'bg-yellow-500 scale-125 shadow-md'
+                      : 'bg-slate-300 hover:bg-slate-400'
                   }`}
                   aria-label={`Ir para depoimento ${index + 1}`}
                 />
@@ -142,9 +142,9 @@ const TestimonialCarousel = () => {
 
             {/* Progress Indicator */}
             <div className="mt-3">
-              <div className="w-full bg-gray-700/20 rounded-full h-0.5">
+              <div className="w-full bg-slate-200 rounded-full h-1">
                 <div
-                  className="bg-gray-500 h-0.5 rounded-full transition-all duration-200 ease-linear"
+                  className="bg-yellow-500 h-1 rounded-full transition-all duration-200 ease-linear"
                   style={{
                     width: `${((currentIndex + 1) / testimonials.length) * 100}%`
                   }}
@@ -157,7 +157,7 @@ const TestimonialCarousel = () => {
 
       {/* Mobile Touch Instructions */}
       <div className="text-center mt-3 md:hidden">
-        <p className="text-xs text-text-gray/50">
+        <p className="text-xs text-slate-500">
           Toque nas setas ou pontos para navegar
         </p>
       </div>

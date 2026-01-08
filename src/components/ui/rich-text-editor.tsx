@@ -28,7 +28,7 @@ export const RichTextEditor = ({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-neon-cyan hover:text-neon-purple transition-colors cursor-pointer',
+          class: 'text-yellow-500 hover:text-yellow-400 transition-colors cursor-pointer',
         },
       }),
     ],
@@ -91,108 +91,108 @@ export const RichTextEditor = ({
   return (
     <div className={`space-y-2 ${className}`}>
       {label && (
-        <Label className="text-soft-white">{label}</Label>
+        <Label className="text-slate-50">{label}</Label>
       )}
-      
-      <div className="bg-dark-bg/50 border border-neon-purple/30 rounded-lg overflow-hidden">
+
+      <div className="bg-slate-700 border border-slate-600 rounded-lg overflow-hidden">
         {/* Toolbar */}
-        <div className="flex items-center gap-1 p-2 border-b border-neon-purple/20 bg-dark-bg/30">
+        <div className="flex items-center gap-1 p-2 border-b border-slate-600 bg-slate-800">
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={toggleBold}
             disabled={disabled}
-            className={`h-8 w-8 p-0 hover:bg-neon-purple/20 ${
-              editor.isActive('bold') ? 'bg-neon-purple/30 text-neon-purple' : 'text-soft-white'
+            className={`h-8 w-8 p-0 hover:bg-slate-700 ${
+              editor.isActive('bold') ? 'bg-yellow-500/20 text-yellow-500' : 'text-slate-50'
             }`}
           >
             <Bold className="h-4 w-4" />
           </Button>
-          
+
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={toggleItalic}
             disabled={disabled}
-            className={`h-8 w-8 p-0 hover:bg-neon-purple/20 ${
-              editor.isActive('italic') ? 'bg-neon-purple/30 text-neon-purple' : 'text-soft-white'
+            className={`h-8 w-8 p-0 hover:bg-slate-700 ${
+              editor.isActive('italic') ? 'bg-yellow-500/20 text-yellow-500' : 'text-slate-50'
             }`}
           >
             <Italic className="h-4 w-4" />
           </Button>
-          
-          <div className="w-px h-6 bg-neon-purple/20 mx-1" />
-          
+
+          <div className="w-px h-6 bg-slate-600 mx-1" />
+
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={toggleBulletList}
             disabled={disabled}
-            className={`h-8 w-8 p-0 hover:bg-neon-purple/20 ${
-              editor.isActive('bulletList') ? 'bg-neon-purple/30 text-neon-purple' : 'text-soft-white'
+            className={`h-8 w-8 p-0 hover:bg-slate-700 ${
+              editor.isActive('bulletList') ? 'bg-yellow-500/20 text-yellow-500' : 'text-slate-50'
             }`}
           >
             <List className="h-4 w-4" />
           </Button>
-          
+
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={toggleOrderedList}
             disabled={disabled}
-            className={`h-8 w-8 p-0 hover:bg-neon-purple/20 ${
-              editor.isActive('orderedList') ? 'bg-neon-purple/30 text-neon-purple' : 'text-soft-white'
+            className={`h-8 w-8 p-0 hover:bg-slate-700 ${
+              editor.isActive('orderedList') ? 'bg-yellow-500/20 text-yellow-500' : 'text-slate-50'
             }`}
           >
             <ListOrdered className="h-4 w-4" />
           </Button>
-          
+
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={setLink}
             disabled={disabled}
-            className={`h-8 w-8 p-0 hover:bg-neon-purple/20 ${
-              editor.isActive('link') ? 'bg-neon-purple/30 text-neon-purple' : 'text-soft-white'
+            className={`h-8 w-8 p-0 hover:bg-slate-700 ${
+              editor.isActive('link') ? 'bg-yellow-500/20 text-yellow-500' : 'text-slate-50'
             }`}
           >
             <LinkIcon className="h-4 w-4" />
           </Button>
-          
-          <div className="w-px h-6 bg-neon-purple/20 mx-1" />
-          
+
+          <div className="w-px h-6 bg-slate-600 mx-1" />
+
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={undo}
             disabled={disabled}
-            className="h-8 w-8 p-0 hover:bg-neon-purple/20 text-soft-white"
+            className="h-8 w-8 p-0 hover:bg-slate-700 text-slate-50"
           >
             <Undo className="h-4 w-4" />
           </Button>
-          
+
           <Button
             type="button"
             size="sm"
             variant="ghost"
             onClick={redo}
             disabled={disabled}
-            className="h-8 w-8 p-0 hover:bg-neon-purple/20 text-soft-white"
+            className="h-8 w-8 p-0 hover:bg-slate-700 text-slate-50"
           >
             <Redo className="h-4 w-4" />
           </Button>
         </div>
-        
+
         {/* Editor Content */}
-        <div className="text-soft-white">
-          <EditorContent 
-            editor={editor} 
+        <div className="text-slate-50">
+          <EditorContent
+            editor={editor}
             placeholder={placeholder}
           />
         </div>

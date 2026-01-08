@@ -20,11 +20,63 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   </head>
 
   <body>
     <div id="root"></div>
+
+    <!-- #region agent log - Error catcher before React loads -->
+    <script>
+      // Global error handler
+      window.onerror = function(msg, url, line, col, error) {
+        fetch('http://127.0.0.1:7245/ingest/fbe0bbdb-9d7a-4e37-88aa-b587899c232f',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            location:'index.html:onerror',
+            message:'GLOBAL ERROR CAUGHT',
+            data:{msg:String(msg),url:url,line:line,col:col,error:error?error.message:'no error obj'},
+            timestamp:Date.now(),
+            sessionId:'debug-session',
+            hypothesisId:'D'
+          })
+        }).catch(function(){});
+        return false;
+      };
+
+      // Unhandled promise rejection handler
+      window.onunhandledrejection = function(event) {
+        fetch('http://127.0.0.1:7245/ingest/fbe0bbdb-9d7a-4e37-88aa-b587899c232f',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            location:'index.html:onunhandledrejection',
+            message:'UNHANDLED PROMISE REJECTION',
+            data:{reason:event.reason?String(event.reason):'unknown'},
+            timestamp:Date.now(),
+            sessionId:'debug-session',
+            hypothesisId:'D'
+          })
+        }).catch(function(){});
+      };
+
+      // Log that HTML loaded
+      fetch('http://127.0.0.1:7245/ingest/fbe0bbdb-9d7a-4e37-88aa-b587899c232f',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          location:'index.html:inline',
+          message:'HTML LOADED - Browser reached this point',
+          data:{userAgent:navigator.userAgent,url:window.location.href},
+          timestamp:Date.now(),
+          sessionId:'debug-session',
+          hypothesisId:'C'
+        })
+      }).catch(function(){});
+    </script>
+    <!-- #endregion -->
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

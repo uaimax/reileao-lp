@@ -84,17 +84,17 @@ const FileUpload = ({
   return (
     <div className="space-y-2">
       {label && (
-        <label className="text-sm font-medium text-soft-white">
+        <label className="text-sm font-medium text-slate-50">
           {label}
         </label>
       )}
 
-      <div className="border-2 border-dashed border-neon-purple/30 rounded-lg p-6 text-center hover:border-neon-purple/50 transition-colors">
+      <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center hover:border-slate-500 transition-colors">
         {value ? (
           <div className="space-y-2">
             <div className="flex items-center justify-center space-x-2">
-              <File className="w-5 h-5 text-neon-cyan" />
-              <span className="text-soft-white text-sm truncate max-w-xs">
+              <File className="w-5 h-5 text-yellow-500" />
+              <span className="text-slate-50 text-sm truncate max-w-xs">
                 {value.split('/').pop()}
               </span>
             </div>
@@ -110,20 +110,20 @@ const FileUpload = ({
           </div>
         ) : (
           <div className="space-y-2">
-            <Upload className="w-8 h-8 text-neon-purple mx-auto" />
-            <div className="text-soft-white">
+            <Upload className="w-8 h-8 text-yellow-500 mx-auto" />
+            <div className="text-slate-50">
               <p className="font-medium">Clique para selecionar um arquivo</p>
-              <p className="text-sm text-text-gray">
+              <p className="text-sm text-slate-400">
                 ou arraste e solte aqui
               </p>
             </div>
-            <p className="text-xs text-text-gray">
+            <p className="text-xs text-slate-400">
               Tamanho máximo: {maxSize}MB
             </p>
             <Button
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="bg-neon-purple hover:bg-neon-purple/80 text-white"
+              className="bg-yellow-500 hover:bg-yellow-600 text-slate-900"
             >
               {isUploading ? 'Enviando...' : 'Selecionar Arquivo'}
             </Button>

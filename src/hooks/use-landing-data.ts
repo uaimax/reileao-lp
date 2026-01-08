@@ -22,7 +22,9 @@ export const useLandingData = () => {
           testimonialsSection: mockData.mockTestimonialsContent,
           location: mockData.mockLocationContent,
           participation: mockData.mockParticipationContent,
-          footer: mockData.mockFooterContent
+          footer: mockData.mockFooterContent,
+          faqs: mockData.mockFAQs,
+          faqSection: mockData.mockFAQSection
         };
       }
     },

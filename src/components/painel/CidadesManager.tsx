@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Trash2, Plus, MapPin, FileText, Upload } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface Cidade {
   id: string;
@@ -124,7 +125,7 @@ const CidadesManager = () => {
     setIsProcessingBatch(true);
     const cidadesText = batchText.trim().split('\n').filter(line => line.trim());
     const cidadesExistentes = cidades.map(c => c.nome.toLowerCase());
-    
+
     let adicionadas = 0;
     let ignoradas = 0;
     const erros = [];
@@ -147,7 +148,7 @@ const CidadesManager = () => {
       // Processar cada cidade do texto
       for (const cidadeNome of cidadesText) {
         const nomeLimpo = cidadeNome.trim();
-        
+
         // Verificar se já existe
         if (cidadesExistentes.includes(nomeLimpo.toLowerCase())) {
           ignoradas++;
@@ -155,7 +156,7 @@ const CidadesManager = () => {
         }
 
         // Buscar match nas cidades disponíveis
-        const cidadeEncontrada = todasCidades.find(c => 
+        const cidadeEncontrada = todasCidades.find(c =>
           c.nome.toLowerCase() === nomeLimpo.toLowerCase()
         );
 
@@ -217,26 +218,26 @@ const CidadesManager = () => {
 
   if (isLoading) {
     return (
-      <div className="text-soft-white">Carregando cidades...</div>
+      <div className="text-slate-50">Carregando cidades...</div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <Card className="glass-effect border-neon-purple/30">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-soft-white flex items-center">
-            <MapPin className="w-6 h-6 mr-2 text-neon-purple" />
+          <CardTitle className="text-2xl font-bold text-slate-50 flex items-center">
+            <MapPin className="w-6 h-6 mr-2 text-yellow-500" />
             Cidades com Representantes
           </CardTitle>
-          <CardDescription className="text-text-gray">
-            Gerencie as cidades que já possuem representantes no UAIZOUK
+          <CardDescription className="text-slate-400">
+            Gerencie as cidades que já possuem representantes no {SITE_NAME}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center mb-6">
-            <div className="text-soft-white">
-              Total de cidades: <Badge className="bg-neon-purple text-white">{cidades.length}</Badge>
+            <div className="text-slate-50">
+              Total de cidades: <Badge className="bg-yellow-500 text-slate-900">{cidades.length}</Badge>
             </div>
             <div className="flex gap-2">
               <Button
@@ -245,7 +246,7 @@ const CidadesManager = () => {
                   setIsBatchMode(false);
                 }}
                 variant={isAdding && !isBatchMode ? "default" : "outline"}
-                className={isAdding && !isBatchMode ? "bg-neon-purple hover:bg-neon-purple/80 text-white" : "border-neon-purple/50 text-soft-white"}
+                className={isAdding && !isBatchMode ? "bg-yellow-500 hover:bg-yellow-600 text-slate-900" : "border-slate-600 text-slate-50"}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Individual
@@ -256,7 +257,7 @@ const CidadesManager = () => {
                   setIsAdding(false);
                 }}
                 variant={isBatchMode ? "default" : "outline"}
-                className={isBatchMode ? "bg-neon-cyan hover:bg-neon-cyan/80 text-dark-bg" : "border-neon-cyan/50 text-neon-cyan"}
+                className={isBatchMode ? "bg-yellow-500 hover:bg-yellow-600 text-slate-900" : "border-slate-600 text-yellow-500"}
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Adicionar em Lote
@@ -265,18 +266,18 @@ const CidadesManager = () => {
           </div>
 
           {isAdding && (
-            <Card className="mb-6 border-neon-cyan/30">
+            <Card className="mb-6 border-slate-600">
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-soft-white">Estado</Label>
+                    <Label className="text-slate-50">Estado</Label>
                     <Select value={newCidade.estado} onValueChange={handleEstadoChange}>
-                      <SelectTrigger className="bg-dark-bg border-neon-purple/50 text-soft-white">
+                      <SelectTrigger className="bg-slate-700 border-slate-600 text-slate-50">
                         <SelectValue placeholder="Selecione o estado" />
                       </SelectTrigger>
-                      <SelectContent className="bg-dark-bg border-neon-purple/50">
+                      <SelectContent className="bg-slate-700 border-slate-600">
                         {estados.map((estado) => (
-                          <SelectItem key={estado.value} value={estado.value} className="text-soft-white">
+                          <SelectItem key={estado.value} value={estado.value} className="text-slate-50">
                             {estado.label}
                           </SelectItem>
                         ))}
@@ -284,13 +285,13 @@ const CidadesManager = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-soft-white">Cidade</Label>
+                    <Label className="text-slate-50">Cidade</Label>
                     <Select
                       value={newCidade.nome}
                       onValueChange={(nome) => setNewCidade(prev => ({ ...prev, nome }))}
                       disabled={!newCidade.estado || carregandoCidades}
                     >
-                      <SelectTrigger className="bg-dark-bg border-neon-purple/50 text-soft-white">
+                      <SelectTrigger className="bg-slate-700 border-slate-600 text-slate-50">
                         <SelectValue placeholder={
                           !newCidade.estado
                             ? "Primeiro selecione o estado"
@@ -299,9 +300,9 @@ const CidadesManager = () => {
                               : "Selecione a cidade"
                         } />
                       </SelectTrigger>
-                      <SelectContent className="bg-dark-bg border-neon-purple/50 max-h-60">
+                      <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
                         {cidadesDisponiveis.map((cidade: any) => (
-                          <SelectItem key={cidade.id} value={cidade.nome} className="text-soft-white">
+                          <SelectItem key={cidade.id} value={cidade.nome} className="text-slate-50">
                             {cidade.nome}
                           </SelectItem>
                         ))}
@@ -317,13 +318,13 @@ const CidadesManager = () => {
                       setNewCidade({ nome: '', estado: '' });
                       setCidadesDisponiveis([]);
                     }}
-                    className="border-neon-purple/50 text-soft-white"
+                    className="border-slate-600 text-slate-50"
                   >
                     Cancelar
                   </Button>
                   <Button
                     onClick={handleAddCidade}
-                    className="bg-neon-cyan hover:bg-neon-cyan/80 text-dark-bg"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-slate-900"
                   >
                     Adicionar
                   </Button>
@@ -333,30 +334,30 @@ const CidadesManager = () => {
           )}
 
           {cidades.length === 0 ? (
-            <div className="text-center py-8 text-text-gray">
+            <div className="text-center py-8 text-slate-400">
               Nenhuma cidade configurada ainda
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-neon-purple/20">
-                    <TableHead className="text-soft-white">Cidade</TableHead>
-                    <TableHead className="text-soft-white">Estado</TableHead>
-                    <TableHead className="text-soft-white">Data de Adição</TableHead>
-                    <TableHead className="text-soft-white">Ações</TableHead>
+                  <TableRow className="border-slate-700">
+                    <TableHead className="text-slate-50">Cidade</TableHead>
+                    <TableHead className="text-slate-50">Estado</TableHead>
+                    <TableHead className="text-slate-50">Data de Adição</TableHead>
+                    <TableHead className="text-slate-50">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {cidades.map((cidade) => (
-                    <TableRow key={cidade.id} className="border-neon-purple/10">
-                      <TableCell className="text-soft-white font-medium">
+                    <TableRow key={cidade.id} className="border-slate-700">
+                      <TableCell className="text-slate-50 font-medium">
                         {cidade.nome}
                       </TableCell>
-                      <TableCell className="text-soft-white">
+                      <TableCell className="text-slate-50">
                         {getEstadoLabel(cidade.estado)}
                       </TableCell>
-                      <TableCell className="text-text-gray">
+                      <TableCell className="text-slate-400">
                         {new Date(cidade.createdAt).toLocaleDateString('pt-BR')}
                       </TableCell>
                       <TableCell>

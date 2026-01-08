@@ -1,52 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './styles/design-tokens.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
-
-@layer base {
-  :root {
-    --background: 225 15% 6%;
-    --foreground: 231 100% 98%;
-
-    --card: 225 15% 8%;
-    --card-foreground: 231 100% 98%;
-
-    --popover: 225 15% 8%;
-    --popover-foreground: 231 100% 98%;
-
-    --primary: 324 100% 55%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 267 100% 58%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 225 15% 15%;
-    --muted-foreground: 233 12% 69%;
-
-    --accent: 197 100% 54%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 225 15% 20%;
-    --input: 225 15% 20%;
-    --ring: 324 100% 55%;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 225 15% 6%;
-    --sidebar-foreground: 233 12% 69%;
-    --sidebar-primary: 324 100% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 225 15% 15%;
-    --sidebar-accent-foreground: 231 100% 98%;
-    --sidebar-border: 225 15% 20%;
-    --sidebar-ring: 324 100% 55%;
-  }
-}
 
 @layer base {
   * {
@@ -54,42 +11,13 @@
   }
 
   body {
-    @apply bg-dark-bg text-soft-white font-inter;
-    background: linear-gradient(135deg, #0C0C1F 0%, #1a1332 50%, #0C0C1F 100%);
+    @apply bg-background text-foreground font-inter;
     min-height: 100vh;
   }
 
-  .gradient-text {
-    background: linear-gradient(135deg, #ff1c8e 0%, #9225ff 50%, #14b9ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .neon-glow {
-    text-shadow: 0 0 10px rgba(255, 28, 142, 0.5), 0 0 20px rgba(255, 28, 142, 0.3);
-  }
-
-  .glass-effect {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .btn-neon {
-    background: linear-gradient(135deg, #ff1c8e 0%, #9225ff 100%);
-    box-shadow: 0 0 20px rgba(255, 28, 142, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .btn-neon:hover {
-    transform: translateY(-2px) translateZ(0);
-    box-shadow: 0 0 30px rgba(255, 28, 142, 0.6);
-  }
-
-  .btn-neon:active {
-    transform: translateY(0) scale(0.98) translateZ(0);
-    transition: transform 0.1s ease;
+  /* Tema painel - aplicar fundo escuro */
+  .theme-painel {
+    background: hsl(var(--background)) !important;
   }
 
   .scroll-smooth {
@@ -102,12 +30,88 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  .hero-gradient {
-    background: radial-gradient(ellipse at center, rgba(146, 37, 255, 0.15) 0%, rgba(20, 185, 255, 0.1) 50%, transparent 70%);
+  .container {
+    @apply w-full mx-auto px-4;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      @apply max-w-screen-sm;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      @apply max-w-screen-md;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      @apply max-w-screen-lg;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      @apply max-w-screen-xl;
+    }
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+    @apply transition-all duration-300 hover:shadow-lg;
+  }
+
+  /* Reveillon specific utilities */
+  .font-bebas {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+  }
+
+  .font-script {
+    font-family: 'Great Vibes', cursive;
+  }
+
+  /* Scroll animations for Reveillon */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease-out;
+  }
+
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Form group spacing */
+  .form-group {
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Painel Form group spacing */
+  .theme-painel .form-group {
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Painel Helper text */
+  .theme-painel .helper-text {
+    @apply text-slate-400 text-xs mt-1;
+  }
+
+  /* Painel Typography Scale */
+  .theme-painel h1,
+  .theme-painel .page-title {
+    @apply text-2xl font-semibold text-slate-50 mb-4;
+  }
+
+  .theme-painel h2,
+  .theme-painel .section-title {
+    @apply text-lg font-medium text-slate-50 mb-4;
+  }
+
+  .theme-painel h3 {
+    @apply text-base font-medium text-slate-50;
   }
 }
 
@@ -273,18 +277,7 @@
   }
 }
 
-/* Mobile Performance Optimizations - YOLO */
+/* Mobile Performance Optimizations */
 @media (max-width: 768px) {
-  .btn-neon {
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-  }
-
-  .glass-effect {
-    backdrop-filter: blur(5px);
-  }
-
-  .gradient-text {
-    background-attachment: scroll;
-  }
+  /* Otimizações específicas para mobile se necessário */
 }

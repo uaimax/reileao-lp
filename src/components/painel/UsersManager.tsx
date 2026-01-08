@@ -140,7 +140,7 @@ const UsersManager = () => {
   if (isLoading) {
     return (
       <div className="p-6">
-        <div className="text-soft-white">Carregando usuários...</div>
+        <div className="text-slate-50">Carregando usuários...</div>
       </div>
     );
   }
@@ -150,46 +150,46 @@ const UsersManager = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Users className="w-6 h-6 text-neon-purple" />
-          <h2 className="text-2xl font-bold gradient-text">Gestão de Usuários</h2>
+          <Users className="w-6 h-6 text-yellow-500" />
+          <h2 className="text-2xl font-bold text-slate-50">Gestão de Usuários</h2>
         </div>
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="btn-neon">
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-slate-900">
               <UserPlus className="w-4 h-4 mr-2" />
               Novo Usuário
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="bg-dark-bg border-neon-purple/30">
+          <DialogContent className="bg-slate-800 border-slate-700">
             <DialogHeader>
-              <DialogTitle className="text-soft-white">Criar Novo Usuário</DialogTitle>
+              <DialogTitle className="text-slate-50">Criar Novo Usuário</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-soft-white">Email</Label>
+                <Label htmlFor="email" className="text-slate-50">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={newUserEmail}
                   onChange={(e) => setNewUserEmail(e.target.value)}
                   placeholder="Digite o email do usuário"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-soft-white">Senha</Label>
+                <Label htmlFor="password" className="text-slate-50">Senha</Label>
                 <Input
                   id="password"
                   type="password"
                   value={newUserPassword}
                   onChange={(e) => setNewUserPassword(e.target.value)}
                   placeholder="Digite a senha (mín. 6 caracteres)"
-                  className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+                  className="bg-slate-700 border-slate-600 text-slate-50"
                   required
                   minLength={6}
                 />
@@ -210,7 +210,7 @@ const UsersManager = () => {
                 </Button>
                 <Button
                   type="submit"
-                  className="btn-neon flex-1"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 flex-1"
                   disabled={isCreating}
                 >
                   {isCreating ? 'Criando...' : 'Criar Usuário'}
@@ -222,21 +222,21 @@ const UsersManager = () => {
       </div>
 
       {/* Users Table */}
-      <div className="glass-effect border-neon-purple/30 rounded-lg overflow-hidden">
+      <div className="bg-slate-800 border-slate-700 rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="border-neon-purple/20">
-              <TableHead className="text-soft-white">Email</TableHead>
-              <TableHead className="text-soft-white">Status</TableHead>
-              <TableHead className="text-soft-white">Criado em</TableHead>
-              <TableHead className="text-soft-white">Atualizado em</TableHead>
-              <TableHead className="text-soft-white text-right">Ações</TableHead>
+            <TableRow className="border-slate-700">
+              <TableHead className="text-slate-50">Email</TableHead>
+              <TableHead className="text-slate-50">Status</TableHead>
+              <TableHead className="text-slate-50">Criado em</TableHead>
+              <TableHead className="text-slate-50">Atualizado em</TableHead>
+              <TableHead className="text-slate-50 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id} className="border-neon-purple/10">
-                <TableCell className="text-soft-white font-medium">
+              <TableRow key={user.id} className="border-slate-700">
+                <TableCell className="text-slate-50 font-medium">
                   {user.email}
                 </TableCell>
                 <TableCell>
@@ -257,10 +257,10 @@ const UsersManager = () => {
                     )}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-text-gray text-sm">
+                <TableCell className="text-slate-400 text-sm">
                   {formatDate(user.createdAt)}
                 </TableCell>
-                <TableCell className="text-text-gray text-sm">
+                <TableCell className="text-slate-400 text-sm">
                   {formatDate(user.updatedAt)}
                 </TableCell>
                 <TableCell className="text-right">
@@ -268,7 +268,7 @@ const UsersManager = () => {
                     <Switch
                       checked={user.isActive}
                       onCheckedChange={() => handleToggleUserStatus(user.id, user.isActive)}
-                      className="data-[state=checked]:bg-neon-purple"
+                      className="data-[state=checked]:bg-yellow-500"
                     />
 
                     <Button
@@ -287,7 +287,7 @@ const UsersManager = () => {
         </Table>
 
         {users.length === 0 && (
-          <div className="p-8 text-center text-text-gray">
+          <div className="p-8 text-center text-slate-400">
             Nenhum usuário encontrado
           </div>
         )}
@@ -299,7 +299,7 @@ const UsersManager = () => {
           <Shield className="w-5 h-5 text-blue-400 mt-0.5" />
           <div>
             <h3 className="text-blue-400 font-medium mb-1">Informações sobre Usuários</h3>
-            <p className="text-text-gray text-sm">
+            <p className="text-slate-400 text-sm">
               • Usuários ativos podem fazer login no painel<br/>
               • Usuários inativos não conseguem acessar o sistema<br/>
               • Apenas usuários ativos recebem notificações<br/>

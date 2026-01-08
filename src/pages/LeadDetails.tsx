@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface Lead {
   id: string;
@@ -151,7 +152,7 @@ const LeadDetails = () => {
     if (!lead) return;
 
     const cleanNumber = lead.whatsapp.replace(/\D/g, '');
-    const message = `Olá ${lead.nome}! Vi que você se inscreveu no programa PRIMEIRINHO do UAIZOUK. Como posso ajudá-lo?`;
+    const message = `Olá ${lead.nome}! Vi que você se inscreveu no programa PRIMEIRINHO do ${SITE_NAME}. Como posso ajudá-lo?`;
     const url = `https://api.whatsapp.com/send?phone=55${cleanNumber}&text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };

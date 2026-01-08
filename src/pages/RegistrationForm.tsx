@@ -21,8 +21,11 @@ import TestimonialCarousel from '@/components/TestimonialCarousel';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import '../styles/phone-input.css';
+import { SITE_NAME, getSiteNameWithYear } from '@/lib/site-config';
+import Stepper from '@/components/ui/stepper';
 
 interface TicketType {
+  isActive?: boolean;
   name: string;
   price: number;
   requiresPartner: boolean;
@@ -100,7 +103,7 @@ const RegistrationForm = () => {
     trackCustomEvent('RegistrationFormView', {
       content_name: 'Event Registration Form',
       content_category: 'form',
-      event_name: eventConfig?.eventTitle || 'UAIZOUK'
+      event_name: eventConfig?.eventTitle || SITE_NAME
     });
   }, [trackFormStart, trackCustomEvent, eventConfig]);
 
@@ -582,7 +585,7 @@ const RegistrationForm = () => {
       trackCustomEvent('RegistrationSubmit', {
         content_name: 'Event Registration',
         content_category: 'form',
-        event_name: eventConfig?.eventTitle || 'UAIZOUK',
+        event_name: eventConfig?.eventTitle || SITE_NAME,
         ticket_type: formData.ticketType,
         payment_method: formData.paymentMethod,
         installments: formData.installments,
@@ -663,7 +666,7 @@ const RegistrationForm = () => {
       trackCustomEvent('RegistrationComplete', {
         content_name: 'Event Registration Complete',
         content_category: 'conversion',
-        event_name: eventConfig?.eventTitle || 'UAIZOUK',
+        event_name: eventConfig?.eventTitle || SITE_NAME,
         registration_id: registrationId,
         ticket_type: formData.ticketType,
         payment_method: formData.paymentMethod,
@@ -718,10 +721,10 @@ const RegistrationForm = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-          <p className="text-soft-white">{t('loading')}</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-yellow-500" />
+          <p className="text-black">{t('loading')}</p>
         </div>
       </div>
     );
@@ -729,10 +732,10 @@ const RegistrationForm = () => {
 
   if (!config) {
     return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-8 h-8 mx-auto mb-4 text-red-400" />
-          <p className="text-soft-white">{t('error.config')}</p>
+          <AlertCircle className="w-8 h-8 mx-auto mb-4 text-red-500" />
+          <p className="text-black">{t('error.config')}</p>
         </div>
       </div>
     );
@@ -741,65 +744,49 @@ const RegistrationForm = () => {
   return (
     <>
       <SEOHead
-        title={(landingData as any)?.event?.metaTitle || `${(landingData as any)?.event?.eventTitle || 'UAIZOUK 2025'} - ${t('header.title')}`}
-        description={(landingData as any)?.event?.metaDescription || `${(landingData as any)?.event?.eventTitle || 'UAIZOUK 2025'} - ${t('header.subtitle')}`}
+        title={(landingData as any)?.event?.metaTitle || `${(landingData as any)?.event?.eventTitle || getSiteNameWithYear('2025')} - ${t('header.title')}`}
+        description={(landingData as any)?.event?.metaDescription || `${(landingData as any)?.event?.eventTitle || getSiteNameWithYear('2025')} - ${t('header.subtitle')}`}
         image={(landingData as any)?.event?.metaImageUrl}
         url={window.location.href}
         type="website"
       />
-      <div className="min-h-screen bg-dark-bg py-8">
+      <div className="min-h-screen bg-white py-8">
       <div className="max-w-4xl mx-auto px-4">
 
         {/* Header com progresso */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold gradient-text mb-2">
-            {eventConfig?.eventTitle || 'UAIZOUK 2025'} - {t('header.title')}
+          <h1 className="text-3xl font-bold font-bebas mb-2 text-black">
+            {eventConfig?.eventTitle || getSiteNameWithYear('2025')} - {t('header.title')}
           </h1>
-          <p className="text-text-gray">{t('header.subtitle')}</p>
+          <p className="text-slate-600">{t('header.subtitle')}</p>
 
-          {/* Barra de progresso */}
+          {/* Stepper melhorado */}
           <div className="mt-6">
-            <div className="flex justify-center space-x-2 mb-2">
-              {['identification', 'tickets', 'products', 'payment', 'summary'].map((section, index) => (
-                <div
-                  key={section}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    currentSection === section
-                      ? 'bg-primary text-white'
-                      : completedSections.has(section as FormSection)
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-600 text-gray-300'
-                  }`}
-                >
-                  {completedSections.has(section as FormSection) ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : (
-                    index + 1
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="text-sm text-gray-400">
-              {currentSection === 'identification' && t('progress.identification')}
-              {currentSection === 'tickets' && t('progress.tickets')}
-              {currentSection === 'products' && t('progress.products')}
-              {currentSection === 'payment' && t('progress.payment')}
-              {currentSection === 'summary' && t('progress.summary')}
-            </div>
+            <Stepper
+              steps={[
+                { id: 'identification', label: t('progress.identification') },
+                { id: 'tickets', label: t('progress.tickets') },
+                { id: 'products', label: t('progress.products') },
+                { id: 'payment', label: t('progress.payment') },
+                { id: 'summary', label: t('progress.summary') }
+              ]}
+              currentStep={currentSection}
+              completedSteps={completedSections}
+            />
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Seção 1: Identificação */}
           {currentSection === 'identification' && (
-            <Card className="animate-in slide-in-from-right-4 duration-300">
+            <Card className="animate-in slide-in-from-right-4 duration-300 bg-white border border-slate-200 shadow-md">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">1</span>
+                <CardTitle className="flex items-center text-slate-900">
+                  <span className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-slate-900 font-bold mr-3">1</span>
                   {t('progress.identification')}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {config.foreignerOption?.enabled && (
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -848,7 +835,7 @@ const RegistrationForm = () => {
                       placeholder={t('form.whatsapp.placeholder')}
                       className="phone-input-custom"
                       style={{
-                        '--PhoneInput-color--focus': '#3b82f6',
+                        '--PhoneInput-color--focus': '#eab308',
                         '--PhoneInputCountrySelect-marginRight': '0.5em',
                       }}
                     />
@@ -943,10 +930,10 @@ const RegistrationForm = () => {
                     type="button"
                     onClick={goToNextSection}
                     disabled={!isSectionComplete('identification')}
-                    className={`transition-all duration-200 ${
+                    className={`transition-all duration-200 font-semibold ${
                       isSectionComplete('identification')
-                        ? 'bg-primary hover:bg-primary/90 cursor-pointer opacity-100'
-                        : 'bg-gray-600 cursor-not-allowed opacity-50 hover:bg-gray-600'
+                        ? 'bg-slate-900 hover:bg-slate-800 text-white cursor-pointer opacity-100 shadow-md hover:shadow-lg'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 hover:bg-gray-300'
                     }`}
                     onKeyDown={(e) => {
                       // 🏆 GHOST SELECTION LOCKDOWN - Bloquear Enter se inválido
@@ -969,17 +956,17 @@ const RegistrationForm = () => {
 
           {/* Seção 2: Tipo de Ingresso */}
           {currentSection === 'tickets' && (
-            <Card className="animate-in slide-in-from-right-4 duration-300">
+            <Card className="animate-in slide-in-from-right-4 duration-300 bg-white border border-slate-200 shadow-md">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">2</span>
+                <CardTitle className="flex items-center text-slate-900">
+                  <span className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-slate-900 font-bold mr-3">2</span>
                   {t('tickets.section.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {config.ticketTypes?.map((ticket) => (
-                    <div key={ticket.name} className="border border-gray-600 rounded-lg p-4">
+                  {config.ticketTypes?.filter(ticket => ticket.isActive !== false).map((ticket) => (
+                    <div key={ticket.name} className="border border-gray-300 rounded-lg p-4 bg-white">
                       <div className="flex items-center space-x-2 mb-3">
                         <input
                           type="radio"
@@ -989,16 +976,16 @@ const RegistrationForm = () => {
                           value={ticket.name}
                           checked={formData.ticketType === ticket.name}
                           onChange={(e) => setFormData({ ...formData, ticketType: e.target.value })}
-                          className="w-4 h-4 text-primary"
+                          className="w-4 h-4 text-yellow-500"
                         />
                         <Label htmlFor={`ticket-${ticket.name}`} className="text-lg font-semibold">
                           {ticket.name}
                         </Label>
                       </div>
-                      <p className="text-gray-400 text-sm mb-2">
+                      <p className="text-slate-600 text-sm mb-2">
                         {ticket.description}
                       </p>
-                      <p className="text-2xl font-bold text-primary">R$ {ticket.price.toFixed(2)}</p>
+                      <p className="text-2xl font-bold text-yellow-500">R$ {ticket.price.toFixed(2)}</p>
                     </div>
                   ))}
                 </div>
@@ -1028,10 +1015,10 @@ const RegistrationForm = () => {
                     type="button"
                     onClick={goToNextSection}
                     disabled={!isSectionComplete('tickets')}
-                    className={`transition-all duration-200 ${
+                    className={`transition-all duration-200 font-semibold ${
                       isSectionComplete('tickets')
-                        ? 'bg-primary hover:bg-primary/90 cursor-pointer opacity-100'
-                        : 'bg-gray-600 cursor-not-allowed opacity-50 hover:bg-gray-600'
+                        ? 'bg-slate-900 hover:bg-slate-800 text-white cursor-pointer opacity-100 shadow-md hover:shadow-lg'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 hover:bg-gray-300'
                     }`}
                     onKeyDown={(e) => {
                       // 🏆 GHOST SELECTION LOCKDOWN - Bloquear Enter se inválido
@@ -1054,13 +1041,13 @@ const RegistrationForm = () => {
 
           {/* Seção 3: Produtos Adicionais - NOVA UX DIRETA */}
           {currentSection === 'products' && (
-            <Card className="animate-in slide-in-from-right-4 duration-300">
+            <Card className="animate-in slide-in-from-right-4 duration-300 bg-white border border-slate-200 shadow-md">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">3</span>
+                <CardTitle className="flex items-center text-slate-900">
+                  <span className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-slate-900 font-bold mr-3">3</span>
                   {t('products.section.title')}
                 </CardTitle>
-                <p className="text-gray-400 text-sm mt-2">
+                <p className="text-slate-500 text-sm mt-2">
                   Para cada produto abaixo, escolha uma opção. <strong>Todos os produtos devem ser respondidos para continuar.</strong>
                 </p>
               </CardHeader>
@@ -1088,8 +1075,8 @@ const RegistrationForm = () => {
                     <div key={product.name} className={`
                       rounded-xl p-6 border-2 transition-all duration-300
                       ${isAnswered
-                        ? 'border-green-400 bg-green-900/10 shadow-lg shadow-green-500/20'
-                        : 'border-orange-400 bg-orange-900/10 shadow-lg shadow-orange-500/20'
+                        ? 'border-green-500 bg-green-50 shadow-md'
+                        : 'border-orange-400 bg-orange-50 shadow-md'
                       }
                     `}>
 
@@ -1097,15 +1084,15 @@ const RegistrationForm = () => {
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex-1">
                           <div className="flex items-center mb-2">
-                            <h3 className="text-xl font-bold text-white mr-3">
+                            <h3 className="text-xl font-bold text-slate-900 mr-3">
                               {product.name}
                             </h3>
-                            <span className="text-2xl font-bold text-primary">
+                            <span className="text-2xl font-bold text-yellow-500">
                               R$ {product.price.toFixed(2)}
                             </span>
                           </div>
                           {product.description && (
-                            <p className="text-gray-400 text-sm mb-3">
+                            <p className="text-slate-500 text-sm mb-3">
                               {product.description}
                             </p>
                           )}
@@ -1123,7 +1110,7 @@ const RegistrationForm = () => {
 
                       {/* OPTIONS */}
                       <div className="space-y-3">
-                        <Label className="text-white font-semibold block">
+                        <Label className="text-slate-900 font-semibold block">
                           Escolha uma opção para {product.name}:
                         </Label>
 
@@ -1133,8 +1120,8 @@ const RegistrationForm = () => {
                           <div
                             className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
                               selectedValue === 'Não'
-                                ? 'border-red-400 bg-red-900/20 shadow-lg'
-                                : 'border-gray-600 hover:border-gray-500 bg-gray-800/30'
+                                ? 'border-red-500 bg-red-50 shadow-md'
+                                : 'border-slate-300 hover:border-slate-400 bg-white'
                             }`}
                             onClick={() => setFormData(prev => ({
                               ...prev,
@@ -1147,15 +1134,15 @@ const RegistrationForm = () => {
                             <div className="flex items-center">
                               <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
                                 selectedValue === 'Não'
-                                  ? 'border-red-400 bg-red-400'
-                                  : 'border-gray-500'
+                                  ? 'border-red-500 bg-red-500'
+                                  : 'border-slate-400'
                               }`}>
                                 {selectedValue === 'Não' && (
                                   <div className="w-2 h-2 bg-white rounded-full"></div>
                                 )}
                               </div>
                               <span className={`font-medium ${
-                                selectedValue === 'Não' ? 'text-red-300' : 'text-gray-300'
+                                selectedValue === 'Não' ? 'text-red-600' : 'text-slate-600'
                               }`}>
                                 ❌ Não quero.
                               </span>
@@ -1170,8 +1157,8 @@ const RegistrationForm = () => {
                                 key={option}
                                 className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
                                   selectedValue === option
-                                    ? 'border-green-400 bg-green-900/20 shadow-lg'
-                                    : 'border-gray-600 hover:border-gray-500 bg-gray-800/30'
+                                    ? 'border-green-500 bg-green-50 shadow-md'
+                                    : 'border-slate-300 hover:border-slate-400 bg-white'
                                 }`}
                                 onClick={() => setFormData(prev => ({
                                   ...prev,
@@ -1185,21 +1172,21 @@ const RegistrationForm = () => {
                                   <div className="flex items-center">
                                     <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
                                       selectedValue === option
-                                        ? 'border-green-400 bg-green-400'
-                                        : 'border-gray-500'
+                                        ? 'border-green-500 bg-green-500'
+                                        : 'border-slate-400'
                                     }`}>
                                       {selectedValue === option && (
                                         <div className="w-2 h-2 bg-white rounded-full"></div>
                                       )}
                                     </div>
                                     <span className={`font-medium ${
-                                      selectedValue === option ? 'text-green-300' : 'text-gray-300'
+                                      selectedValue === option ? 'text-green-600' : 'text-slate-600'
                                     }`}>
                                       ✅ Sim, quero:  <strong>{option}</strong>
                                     </span>
                                   </div>
                                   <span className={`text-sm ${
-                                    selectedValue === option ? 'text-green-400' : 'text-gray-400'
+                                    selectedValue === option ? 'text-green-600' : 'text-slate-500'
                                   }`}>
                                     +R$ {product.price.toFixed(2)}
                                   </span>
@@ -1211,8 +1198,8 @@ const RegistrationForm = () => {
                             <div
                               className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
                                 selectedValue === 'Sim'
-                                  ? 'border-green-400 bg-green-900/20 shadow-lg'
-                                  : 'border-gray-600 hover:border-gray-500 bg-gray-800/30'
+                                  ? 'border-green-500 bg-green-50 shadow-md'
+                                  : 'border-slate-300 hover:border-slate-400 bg-white'
                               }`}
                               onClick={() => setFormData(prev => ({
                                 ...prev,
@@ -1226,21 +1213,21 @@ const RegistrationForm = () => {
                                 <div className="flex items-center">
                                   <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
                                     selectedValue === 'Sim'
-                                      ? 'border-green-400 bg-green-400'
-                                      : 'border-gray-500'
+                                      ? 'border-green-500 bg-green-500'
+                                      : 'border-slate-400'
                                   }`}>
                                     {selectedValue === 'Sim' && (
                                       <div className="w-2 h-2 bg-white rounded-full"></div>
                                     )}
                                   </div>
                                   <span className={`font-medium ${
-                                    selectedValue === 'Sim' ? 'text-green-300' : 'text-gray-300'
+                                    selectedValue === 'Sim' ? 'text-green-600' : 'text-slate-600'
                                   }`}>
                                     ✅ Sim, quero!
                                   </span>
                                 </div>
                                 <span className={`text-sm ${
-                                  selectedValue === 'Sim' ? 'text-green-400' : 'text-gray-400'
+                                  selectedValue === 'Sim' ? 'text-green-600' : 'text-slate-500'
                                 }`}>
                                   +R$ {product.price.toFixed(2)}
                                 </span>
@@ -1255,13 +1242,13 @@ const RegistrationForm = () => {
 
                 {/* VALIDATION STATUS */}
                 {!isSectionComplete('products') && (
-                  <div className="p-4 rounded-lg border-2 border-orange-400 bg-orange-900/20">
+                  <div className="p-4 rounded-lg border-2 border-orange-400 bg-orange-50">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-6 h-6 rounded-full mr-3 flex items-center justify-center bg-orange-500">
                           ⏳
                         </div>
-                        <span className="font-semibold text-orange-300">
+                        <span className="font-semibold text-orange-600">
                           Ainda há produtos aguardando resposta
                         </span>
                       </div>
@@ -1285,10 +1272,10 @@ const RegistrationForm = () => {
                     onClick={goToNextSection}
                     disabled={!isSectionComplete('products')}
                     size="lg"
-                    className={`transition-all duration-200 ${
+                    className={`transition-all duration-200 font-semibold ${
                       isSectionComplete('products')
-                        ? 'bg-primary hover:bg-primary/90 text-white'
-                        : 'bg-gray-600 cursor-not-allowed opacity-50'
+                        ? 'bg-slate-900 hover:bg-slate-800 text-white cursor-pointer opacity-100 shadow-md hover:shadow-lg'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 hover:bg-gray-300'
                     }`}
                   >
                     {isSectionComplete('products')
@@ -1308,29 +1295,29 @@ const RegistrationForm = () => {
 
           {/* Seção 4: Forma de Pagamento */}
           {currentSection === 'payment' && (
-            <Card className="animate-in slide-in-from-right-4 duration-300">
+            <Card className="animate-in slide-in-from-right-4 duration-300 bg-white border border-slate-200 shadow-md">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">4</span>
+                <CardTitle className="flex items-center text-slate-900">
+                  <span className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-slate-900 font-bold mr-3">4</span>
                   {t('payment.section.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Resumo dos Produtos Selecionados */}
-                <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
-                  <h4 className="font-semibold text-white mb-3 flex items-center">
-                    <span className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm mr-2">📋</span>
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
+                    <span className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-slate-900 text-sm mr-2">📋</span>
                     {t('payment.summary.title')}
                   </h4>
                   <div className="space-y-2">
                     {/* Ingresso Selecionado */}
                     {formData.ticketType && (
                       <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-300">
+                        <span className="text-slate-600">
                           🎫 {formData.ticketType}
                           {formData.partnerName && ` (Dupla: ${formData.partnerName})`}
                         </span>
-                        <span className="text-white font-medium">
+                        <span className="text-slate-900 font-medium">
                           R$ {config?.ticketTypes?.find(t => t.name === formData.ticketType)?.price?.toFixed(2) || '0.00'}
                         </span>
                       </div>
@@ -1343,10 +1330,10 @@ const RegistrationForm = () => {
 
                       return (
                         <div key={productName} className="flex justify-between items-center text-sm">
-                          <span className="text-gray-300">
+                          <span className="text-slate-600">
                             🛍️ {productName}: {option}
                           </span>
-                          <span className="text-white font-medium">
+                          <span className="text-slate-900 font-medium">
                             R$ {product.price?.toFixed(2) || '0.00'}
                           </span>
                         </div>
@@ -1354,12 +1341,12 @@ const RegistrationForm = () => {
                     })}
 
                     {/* Linha Separadora */}
-                    <div className="border-t border-gray-600 my-2"></div>
+                    <div className="border-t border-slate-300 my-2"></div>
 
                     {/* Total Base */}
                     <div className="flex justify-between items-center text-sm font-medium">
-                      <span className="text-gray-300">{t('payment.summary.totalBase')}</span>
-                      <span className="text-white" data-testid="baseTotal">R$ {calculateTotal().toFixed(2)}</span>
+                      <span className="text-slate-500">{t('payment.summary.totalBase')}</span>
+                      <span className="text-slate-900" data-testid="baseTotal">R$ {calculateTotal().toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -1367,8 +1354,8 @@ const RegistrationForm = () => {
                 {config?.paymentSettings && (
                   <div className="space-y-4">
                     <div className="text-center">
-                      <h3 className="text-xl font-bold text-white mb-2">{t('payment.choose.title')}</h3>
-                      <p className="text-gray-400 text-sm">{t('payment.choose.subtitle')}</p>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">{t('payment.choose.title')}</h3>
+                      <p className="text-slate-500 text-sm">{t('payment.choose.subtitle')}</p>
                     </div>
 
                     <div className="space-y-4">
@@ -1377,8 +1364,8 @@ const RegistrationForm = () => {
                         <div
                           className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 relative ${
                             formData.paymentMethod === 'pix'
-                              ? 'border-green-500 bg-green-900/20 shadow-lg shadow-green-500/20'
-                              : 'border-green-400 bg-green-900/10 hover:border-green-500 hover:bg-green-900/20'
+                              ? 'border-green-500 bg-green-50 shadow-lg'
+                              : 'border-green-300 bg-green-50/50 hover:border-green-500 hover:bg-green-50'
                           }`}
                           data-testid="payment-pix"
                           onClick={() => setFormData({ ...formData, paymentMethod: 'pix' })}
@@ -1393,12 +1380,12 @@ const RegistrationForm = () => {
                                 <span className="text-white font-bold text-lg">P</span>
                               </div>
                               <div>
-                                <h4 className="font-bold text-white text-lg">{t('payment.pix.title')}</h4>
-                                <p className="text-sm text-gray-300">{t('payment.pix.subtitle')}</p>
+                                <h4 className="font-bold text-slate-900 text-lg">{t('payment.pix.title')}</h4>
+                                <p className="text-sm text-slate-600">{t('payment.pix.subtitle')}</p>
                               </div>
                             </div>
                             <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
-                              formData.paymentMethod === 'pix' ? 'border-green-500 bg-green-500' : 'border-gray-400'
+                              formData.paymentMethod === 'pix' ? 'border-green-500 bg-green-500' : 'border-slate-300'
                             }`}>
                               {formData.paymentMethod === 'pix' && (
                                 <div className="w-3 h-3 bg-white rounded-full"></div>
@@ -1406,24 +1393,24 @@ const RegistrationForm = () => {
                             </div>
                           </div>
 
-                          <div className="bg-green-800/20 rounded-lg p-4">
+                          <div className="bg-green-100 rounded-lg p-4">
                             <div className="flex justify-between items-center mb-2">
-                              <span className="text-gray-300">{t('payment.pix.baseValue')}</span>
-                              <span className="text-gray-400">R$ {(calculateTotal() || 0).toFixed(2)}</span>
+                              <span className="text-slate-600">{t('payment.pix.baseValue')}</span>
+                              <span className="text-slate-500">R$ {(calculateTotal() || 0).toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between items-center mb-3">
-                              <span className="text-green-300 font-medium">PIX sem taxa do sistema:</span>
-                              <span className="text-green-300 font-medium">-R$ {(calculateSavings(calculateTotal(), 'pix') || 0).toFixed(2)}</span>
+                              <span className="text-green-600 font-medium">PIX sem taxa do sistema:</span>
+                              <span className="text-green-600 font-medium">-R$ {(calculateSavings(calculateTotal(), 'pix') || 0).toFixed(2)}</span>
                             </div>
-                            <div className="border-t border-green-600 pt-3">
+                            <div className="border-t border-green-300 pt-3">
                               <div className="flex justify-between items-center">
-                                <span className="font-bold text-white text-lg">{t('payment.pix.finalValue')}</span>
-                                <span className="font-bold text-green-400 text-2xl" data-testid="finalTotal">R$ {(calculateFinalTotal(calculateTotal(), 'pix') || 0).toFixed(2)}</span>
+                                <span className="font-bold text-slate-900 text-lg">{t('payment.pix.finalValue')}</span>
+                                <span className="font-bold text-green-600 text-2xl" data-testid="finalTotal">R$ {(calculateFinalTotal(calculateTotal(), 'pix') || 0).toFixed(2)}</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="mt-4 flex items-center justify-center space-x-6 text-xs text-green-300">
+                          <div className="mt-4 flex items-center justify-center space-x-6 text-xs text-green-600">
                             <span>{t('payment.pix.benefits.economy')}</span>
                             <span>{t('payment.pix.benefits.noFees')}</span>
                             <span>{t('payment.pix.benefits.instant')}</span>
@@ -1438,8 +1425,8 @@ const RegistrationForm = () => {
                           <div
                             className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
                               formData.paymentMethod === 'pix_installment'
-                                ? 'border-blue-400 bg-blue-900/20'
-                                : 'border-gray-600 bg-gray-800/30 hover:border-blue-300'
+                                ? 'border-blue-500 bg-blue-50'
+                                : 'border-slate-300 bg-slate-50 hover:border-blue-400'
                             }`}
                             data-testid="payment-pix_installment"
                             onClick={() => setFormData({ ...formData, paymentMethod: 'pix_installment' })}
@@ -1447,19 +1434,19 @@ const RegistrationForm = () => {
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-3">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                  formData.paymentMethod === 'pix_installment' ? 'bg-blue-400' : 'bg-gray-600'
+                                  formData.paymentMethod === 'pix_installment' ? 'bg-blue-500' : 'bg-slate-400'
                                 }`}>
                                   <span className="text-white font-bold text-sm">P</span>
                                 </div>
                                 <div>
                                   <h5 className={`font-semibold ${
-                                    formData.paymentMethod === 'pix_installment' ? 'text-white' : 'text-gray-300'
+                                    formData.paymentMethod === 'pix_installment' ? 'text-slate-900' : 'text-slate-700'
                                   }`}>{t('payment.pixInstallment.title')}</h5>
-                                  <p className="text-xs text-gray-400">{t('payment.pixInstallment.subtitle', { '0': calculateMaxInstallments(config.paymentSettings.dueDateLimit) })}</p>
+                                  <p className="text-xs text-slate-500">{t('payment.pixInstallment.subtitle', { '0': calculateMaxInstallments(config.paymentSettings.dueDateLimit) })}</p>
                                 </div>
                               </div>
                               <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                formData.paymentMethod === 'pix_installment' ? 'border-blue-400 bg-blue-400' : 'border-gray-500'
+                                formData.paymentMethod === 'pix_installment' ? 'border-blue-500 bg-blue-500' : 'border-slate-400'
                               }`}>
                                 {formData.paymentMethod === 'pix_installment' && (
                                   <div className="w-2 h-2 bg-white rounded-full"></div>
@@ -1467,14 +1454,14 @@ const RegistrationForm = () => {
                               </div>
                             </div>
                             <div className="mt-2 text-right">
-                              <div className="text-xs text-gray-400 mb-1">
+                              <div className="text-xs text-slate-500 mb-1">
                                 {t('payment.pixInstallment.baseValue', { '0': (calculateTotal() || 0).toFixed(2) })}
                               </div>
-                              <div className="text-xs text-red-400 mb-1">
+                              <div className="text-xs text-red-500 mb-1">
                                 {t('payment.pixInstallment.fee', { '0': (config.paymentSettings.creditCardFeePercentage || 5) })}
                               </div>
                               <span className={`font-bold ${
-                                formData.paymentMethod === 'pix_installment' ? 'text-blue-400' : 'text-gray-400'
+                                formData.paymentMethod === 'pix_installment' ? 'text-blue-600' : 'text-slate-500'
                               }`}>
                                 R$ {(calculateFinalTotal(calculateTotal(), 'pix_installment') || 0).toFixed(2)}
                               </span>
@@ -1482,7 +1469,7 @@ const RegistrationForm = () => {
 
                             {/* Seletor de parcelas para PIX parcelado */}
                             {formData.paymentMethod === 'pix_installment' && (
-                              <div className="mt-3 pt-3 border-t border-gray-600">
+                              <div className="mt-3 pt-3 border-t border-slate-200">
                                 <InstallmentSelector
                                   value={formData.installments}
                                   onChange={(value) => setFormData({ ...formData, installments: value })}
@@ -1501,8 +1488,8 @@ const RegistrationForm = () => {
                           <div
                             className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
                               formData.paymentMethod === 'credit_card'
-                                ? 'border-gray-500 bg-gray-800/50'
-                                : 'border-gray-600 bg-gray-800/30 hover:border-gray-500'
+                                ? 'border-slate-500 bg-slate-100'
+                                : 'border-slate-300 bg-slate-50 hover:border-slate-400'
                             }`}
                             data-testid="payment-credit_card"
                             onClick={() => setFormData({ ...formData, paymentMethod: 'credit_card' })}
@@ -1510,19 +1497,19 @@ const RegistrationForm = () => {
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-3">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                  formData.paymentMethod === 'credit_card' ? 'bg-gray-500' : 'bg-gray-600'
+                                  formData.paymentMethod === 'credit_card' ? 'bg-slate-600' : 'bg-slate-400'
                                 }`}>
                                   <span className="text-white font-bold text-sm">💳</span>
                                 </div>
                                 <div>
                                   <h5 className={`font-semibold ${
-                                    formData.paymentMethod === 'credit_card' ? 'text-white' : 'text-gray-300'
+                                    formData.paymentMethod === 'credit_card' ? 'text-slate-900' : 'text-slate-700'
                                   }`}>{t('payment.creditCard.title')}</h5>
-                                  <p className="text-xs text-gray-400">{t('payment.pixInstallment.subtitle', { '0': calculateMaxInstallments(config.paymentSettings.dueDateLimit) })}</p>
+                                  <p className="text-xs text-slate-500">{t('payment.pixInstallment.subtitle', { '0': calculateMaxInstallments(config.paymentSettings.dueDateLimit) })}</p>
                                 </div>
                               </div>
                               <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                formData.paymentMethod === 'credit_card' ? 'border-gray-500 bg-gray-500' : 'border-gray-500'
+                                formData.paymentMethod === 'credit_card' ? 'border-slate-600 bg-slate-600' : 'border-slate-400'
                               }`}>
                                 {formData.paymentMethod === 'credit_card' && (
                                   <div className="w-2 h-2 bg-white rounded-full"></div>
@@ -1530,14 +1517,14 @@ const RegistrationForm = () => {
                               </div>
                             </div>
                             <div className="mt-2 text-right">
-                              <div className="text-xs text-gray-400 mb-1">
+                              <div className="text-xs text-slate-500 mb-1">
                                 {t('payment.creditCard.baseValue', { '0': (calculateTotal() || 0).toFixed(2) })}
                               </div>
-                              <div className="text-xs text-red-400 mb-1">
+                              <div className="text-xs text-red-500 mb-1">
                                 {t('payment.creditCard.fee', { '0': (config.paymentSettings.creditCardFeePercentage || 5) })}
                               </div>
                               <span className={`font-bold ${
-                                formData.paymentMethod === 'credit_card' ? 'text-gray-400' : 'text-gray-500'
+                                formData.paymentMethod === 'credit_card' ? 'text-slate-700' : 'text-slate-500'
                               }`}>
                                 R$ {(calculateFinalTotal(calculateTotal(), 'credit_card') || 0).toFixed(2)}
                               </span>
@@ -1545,7 +1532,7 @@ const RegistrationForm = () => {
 
                             {/* Seletor de parcelas para Cartão de Crédito */}
                             {formData.paymentMethod === 'credit_card' && (
-                              <div className="mt-3 pt-3 border-t border-gray-600">
+                              <div className="mt-3 pt-3 border-t border-slate-200">
                                 <InstallmentSelector
                                   value={formData.installments}
                                   onChange={(value) => setFormData({ ...formData, installments: value })}
@@ -1576,7 +1563,7 @@ const RegistrationForm = () => {
                     type="button"
                     onClick={goToNextSection}
                     disabled={!isSectionComplete('payment')}
-                    className="bg-primary hover:bg-primary/90"
+                    className="bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-md hover:shadow-lg"
                   >
                     {t('button.continue')}
                   </Button>
@@ -1587,67 +1574,69 @@ const RegistrationForm = () => {
 
           {/* Seção 5: Resumo e Confirmação */}
           {currentSection === 'summary' && (
-            <Card className="animate-in slide-in-from-right-4 duration-300">
+            <Card className="animate-in slide-in-from-right-4 duration-300 bg-white border border-slate-200 shadow-md">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">5</span>
+                <CardTitle className="flex items-center text-slate-900">
+                  <span className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-slate-900 font-bold mr-3">5</span>
                   {t('summary.section.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* RESUMO DO PEDIDO */}
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-bold text-white mb-4 flex items-center">
-                    <FileText className="w-5 h-5 mr-2" />
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                    <FileText className="w-5 h-5 mr-2 text-yellow-500" />
                     {t('summary.order.title')}
                   </h3>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-slate-600">
                     <div className="flex justify-between">
                       <span>{t('summary.name')}</span>
-                      <span className="text-white">{formData.fullName}</span>
+                      <span className="text-slate-900 font-medium">{formData.fullName}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>{t('summary.email')}</span>
-                      <span className="text-white">{formData.email}</span>
+                      <span className="text-slate-900 font-medium">{formData.email}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>{t('summary.whatsapp')}</span>
-                      <span className="text-white">{formData.whatsapp}</span>
+                      <span className="text-slate-900 font-medium">{formData.whatsapp}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>{t('summary.ticketType')}</span>
-                      <span className="text-white">{formData.ticketType}</span>
+                      <span className="text-slate-900 font-medium">{formData.ticketType}</span>
                     </div>
                     {formData.partnerName && (
                       <div className="flex justify-between">
                         <span>{t('summary.partner')}</span>
-                        <span className="text-white">{formData.partnerName}</span>
+                        <span className="text-slate-900 font-medium">{formData.partnerName}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
                       <span>{t('summary.paymentMethod')}</span>
-                      <span className="text-white">
+                      <span className="text-slate-900 font-medium">
                         {formData.paymentMethod === 'pix' && t('summary.paymentMethod.pix')}
                         {formData.paymentMethod === 'pix_installment' && t('summary.paymentMethod.pixInstallment')}
                         {formData.paymentMethod === 'credit_card' && t('summary.paymentMethod.creditCard')}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>{t('summary.total')}</span>
-                      <span className="text-white font-bold text-lg">
-                        {(formData.paymentMethod === 'pix_installment' || formData.paymentMethod === 'credit_card') && formData.installments > 1
-                          ? `${formData.installments}x de R$ ${((calculateFinalTotal(calculateTotal(), formData.paymentMethod) || 0) / formData.installments).toFixed(2)}`
-                          : `R$ ${(calculateFinalTotal(calculateTotal(), formData.paymentMethod) || 0).toFixed(2)}`
-                        }
-                      </span>
+                    <div className="border-t border-slate-200 pt-2 mt-2">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold text-slate-900">{t('summary.total')}</span>
+                        <span className="text-yellow-500 font-bold text-xl">
+                          {(formData.paymentMethod === 'pix_installment' || formData.paymentMethod === 'credit_card') && formData.installments > 1
+                            ? `${formData.installments}x de R$ ${((calculateFinalTotal(calculateTotal(), formData.paymentMethod) || 0) / formData.installments).toFixed(2)}`
+                            : `R$ ${(calculateFinalTotal(calculateTotal(), formData.paymentMethod) || 0).toFixed(2)}`
+                          }
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* TERMOS E CONDIÇÕES */}
                 <div className="space-y-4">
-                  <div className="border border-gray-600 rounded-lg p-4 hover:bg-gray-800/30 transition-colors">
+                  <div className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
                     <EnhancedCheckbox
                       id="termsAccepted"
                       data-testid="termsAccepted"
@@ -1661,7 +1650,7 @@ const RegistrationForm = () => {
                             <DialogTrigger asChild>
                               <button
                                 type="button"
-                                className="text-primary hover:underline"
+                                className="text-yellow-500 hover:underline"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 {t('terms.link')}
@@ -1681,7 +1670,7 @@ const RegistrationForm = () => {
                     />
                   </div>
 
-                  <div className="border border-gray-600 rounded-lg p-4 hover:bg-gray-800/30 transition-colors">
+                  <div className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
                     <EnhancedCheckbox
                       id="noRefundAccepted"
                       data-testid="noRefundAccepted"
@@ -1692,7 +1681,7 @@ const RegistrationForm = () => {
                     />
                   </div>
 
-                  <div className="border border-gray-600 rounded-lg p-4 hover:bg-gray-800/30 transition-colors">
+                  <div className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
                     <EnhancedCheckbox
                       id="rescheduleAccepted"
                       data-testid="rescheduleAccepted"
@@ -1703,7 +1692,7 @@ const RegistrationForm = () => {
                     />
                   </div>
 
-                  <div className="border border-gray-600 rounded-lg p-4 hover:bg-gray-800/30 transition-colors">
+                  <div className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
                     <EnhancedCheckbox
                       id="withdrawalAccepted"
                       data-testid="withdrawalAccepted"
@@ -1717,7 +1706,7 @@ const RegistrationForm = () => {
 
                   {/* Checkbox condicional para juros - aparece apenas para cartão de crédito e PIX parcelado */}
                   {(formData.paymentMethod === 'credit_card' || formData.paymentMethod === 'pix_installment') && (
-                    <div className="border border-gray-600 rounded-lg p-4 hover:bg-gray-800/30 transition-colors">
+                    <div className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors">
                       <EnhancedCheckbox
                         id="interestAccepted"
                         data-testid="interestAccepted"
@@ -1741,7 +1730,7 @@ const RegistrationForm = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting || !isSectionComplete('summary')}
-                    className="bg-primary hover:bg-primary/90"
+                    className="bg-yellow-500 hover:bg-yellow-600"
                     size="lg"
                   >
                     {isSubmitting ? (

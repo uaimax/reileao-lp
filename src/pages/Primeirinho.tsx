@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { SITE_NAME, getSiteNameWithYear } from '@/lib/site-config';
 import { CheckCircle, XCircle, FileText } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
@@ -106,7 +107,7 @@ const Primeirinho = () => {
                 PRIMEIRINHO
               </CardTitle>
               <CardDescription className="text-xl text-neon-cyan">
-                Você pode ganhar o FULL PASS do UAIZOUK na hora! Sem sorteio!
+                Você pode ganhar o FULL PASS do {SITE_NAME} na hora! Sem sorteio!
               </CardDescription>
             </CardHeader>
 
@@ -119,7 +120,7 @@ const Primeirinho = () => {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-6 h-6 text-neon-green" />
-                    <span className="text-soft-white">Nunca ter vindo no UAIZOUK ainda.</span>
+                    <span className="text-soft-white">Nunca ter vindo no {SITE_NAME} ainda.</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-6 h-6 text-neon-green" />
@@ -231,7 +232,7 @@ const Primeirinho = () => {
                         <DialogContent className="bg-dark-bg border-neon-purple/50 text-soft-white max-w-2xl max-h-[80vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle className="text-neon-cyan text-xl font-bold">
-                              Termos de Participação - PRIMEIRINHO UAIZOUK 2026
+                              Termos de Participação - PRIMEIRINHO {getSiteNameWithYear('2026')}
                             </DialogTitle>
                             <DialogDescription className="text-text-gray">
                               Leia atentamente os termos antes de participar
@@ -267,7 +268,7 @@ const Primeirinho = () => {
                               <div className="flex items-start space-x-3">
                                 <span className="text-neon-cyan font-bold">4.</span>
                                 <p className="text-soft-white">
-                                  Não contemplaremos participantes que já estiveram no UAIZOUK em outras ocasiões.
+                                  Não contemplaremos participantes que já estiveram no {SITE_NAME} em outras ocasiões.
                                 </p>
                               </div>
 

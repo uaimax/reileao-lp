@@ -32,9 +32,58 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Configure as variáveis de ambiente
+# Copie o arquivo _save_env para .env (ou configure manualmente)
+cp _save_env .env
+
+# Step 5: Inicie o projeto completo (Frontend + API)
+./dev-start.sh
+
+# OU inicie apenas o frontend:
 npm run dev
+
+# OU inicie apenas a API:
+npm run dev:api
 ```
+
+## 🚀 Iniciando o Projeto
+
+### Forma Mais Fácil (Recomendado)
+
+Use o script `./dev-start.sh` que inicia automaticamente o frontend e a API:
+
+```sh
+./dev-start.sh
+```
+
+Este script:
+- ✅ Verifica se as portas estão disponíveis
+- ✅ Configura automaticamente `VITE_API_URL`
+- ✅ Inicia a API na porta 3002
+- ✅ Inicia o Frontend na porta 5173
+- ✅ Carrega variáveis de ambiente do arquivo `_save_env`
+
+### Configurando Portas Personalizadas
+
+Se precisar usar portas diferentes (para evitar conflitos):
+
+```sh
+# Frontend na porta 5174 e API na porta 3003
+FRONTEND_PORT=5174 API_PORT=3003 ./dev-start.sh
+```
+
+### Variáveis de Ambiente
+
+O projeto precisa do arquivo `_save_env` na raiz com as seguintes variáveis:
+
+- `DATABASE_URL` - URL de conexão do PostgreSQL
+- `VITE_API_URL` - URL da API (configurado automaticamente pelo script)
+- `VITE_SITE_NAME` - Nome do site (padrão: 'UAIZOUK')
+- `ASAAS_SANDBOX` - Modo sandbox do Asaas
+- `ASAAS_API_KEY_SANDBOX` - Chave da API Asaas (sandbox)
+- `ASAAS_API_KEY_PRODUCTION` - Chave da API Asaas (produção)
+
+**Nota:** O script `./dev-start.sh` configura automaticamente `VITE_API_URL` baseado na porta da API, então você não precisa configurá-la manualmente no `_save_env` para desenvolvimento.
 
 **Edit a file directly in GitHub**
 

@@ -7,6 +7,7 @@ import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
 import PrimeirinhoConfirmation from '@/components/PrimeirinhoConfirmation';
 import PrimeirinhoConfirmed from '@/components/PrimeirinhoConfirmed';
+import { getSiteNameWithYear } from '@/lib/site-config';
 
 interface LeadData {
   id: string;
@@ -113,7 +114,7 @@ const PrimeirinhoStatus = () => {
       }
 
       setLeadData(updatedData);
-      
+
       // Se o status foi alterado para confirmed, a página será automaticamente
       // redirecionada para mostrar PrimeirinhoConfirmed devido ao useEffect
     } catch (error: any) {
@@ -187,7 +188,7 @@ const PrimeirinhoStatus = () => {
                     Está quase lá!
                   </h3>
                   <p className="text-soft-white mb-4">
-                    Se não tiver ninguém da sua cidade ainda, você pode ter ganhado um Full Pass do UAIZOUK 2026.
+                    Se não tiver ninguém da sua cidade ainda, você pode ter ganhado um Full Pass do {getSiteNameWithYear('2026')}.
                   </p>
                   <p className="text-soft-white mb-4">
                     O processo de avaliação pode levar até 5 dias úteis e nossa equipe entrará em contato com você, seja para informar que deu certo ou não!

@@ -17,12 +17,12 @@ const EventoConfig = () => {
 
   const handleSave = () => {
     // Aqui salvaria no banco de dados
-    console.log('Salvando configurações:', { 
-      dataInicio, 
-      dataFim, 
-      videoFundo, 
-      videoLocal, 
-      linkCTA 
+    console.log('Salvando configurações:', {
+      dataInicio,
+      dataFim,
+      videoFundo,
+      videoLocal,
+      linkCTA
     });
     toast({
       title: "Configurações salvas!",
@@ -31,16 +31,16 @@ const EventoConfig = () => {
   };
 
   return (
-    <Card className="glass-effect border-neon-purple/30">
+    <Card className="bg-slate-800 border-slate-700">
       <CardHeader>
-        <CardTitle className="text-xl text-soft-white">
+        <CardTitle className="text-xl text-slate-50">
           Configurações do Evento
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="dataInicio" className="text-soft-white">
+            <Label htmlFor="dataInicio" className="text-slate-50">
               Data e Horário de Início
             </Label>
             <Input
@@ -48,15 +48,15 @@ const EventoConfig = () => {
               type="datetime-local"
               value={dataInicio}
               onChange={(e) => setDataInicio(e.target.value)}
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50"
             />
-            <p className="text-text-gray text-sm">
+            <p className="text-slate-400 text-sm">
               Data e horário de início do evento
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dataFim" className="text-soft-white">
+            <Label htmlFor="dataFim" className="text-slate-50">
               Data e Horário de Fim
             </Label>
             <Input
@@ -64,16 +64,16 @@ const EventoConfig = () => {
               type="datetime-local"
               value={dataFim}
               onChange={(e) => setDataFim(e.target.value)}
-              className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+              className="bg-slate-700 border-slate-600 text-slate-50"
             />
-            <p className="text-text-gray text-sm">
+            <p className="text-slate-400 text-sm">
               Data e horário de fim do evento
             </p>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="videoFundo" className="text-soft-white">
+          <Label htmlFor="videoFundo" className="text-slate-50">
             Vídeo de Fundo do Hero (YouTube)
           </Label>
           <Input
@@ -82,15 +82,15 @@ const EventoConfig = () => {
             value={videoFundo}
             onChange={(e) => setVideoFundo(e.target.value)}
             placeholder="https://youtu.be/..."
-            className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+            className="bg-slate-700 border-slate-600 text-slate-50"
           />
-          <p className="text-text-gray text-sm">
+          <p className="text-slate-400 text-sm">
             Link do YouTube que será exibido como vídeo de fundo na seção hero
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="videoLocal" className="text-soft-white">
+          <Label htmlFor="videoLocal" className="text-slate-50">
             Vídeo do Local (YouTube)
           </Label>
           <Input
@@ -99,15 +99,15 @@ const EventoConfig = () => {
             value={videoLocal}
             onChange={(e) => setVideoLocal(e.target.value)}
             placeholder="https://youtu.be/..."
-            className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+            className="bg-slate-700 border-slate-600 text-slate-50"
           />
-          <p className="text-text-gray text-sm">
+          <p className="text-slate-400 text-sm">
             Link do YouTube que será exibido na seção da cidade
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="linkCTA" className="text-soft-white">
+          <Label htmlFor="linkCTA" className="text-slate-50">
             Link do CTA "QUERO PARTICIPAR"
           </Label>
           <Input
@@ -116,14 +116,14 @@ const EventoConfig = () => {
             value={linkCTA}
             onChange={(e) => setLinkCTA(e.target.value)}
             placeholder="https://..."
-            className="bg-dark-bg/50 border-neon-purple/30 text-soft-white"
+            className="bg-slate-700 border-slate-600 text-slate-50"
           />
-          <p className="text-text-gray text-sm">
+          <p className="text-slate-400 text-sm">
             Link que será usado no botão "QUERO PARTICIPAR" da página principal
           </p>
         </div>
 
-        <Button onClick={handleSave} className="btn-neon">
+        <Button onClick={handleSave} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900">
           <Save className="w-4 h-4 mr-2" />
           Salvar Configurações
         </Button>

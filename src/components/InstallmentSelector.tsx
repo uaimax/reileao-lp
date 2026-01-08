@@ -20,7 +20,7 @@ export const InstallmentSelector: React.FC<InstallmentSelectorProps> = ({
 }) => {
   return (
     <div className={cn("space-y-3", className)}>
-      <label className="block text-sm font-medium text-gray-300">
+      <label className="block text-sm font-medium text-slate-700">
         Número de parcelas
       </label>
       <div className="grid grid-cols-3 gap-2">
@@ -41,21 +41,21 @@ export const InstallmentSelector: React.FC<InstallmentSelectorProps> = ({
                 "p-3 rounded-lg border-2 transition-all duration-200 text-center",
                 "hover:scale-105 active:scale-95 cursor-pointer",
                 isSelected
-                  ? "border-blue-500 bg-blue-500/10 text-blue-400"
-                  : "border-gray-600 bg-gray-800/50 text-gray-300 hover:border-gray-500 hover:bg-gray-700/50"
+                  ? "border-yellow-500 bg-yellow-50 text-yellow-600"
+                  : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
               )}
             >
               <div className="text-sm font-bold">
                 {num}x
               </div>
-              <div className="text-xs text-gray-400">
+              <div className="text-xs text-slate-500">
                 R$ {installmentValue.toFixed(2)}
               </div>
             </button>
           );
         })}
       </div>
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-slate-500">
         Escolha o número de parcelas (máximo {maxInstallments}x)
       </p>
     </div>

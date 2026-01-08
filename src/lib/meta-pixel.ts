@@ -1,5 +1,5 @@
 /**
- * Meta Pixel Integration for UAIZOUK
+ * Meta Pixel Integration
  * Dataset ID: 630477477390150
  *
  * This file provides a comprehensive Meta Pixel integration

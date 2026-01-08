@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Copy, Download, RefreshCw, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface StructuredData {
   metadata: {
@@ -221,7 +222,7 @@ const StructuredData = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Dados Estruturados UAIZOUK</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Dados Estruturados {SITE_NAME}</h1>
               <p className="text-gray-600 mt-2">
                 Informações estruturadas para consumo por IAs e sistemas automatizados
               </p>

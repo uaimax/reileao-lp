@@ -1,0 +1,37 @@
+# PRD: Melhorias no Sistema de Inscrições UAIZOUK
+
+## Visão Geral
+Este PRD descreve melhorias específicas para o sistema de inscrições do UAIZOUK, focando em UX, funcionalidades e correções baseadas nos princípios LEAN, KISS e YAGNI.
+
+## Páginas do Sistema
+- **Pag1**: Página de inscrição (http://localhost:8080/inscricao)
+- **Pag2**: Visualizar Inscrições no painel (/painel)
+- **Pag3**: Configuração do Formulário no painel (/painel)
+
+## Melhorias Prioritárias
+
+### 1. Internacionalização e UX
+- Adicionar seletor de idioma (Português/Inglês) no rodapé da Pag1
+- Manter checkbox "Sou estrangeiro" sempre em PT/EN independente do idioma
+- Melhorar área de clique dos checkboxes na etapa "Resumo e confirmação"
+
+### 2. Validações e Regras de Negócio
+- Permitir múltiplas inscrições com mesmo CPF/email no mesmo evento
+- Otimizar criação de clientes ASAAS (buscar existente antes de criar)
+- Corrigir lógica de desconto PIX (mostrar como vantagem, não desconto)
+
+### 3. Produtos e Configurações
+- Simplificar "Combo Alimentação" (remover redundância do checkbox)
+- Atualizar textos dos checkboxes de confirmação com informações corretas
+- Adicionar checkbox de juros apenas para cartão/PIX parcelado
+
+### 4. Validação de Pagamentos
+- Verificar PIX parcelado: parcelas máximas, criação ASAAS, exibição na confirmação
+- Verificar Cartão de Crédito: parcelas máximas, criação ASAAS, exibição na confirmação
+- Validar cálculos de parcelas e valores em todas as etapas
+
+## Critérios de Sucesso
+- Cada melhoria deve ser testada e validada
+- Manter compatibilidade com sistema existente
+- Focar em soluções simples e diretas
+- Priorizar impacto vs esforço (LEAN)

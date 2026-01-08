@@ -1,0 +1,750 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Internationalization Infrastructure",
+        "description": "Implement lightweight i18n solution using custom hook for Portuguese/English support on registration page only, with language selector in footer",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "details": "Create simple useLanguage() hook with useState + localStorage persistence. Create translation files at src/locales/{pt.json,en.json}. Implement LanguageSelector component for footer placement. Apply internationalization only to registration page (/inscricao). Keep 'Sou estrangeiro' checkbox always bilingual. This simplified approach reduces complexity while maintaining functionality.",
+        "testStrategy": "Unit tests for useLanguage hook functionality and localStorage persistence. Component tests for LanguageSelector switching behavior. Integration tests for registration page language switching. Verify bilingual checkbox remains functional across language changes.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Custom useLanguage Hook",
+            "description": "Create src/hooks/useLanguage.ts with useState and localStorage persistence for language management",
+            "status": "done",
+            "dependencies": [],
+            "details": "Create useLanguage.ts hook that manages language state with useState. Implement localStorage read/write for language preference persistence. Include language switching function and current language getter. Handle fallback to browser language or default Portuguese. Return interface with currentLanguage, setLanguage, and t (translation) function.",
+            "testStrategy": "Test localStorage persistence, language switching, and fallback behavior"
+          },
+          {
+            "id": 2,
+            "title": "Create Translation Files with Specific Keys",
+            "description": "Set up src/locales/pt.json and src/locales/en.json with structured translation keys",
+            "status": "done",
+            "dependencies": [],
+            "details": "Create translation files with keys like 'form.title', 'form.name', 'checkbox.foreigner' for registration page content. Use flat key-value structure for maintainability. Focus on all text content in RegistrationForm.tsx that needs translation.",
+            "testStrategy": "Verify all required translation keys are present in both language files"
+          },
+          {
+            "id": 3,
+            "title": "Implement Language Selector Component",
+            "description": "Create src/components/LanguageSelector.tsx for footer placement at line ~1150 of RegistrationForm.tsx",
+            "status": "done",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Build LanguageSelector component using custom useLanguage hook. Create simple UI for PT/EN switching (dropdown or toggle). Position component in footer area of registration form around line 1150. Ensure proper styling integration with existing footer design.",
+            "testStrategy": "Test component renders correctly in footer and language switching works"
+          },
+          {
+            "id": 4,
+            "title": "Apply Internationalization to RegistrationForm.tsx",
+            "description": "Replace hardcoded Portuguese text in src/pages/RegistrationForm.tsx with translation keys",
+            "status": "done",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Scan RegistrationForm.tsx for all Portuguese text strings. Replace with translation keys using useLanguage hook's t() function. Focus on form labels, placeholders, buttons, and validation messages. Ensure all user-facing text can switch between Portuguese and English.",
+            "testStrategy": "Verify all text switches correctly and form functionality remains intact"
+          },
+          {
+            "id": 5,
+            "title": "Update 'Sou estrangeiro' Checkbox to Always Show Bilingual Text",
+            "description": "Modify checkbox at line 481 in RegistrationForm.tsx to always display 'Sou estrangeiro / I am a foreigner'",
+            "status": "done",
+            "dependencies": [
+              4
+            ],
+            "details": "Locate the 'Sou estrangeiro' checkbox around line 481 in RegistrationForm.tsx. Update the label to always show bilingual text: 'Sou estrangeiro / I am a foreigner'. This element should not change with language selection to maintain clarity for all users regardless of chosen interface language.",
+            "testStrategy": "Verify checkbox always shows bilingual text regardless of selected language"
+          },
+          {
+            "id": 6,
+            "title": "Test Language Switching and localStorage Persistence",
+            "description": "Validate complete i18n implementation with language switching and browser persistence",
+            "status": "done",
+            "dependencies": [
+              3,
+              4,
+              5
+            ],
+            "details": "Test language selector functionality on registration page. Verify localStorage persistence by refreshing page and checking language preference is maintained. Test all translated content switches correctly between Portuguese and English. Confirm bilingual checkbox behavior is preserved.",
+            "testStrategy": "Manual testing of language switching, browser refresh persistence, and complete registration page functionality in both languages"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Enhance Checkbox UX and Accessibility",
+        "description": "Improve checkbox click areas in 'Resumo e confirmação' step and ensure 'Sou estrangeiro' remains bilingual",
+        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "Increase checkbox click target area to minimum 44x44px following WCAG 2.1 guidelines. Implement custom checkbox component with larger hitbox using padding or ::before pseudo-elements. Ensure 'Sou estrangeiro / I am a foreigner' checkbox text remains hardcoded in both languages regardless of selected locale. Add focus indicators and keyboard navigation support. Apply consistent styling across all form checkboxes.",
+        "testStrategy": "Accessibility audit using axe-core@4.8.0. Manual testing of click areas on mobile devices. Keyboard navigation tests for all checkboxes. Visual regression tests to ensure consistent appearance. Verify bilingual text remains unchanged when switching languages.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create EnhancedCheckbox component with expanded click area",
+            "description": "Create src/components/EnhancedCheckbox.tsx that wraps Shadcn UI checkbox with label as clickable area",
+            "status": "done",
+            "dependencies": [],
+            "details": "Build EnhancedCheckbox component that extends src/components/ui/checkbox.tsx. Include label text within clickable container. Maintain Shadcn UI compatibility and styling. Ensure proper TypeScript interfaces and props handling.",
+            "testStrategy": "Test click functionality on both checkbox and label areas. Verify Shadcn UI theme integration."
+          },
+          {
+            "id": 2,
+            "title": "Implement WCAG compliance features in EnhancedCheckbox",
+            "description": "Add accessibility features to meet WCAG standards including proper ARIA labels, keyboard navigation, and screen reader support",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement proper ARIA attributes (aria-label, aria-describedby), ensure keyboard navigation with focus indicators, add role attributes where needed, and test with screen readers for proper announcement of checkbox states. Maintain 44x44px minimum click target.",
+            "testStrategy": "Accessibility audit with axe-core. Screen reader testing for proper state announcements."
+          },
+          {
+            "id": 3,
+            "title": "Add bilingual text support to EnhancedCheckbox",
+            "description": "Extend EnhancedCheckbox to support bilingual labels for 'Sou estrangeiro / I am a foreigner' use case",
+            "status": "done",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Add bilingualText prop to EnhancedCheckbox component. Handle dual-language display with proper spacing and typography. Ensure both languages are accessible to screen readers. Create variant that bypasses i18n for hardcoded bilingual content.",
+            "testStrategy": "Verify bilingual text displays correctly and remains unchanged when switching app language."
+          },
+          {
+            "id": 4,
+            "title": "Replace checkboxes in RegistrationForm.tsx terms section",
+            "description": "Update checkbox implementations in src/pages/RegistrationForm.tsx lines 1077-1100 with EnhancedCheckbox component",
+            "status": "done",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Replace existing Checkbox components at line 1080 (termsAccepted) and surrounding terms checkboxes with EnhancedCheckbox. Maintain existing formData bindings and onCheckedChange handlers. Ensure proper integration with form validation.",
+            "testStrategy": "Test form submission, validation, and checkbox state management. Verify no breaking changes to existing functionality."
+          },
+          {
+            "id": 5,
+            "title": "Validate expanded click areas and accessibility compliance",
+            "description": "Perform comprehensive testing of enhanced checkbox functionality and accessibility improvements",
+            "status": "done",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Test expanded click areas on mobile and desktop. Verify 44x44px minimum touch targets. Run axe-core accessibility audit. Test keyboard navigation and screen reader compatibility. Validate form functionality remains intact.",
+            "testStrategy": "Manual click area testing on various devices. Automated accessibility testing with axe-core. Screen reader testing for proper announcements."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Refactor Registration Validation Rules",
+        "description": "Allow multiple registrations with same CPF/email for the same event while maintaining data integrity",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "details": "Remove UNIQUE constraints on CPF/email from event_registrations table to allow multiple registrations with the same credentials for the same event. Maintain format validation (valid CPF, valid email) while removing uniqueness checks. Update backend endpoint (api/index.js POST /api/registrations) and frontend validation (src/pages/RegistrationForm.tsx) to support this change. Create database migration to remove existing constraints while preserving referential integrity.",
+        "testStrategy": "Test multiple registrations with same CPF/email for same event. Verify format validation still works (invalid CPF/email rejected). Integration tests for POST /api/registrations endpoint. Frontend validation tests ensuring duplicates are allowed. Database migration tests to ensure constraints are properly removed.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create database migration to remove unique constraints",
+            "description": "Create migrate-remove-unique-constraints.sql migration file to remove UNIQUE constraints on CPF and email columns from event_registrations table",
+            "status": "done",
+            "dependencies": [],
+            "details": "- Create migrate-remove-unique-constraints.sql file\n- Write ALTER TABLE statements to drop UNIQUE constraints on CPF and email\n- Ensure referential integrity constraints remain intact\n- Test migration in development environment\n- Plan rollback strategy in case of issues",
+            "testStrategy": "Verify constraints are removed without affecting other database relationships"
+          },
+          {
+            "id": 2,
+            "title": "Update backend validation in api/index.js",
+            "description": "Modify POST /api/registrations endpoint to remove CPF/email uniqueness validation while maintaining format validation",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "- Locate POST /api/registrations endpoint in api/index.js\n- Remove unique constraint validation for CPF and email fields\n- Maintain CPF format validation (11 digits, valid checksum)\n- Maintain email format validation (valid email pattern)\n- Keep other business rule validations intact\n- Update error messages to reflect new validation rules",
+            "testStrategy": "Test endpoint accepts duplicate CPF/email, rejects invalid formats"
+          },
+          {
+            "id": 3,
+            "title": "Update frontend validation in RegistrationForm.tsx",
+            "description": "Modify client-side validation in src/pages/RegistrationForm.tsx to allow duplicate CPF/email while maintaining format checks",
+            "status": "done",
+            "dependencies": [
+              2
+            ],
+            "details": "- Update validation logic in src/pages/RegistrationForm.tsx\n- Remove client-side duplicate checking for CPF and email\n- Maintain format validation for CPF (11 digits, valid format)\n- Maintain format validation for email (valid email pattern)\n- Update error messages to reflect new validation behavior\n- Ensure form submission works with duplicate credentials",
+            "testStrategy": "Verify form allows duplicate CPF/email submissions, validates formats correctly"
+          },
+          {
+            "id": 4,
+            "title": "Test duplicate registration scenarios",
+            "description": "Comprehensive testing of multiple registrations with same CPF/email for the same event",
+            "status": "done",
+            "dependencies": [
+              3
+            ],
+            "details": "- Test multiple registrations with identical CPF for same event\n- Test multiple registrations with identical email for same event\n- Test multiple registrations with both identical CPF and email\n- Verify format validation still rejects invalid CPF/email\n- Test database integrity after multiple duplicate registrations\n- Verify frontend and backend behavior consistency",
+            "testStrategy": "End-to-end testing covering all duplicate registration scenarios and edge cases"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Optimize ASAAS Customer Management",
+        "description": "Enhance existing getOrCreateAsaasCustomer function in api/index.js to improve customer deduplication and implement caching for ASAAS payment gateway",
+        "status": "done",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Enhance the existing getOrCreateAsaasCustomer function (line ~200 in api/index.js) to improve customer search capabilities beyond CPF/email to include name and phone. Implement in-memory caching to prevent repeated API calls for the same client across multiple subscriptions. Add robust error handling for API failures. Focus on optimizing the POST /api/charges/create endpoint flow for scenarios with multiple charges for the same customer.",
+        "testStrategy": "Test multiple charge creation for same customer to verify deduplication. Unit tests for enhanced search logic. Cache performance testing. Error handling validation for API failures.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Enhance Customer Search in getOrCreateAsaasCustomer",
+            "description": "Improve existing customer search logic in api/index.js to include additional search fields beyond CPF/email",
+            "status": "done",
+            "dependencies": [],
+            "details": "Modify the getOrCreateAsaasCustomer function at line ~200 to search by name and phone in addition to existing CPF/email search. Implement fuzzy matching for name searches and normalize phone numbers for consistent matching\n<info added on 2025-10-02T18:23:39.908Z>\nI'll analyze the current codebase to understand the implementation and provide a detailed update for the subtask.Based on my analysis of the current implementation at `/home/uaimax/projects/uaizouk-site/uaizouk-lp-dinamic/api/index.js:2080-2138`, here is the new information to append to the subtask details:\n\nCurrent implementation analysis confirmed:\n- Line 2085: Uses single search parameter `cpfCnpj=${registration.cpf || registration.email}` which incorrectly falls back to email as CPF value\n- Line 2110: Phone normalization already exists: `registration.whatsapp?.replace(/\\D/g, '').slice(-11)` but only used for customer creation, not search\n- ASAAS API endpoint: `/customers?cpfCnpj=value` supports multiple query parameters for enhanced search\n\nRequired implementation changes:\n1. Create `normalizePhone(phone)` utility function using existing pattern: `phone?.replace(/\\D/g, '').slice(-11)`\n2. Implement search chain functions:\n   - `searchByCpf(cpf)` - existing functionality\n   - `searchByEmail(email)` - use `email` parameter\n   - `searchByPhone(phone)` - use `mobilePhone` parameter  \n   - `searchByName(name)` - use `name` parameter with fuzzy matching\n3. Update search URL construction to use proper ASAAS API parameters instead of misusing cpfCnpj field\n4. Add comprehensive logging for each search attempt and result\n5. Implement fallback chain logic that tries each method sequentially until customer found\n\nTechnical considerations: \n- ASAAS API supports individual field searches - need to separate search calls rather than combined query\n- Existing phone normalization logic can be extracted into reusable utility\n- Function currently at lines 2080-2138 needs complete refactoring for multiple search strategies\n</info added on 2025-10-02T18:23:39.908Z>",
+            "testStrategy": "Unit tests with various customer data combinations to verify enhanced search logic"
+          },
+          {
+            "id": 2,
+            "title": "Implement In-Memory Cache for Customer Lookups",
+            "description": "Add in-memory caching layer to store customer lookup results within the existing function",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a Map-based cache within the api/index.js module to store customer lookup results by CPF/CNPJ keys. Implement TTL-based expiration and cache size limits to prevent memory leaks",
+            "testStrategy": "Performance tests measuring cache hit rates and API call reduction"
+          },
+          {
+            "id": 3,
+            "title": "Enhance Error Handling in Customer Management",
+            "description": "Improve error handling and resilience in the getOrCreateAsaasCustomer function",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Add comprehensive error handling for ASAAS API failures, implement retry logic with exponential backoff, add logging for debugging, and ensure graceful fallback to customer creation when search fails",
+            "testStrategy": "Error scenario testing with mocked API failures and network issues"
+          },
+          {
+            "id": 4,
+            "title": "Optimize POST /api/charges/create for Multiple Subscriptions",
+            "description": "Optimize the charges creation endpoint to efficiently handle multiple charges for the same customer",
+            "status": "done",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Modify the POST /api/charges/create endpoint to leverage the enhanced getOrCreateAsaasCustomer function and caching for scenarios where the same customer creates multiple subscriptions or charges",
+            "testStrategy": "Integration tests creating multiple charges for the same customer to verify optimization"
+          },
+          {
+            "id": 5,
+            "title": "Add Customer Data Merging Logic",
+            "description": "Implement logic to merge or update customer information when found in ASAAS",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Add capability to compare existing ASAAS customer data with new submission data and update fields if necessary while preserving customer ID for charge creation",
+            "testStrategy": "Tests with customer data updates to verify merging behavior"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Fix PIX Payment Display Logic",
+        "description": "Correct PIX discount presentation to show as advantage rather than discount in payment flow. Update specific files: RegistrationForm.tsx (lines 860-870 and calculateFinalTotal function at line 139) and FormConfigManager.tsx to change messaging while maintaining calculation logic.",
+        "status": "done",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Update PIX display from 'Desconto PIX à vista (5%)' to 'PIX sem taxa do sistema' in RegistrationForm.tsx lines 860-870. Maintain calculateFinalTotal function logic (line 139) but change UI presentation to show PIX as advantage rather than discount. Configure FormConfigManager.tsx to support pixDiscountPercentage = 0. Keep calculation logic intact, only modify user interface presentation. Ensure PIX is presented as the standard price with credit card showing additional system fees.",
+        "testStrategy": "Test correct display presentation while maintaining calculation accuracy. Visual regression tests for payment display components in RegistrationForm.tsx. Unit tests for calculateFinalTotal function to ensure calculation logic remains unchanged. Verify FormConfigManager configuration changes work correctly. Test complete payment flow to ensure consistent messaging.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update RegistrationForm.tsx PIX display (lines 860-870)",
+            "description": "Change PIX display text from 'Desconto PIX à vista (5%)' to 'PIX sem taxa do sistema' in the specified lines",
+            "status": "done",
+            "dependencies": [],
+            "details": "Locate RegistrationForm.tsx lines 860-870 where PIX display is handled. Replace current discount messaging with advantage messaging. Update text to show 'PIX sem taxa do sistema' instead of discount language. Ensure styling and layout remain consistent.",
+            "testStrategy": "Visual testing to confirm correct text display and formatting"
+          },
+          {
+            "id": 2,
+            "title": "Maintain calculateFinalTotal logic while updating presentation",
+            "description": "Keep the existing calculation logic in calculateFinalTotal function (line 139) but update how results are presented to users",
+            "status": "done",
+            "dependencies": [],
+            "details": "Review calculateFinalTotal function at line 139 in RegistrationForm.tsx. Ensure calculation logic for PIX pricing remains unchanged. Update any presentation logic to show PIX as base price and credit card as base + fees. Maintain mathematical accuracy while changing user-facing messaging.",
+            "testStrategy": "Unit tests to verify calculation accuracy is maintained"
+          },
+          {
+            "id": 3,
+            "title": "Configure FormConfigManager for new approach",
+            "description": "Update FormConfigManager.tsx to support pixDiscountPercentage = 0 configuration and new messaging approach",
+            "status": "done",
+            "dependencies": [],
+            "details": "Modify FormConfigManager.tsx to handle the new presentation approach. Enable pixDiscountPercentage = 0 configuration. Update any related configuration options to support showing PIX as advantage rather than discount. Ensure configuration changes are properly validated.",
+            "testStrategy": "Test configuration changes work correctly and don't break existing functionality"
+          },
+          {
+            "id": 4,
+            "title": "Validate complete payment flow consistency",
+            "description": "Test entire payment flow to ensure consistent messaging and accurate calculations throughout",
+            "status": "done",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Perform end-to-end testing of payment flow with updated changes. Verify PIX shows as advantage consistently across all screens. Confirm calculations remain accurate. Test edge cases and different pricing scenarios. Ensure no regression in payment functionality.",
+            "testStrategy": "End-to-end testing with focus on pricing display accuracy and calculation validation"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Simplify Combo Alimentação Product",
+        "description": "Remove redundant checkbox and streamline food combo selection from ['Sim', 'Não'] options to direct boolean toggle in product configuration",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "low",
+        "details": "Update FormConfigManager.tsx (line 71) to replace current 'Combo Alimentação' dropdown with ['Sim', 'Não'] options with a simple boolean toggle. Modify RegistrationForm.tsx product section and calculateTotal function (line 258) to handle combo as direct boolean value. Maintain R$ 145.00 pricing while simplifying UI to remove unnecessary checkbox complexity.",
+        "testStrategy": "Unit tests for boolean combo selection logic. Price calculation tests ensuring R$ 145.00 is correctly applied when combo is selected. UI tests verifying simplified toggle works correctly. Integration tests for form submission with boolean combo value.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update FormConfigManager Component",
+            "description": "Modify FormConfigManager.tsx line 71 to replace 'Combo Alimentação' dropdown with boolean toggle",
+            "status": "pending",
+            "dependencies": [],
+            "details": "Replace current ['Sim', 'Não'] dropdown options with direct boolean toggle/checkbox component. Ensure component maintains same styling and form integration while simplifying user interaction.",
+            "testStrategy": "Component unit tests for toggle functionality and form value binding"
+          },
+          {
+            "id": 2,
+            "title": "Update RegistrationForm Product Section",
+            "description": "Modify RegistrationForm.tsx products section to handle combo as boolean value",
+            "status": "pending",
+            "dependencies": [],
+            "details": "Update product selection logic to treat Combo Alimentação as boolean instead of string selection. Ensure form state management correctly handles true/false values for combo selection.",
+            "testStrategy": "Form state tests ensuring boolean values are properly managed and submitted"
+          },
+          {
+            "id": 3,
+            "title": "Update Price Calculation Logic",
+            "description": "Modify calculateTotal function at line 258 in RegistrationForm.tsx to handle boolean combo values",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Update calculateTotal function to check boolean combo value instead of string comparison. Ensure R$ 145.00 is correctly applied when combo is true. Maintain accurate total calculation with simplified logic.",
+            "testStrategy": "Price calculation unit tests with boolean combo values, edge case testing for true/false scenarios"
+          },
+          {
+            "id": 4,
+            "title": "Validate Selection and Price Calculation",
+            "description": "End-to-end testing of simplified combo selection and price calculation accuracy",
+            "status": "pending",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Test complete user flow with boolean combo selection. Verify price calculation accuracy with R$ 145.00 when selected. Ensure form submission works correctly with boolean values.",
+            "testStrategy": "Integration tests for complete selection flow, price accuracy validation, form submission testing"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Update Confirmation Checkbox Texts",
+        "description": "Update specific confirmation checkbox texts in RegistrationForm with accurate terms and implement conditional validation",
+        "status": "pending",
+        "dependencies": [
+          1,
+          2
+        ],
+        "priority": "medium",
+        "details": "Update checkbox texts in RegistrationForm.tsx (lines 1086-1100) with specific terms. Replace current 'Li e aceito os termos e condições' with multiple checkboxes including non-refundable policy, event rescheduling, withdrawal terms, and conditional interest rate agreement for installment payments. Calculate 2-month deadline before event date. Use EnhancedCheckbox component from Task 2. Configure terms in FormConfigManager.tsx.",
+        "testStrategy": "Test all checkbox validations, conditional display logic for payment method checkboxes, date calculation accuracy, and integration with EnhancedCheckbox component. Verify proper form submission behavior with all required checkboxes.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update RegistrationForm Checkbox Implementation",
+            "description": "Replace existing checkbox at line 1086 with multiple specific term checkboxes using EnhancedCheckbox component",
+            "status": "pending",
+            "dependencies": [],
+            "details": "Modify src/pages/RegistrationForm.tsx lines 1086-1100. Replace 'Li e aceito os termos e condições' with: 'Estou ciente que os valores não são reembolsáveis...', 'Estou ciente que o evento poderá ser remarcado...', 'Estou ciente que caso desista da inscrição...', and conditional 'Ao marcar esta caixa, declaro que concordo com a aplicação de juros...' for card/PIX installments. Use EnhancedCheckbox from Task 2.",
+            "testStrategy": "Verify all checkboxes render correctly, conditional checkbox shows only for installment payments, and all use EnhancedCheckbox component"
+          },
+          {
+            "id": 2,
+            "title": "Implement Date Calculation Logic",
+            "description": "Add logic to calculate 2-month deadline before event date for withdrawal terms",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "details": "Create utility function to calculate date that is 2 months before event date. Integrate this calculation into checkbox text for withdrawal terms. Ensure proper date formatting and handling of edge cases.",
+            "testStrategy": "Test date calculation with various event dates, verify correct formatting, and handle edge cases like leap years"
+          },
+          {
+            "id": 3,
+            "title": "Update FormConfigManager for Terms Configuration",
+            "description": "Configure new checkbox terms in FormConfigManager.tsx component",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "details": "Update src/components/painel/FormConfigManager.tsx to include configuration options for the new checkbox terms. Ensure admin can manage these terms through the panel interface.",
+            "testStrategy": "Verify FormConfigManager can handle new checkbox configurations and changes reflect in RegistrationForm"
+          },
+          {
+            "id": 4,
+            "title": "Implement Conditional Validation Logic",
+            "description": "Add form validation to ensure all required checkboxes are checked before submission",
+            "status": "pending",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Implement validation logic that requires all applicable checkboxes to be checked. Include conditional validation for payment method specific checkboxes. Show appropriate error messages for unchecked required boxes.",
+            "testStrategy": "Test validation with different combinations of checked/unchecked boxes, verify payment method conditional logic, and confirm error message display"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Implement Conditional Interest Checkbox",
+        "description": "Add interest acknowledgment checkbox only for credit card and installment PIX payments in RegistrationForm.tsx",
+        "status": "done",
+        "dependencies": [
+          5
+        ],
+        "priority": "medium",
+        "details": "Implement conditional rendering logic for interest checkbox in RegistrationForm.tsx (lines 820-995) that appears only when paymentMethod === 'credit_card' or 'pix_installment'. Add interestAccepted boolean to formData, implement conditional validation in validateForm function (line 305), and use EnhancedCheckbox component from Task 2. Display specific text: 'Ao marcar esta caixa, declaro que concordo com a aplicação de juros por atraso correspondente a 10% a.m. conforme estabelecido na Lei 9.298/1996'.",
+        "testStrategy": "Unit tests for conditional rendering logic based on payment method. Integration tests for form validation with interest checkbox. UI tests ensuring checkbox appears/disappears correctly for credit_card and pix_installment methods.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Add interestAccepted to formData state",
+            "description": "Extend formData interface and state to include interestAccepted boolean field",
+            "status": "done",
+            "dependencies": [],
+            "details": "Add interestAccepted: boolean to formData type definition and initialize with false value in RegistrationForm component state",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement conditional checkbox rendering",
+            "description": "Add conditional rendering logic in payment section (lines 820-995) to show interest checkbox only for credit_card and pix_installment",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Create conditional JSX that renders EnhancedCheckbox when paymentMethod === 'credit_card' || paymentMethod === 'pix_installment'. Include specific legal text about 10% monthly interest rate per Lei 9.298/1996",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Add conditional validation logic",
+            "description": "Extend validateForm function (line 305) to require interest checkbox when applicable payment methods are selected",
+            "status": "done",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Add validation rule that checks if interestAccepted is true when paymentMethod is 'credit_card' or 'pix_installment'. Return appropriate error message if checkbox is not checked for these payment methods",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Test conditional display and validation",
+            "description": "Verify checkbox appears only for correct payment methods and validation works properly",
+            "status": "done",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Test that checkbox is hidden for other payment methods (PIX, bank transfer, etc.), appears for credit card and installment PIX, and form validation prevents submission when checkbox is unchecked for applicable methods\n<info added on 2025-10-02T18:49:09.419Z>\nTesting completed successfully with all functional and technical requirements verified. Implementation includes conditional display logic, form validation, TypeScript integration, and proper translation support. All specified test scenarios passed including PIX à vista (hidden), credit card (shown), PIX installment (shown), validation enforcement, and error messaging. Technical verification confirms clean build, successful compilation, and working HMR.\n</info added on 2025-10-02T18:49:09.419Z>",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Comprehensive Payment Validation Suite",
+        "description": "Validate all payment methods including installment options, ASAAS integration, and display accuracy based on current codebase implementation",
+        "status": "in-progress",
+        "dependencies": [
+          4,
+          5,
+          8
+        ],
+        "priority": "high",
+        "details": "Implement comprehensive test suite for specific files: RegistrationForm.tsx, RegistrationConfirmation.tsx, and api/index.js. Test PIX installments with calculateMaxInstallments function validation, ASAAS charge creation with correct installment handling, payment link display on confirmation page, webhook status updates, and complete E2E flows for all payment methods (PIX, PIX installments, credit card).",
+        "testStrategy": "End-to-end testing covering complete registration flow from RegistrationForm.tsx through RegistrationConfirmation.tsx. Integration tests for api/index.js endpoints (POST /api/charges/create and ASAAS webhook). Validation of calculateMaxInstallments logic and payment link generation. Manual verification of payment confirmation flow.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "E2E test framework setup",
+            "description": "Set up end-to-end testing infrastructure with appropriate tools and configurations for testing payment flows",
+            "status": "done",
+            "dependencies": [],
+            "details": "Install and configure E2E testing framework (e.g., Cypress, Playwright), set up test environments, configure test data management, establish CI/CD integration for automated test runs\n<info added on 2025-10-02T18:56:49.448Z>\nI'll analyze the codebase to understand the current testing setup and provide a comprehensive update to the subtask details.Based on my analysis of the codebase, here's the implementation completion summary that should be appended to the subtask details:\n\n**IMPLEMENTATION COMPLETION STATUS:**\n\nSuccessfully implemented comprehensive E2E testing infrastructure with Playwright framework. Complete test suite created with 4 test files covering all critical flows:\n\n- registration-form.spec.ts: Full E2E registration flow testing with Brazilian/foreign user scenarios\n- registration-confirmation.spec.ts: Payment confirmation page validation \n- api-endpoints.spec.ts: API integration testing for /api/charges/create and webhook endpoints\n- installment-calculation.spec.ts: Payment calculation logic validation\n\nTest utilities implemented in tests/utils/test-helpers.ts with comprehensive data generators, form helpers, and validation functions supporting all payment methods (PIX, PIX installments, credit card).\n\nPlaywright configuration optimized for WSL environment with headless Chrome/Mobile Chrome browsers, automatic dev server startup, screenshot/video capture on failures, and HTML reporting.\n\nPackage.json test scripts configured: npm run test, test:headed, test:ui, test:report, test:debug.\n\n**CRITICAL NEXT STEP IDENTIFIED:** Tests are currently blocked because RegistrationForm.tsx and RegistrationConfirmation.tsx components lack data-testid attributes. Test helpers expect specific data-testid selectors (e.g., data-testid=\"fullName\", data-testid=\"email\", data-testid=\"paymentMethod\", data-testid=\"interestAccepted\") but these attributes are not present in the actual components. The test infrastructure is complete and ready - component instrumentation with data-testid attributes is required to enable automated testing execution.\n</info added on 2025-10-02T18:56:49.448Z>",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "RegistrationForm.tsx flow testing",
+            "description": "Test complete registration form flow including payment method selection and installment calculation",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Test RegistrationForm.tsx payment method selection, verify calculateMaxInstallments function returns correct installment options for PIX, validate form submission with different payment methods, test form validation and error handling\n<info added on 2025-10-02T19:09:26.553Z>\nAnálise completa realizada do RegistrationForm.tsx e infraestrutura de testes. Identificados problemas críticos: falta de data-testid attributes no componente (necessários para seletores como data-testid=\"fullName\", data-testid=\"email\", data-testid=\"paymentMethod\", data-testid=\"interestAccepted\"). Confirmada existência das funções calculateMaxInstallments (linha 83) e calculateFinalTotal (linha 144). Testes E2E já existem em tests/e2e/registration-form.spec.ts mas falham devido aos seletores ausentes. Próximo passo: adicionar data-testid attributes ao RegistrationForm.tsx antes de executar validações.\n</info added on 2025-10-02T19:09:26.553Z>\n<info added on 2025-10-02T20:09:28.658Z>\n✅ TESTE E2E CONCLUÍDO COM SUCESSO! Todos os problemas críticos identificados foram resolvidos: data-testid attributes adicionados em todos os campos (fullName, email, whatsapp, birthDate, cpf, isForeigner, partnerName, state, city, payment methods, checkboxes), rota corrigida de '/' para '/inscricao', implementada navegação por teclado para componentes Radix UI Select (ArrowDown + Enter), usado { force: true } para checkboxes customizados, ajustados locators para textos em português. Teste \"should complete basic PIX registration flow\" executado com sucesso em Chromium e Mobile Chrome em 10.9s. Formulário completo validado incluindo: preenchimento de todos os campos, seleção de método de pagamento PIX, validação da função calculateMaxInstallments, navegação entre etapas, aceitação de termos e condições, habilitação do botão de finalização.\n</info added on 2025-10-02T20:09:28.658Z>",
+            "testStrategy": "E2E tests covering form interaction, payment method switching, installment display validation"
+          },
+          {
+            "id": 3,
+            "title": "ASAAS API endpoint testing",
+            "description": "Test api/index.js POST /api/charges/create endpoint for charge creation with installments",
+            "status": "in-progress",
+            "dependencies": [
+              1
+            ],
+            "details": "Test POST /api/charges/create endpoint with PIX and credit card payments, verify correct installment creation in ASAAS, validate request/response handling, test error scenarios and API failures\n<info added on 2025-10-02T20:11:06.453Z>\n**ANÁLISE COMPLETA REALIZADA:**\n\n**Estrutura Identificada:**\n- Rota: POST /api/charges/create\n- Parâmetro: { registrationId } (obrigatório, não dados completos de cobrança)\n- Funcionalidade: Busca inscrição → cria/busca cliente ASAAS → cria cobrança\n\n**Fluxo Real Mapeado:**\n1. Validação registrationId obrigatório\n2. Busca em event_registrations  \n3. Busca configuração ativa em event_form_configs\n4. Determinação ambiente via ASAAS_SANDBOX\n5. Criação/busca cliente ASAAS com cache\n6. Cálculo máximo parcelas baseado em data limite\n7. Mapeamento paymentMethod → billingType (PIX/CREDIT_CARD)\n8. Criação cobrança ASAAS (única/parcelada)\n9. Atualização asaas_payment_id na inscrição\n10. Retorno dados cobrança e parcelas\n\n**Problemas nos Testes Atuais Detectados:**\n- Enviam dados completos vs registrationId apenas\n- Não refletem fluxo real de busca no banco\n- Ausência de validação cenários de erro específicos\n\n**Necessário:** Reescrever testes para refletir implementação real com registrationId apenas\n</info added on 2025-10-02T20:11:06.453Z>",
+            "testStrategy": "Integration tests with ASAAS sandbox API, mock testing for error scenarios"
+          },
+          {
+            "id": 4,
+            "title": "RegistrationConfirmation.tsx validation",
+            "description": "Test payment link display and confirmation page functionality",
+            "status": "pending",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Test RegistrationConfirmation.tsx displays correct payment links, verify installment information display, test page loading with different payment methods, validate payment status updates",
+            "testStrategy": "E2E tests for confirmation page rendering, payment link accessibility"
+          },
+          {
+            "id": 5,
+            "title": "ASAAS webhook testing",
+            "description": "Test webhook handling in api/index.js for payment status updates",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "details": "Test ASAAS webhook endpoint in api/index.js, verify payment status synchronization, test webhook authentication, validate status update handling for different payment states",
+            "testStrategy": "Integration tests with webhook simulation, status update verification"
+          },
+          {
+            "id": 6,
+            "title": "Complete E2E payment flow testing",
+            "description": "Test complete end-to-end flow from registration to payment confirmation",
+            "status": "pending",
+            "dependencies": [
+              2,
+              4,
+              5
+            ],
+            "details": "Test complete user journey: RegistrationForm.tsx → api/charges/create → RegistrationConfirmation.tsx → webhook updates. Validate all payment methods (PIX, PIX parcelado, cartão), test installment calculations throughout entire flow",
+            "testStrategy": "Complete E2E automation covering entire payment process from form to confirmation"
+          },
+          {
+            "id": 7,
+            "title": "calculateMaxInstallments function validation",
+            "description": "Specific testing of installment calculation logic",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Unit and integration tests for calculateMaxInstallments function, verify correct installment limits for different payment amounts, test edge cases with minimum/maximum values, validate installment display across all components",
+            "testStrategy": "Unit tests for calculation logic, integration tests for UI display"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Database Schema Setup for Notifications",
+        "description": "Create and configure the notifications table in PostgreSQL database with proper indexes and constraints",
+        "details": "Execute the following migration:\n```sql\nCREATE TABLE notifications (\n    id SERIAL PRIMARY KEY,\n    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,\n    type VARCHAR(50) NOT NULL CHECK (type IN ('lead', 'inscricao')),\n    title VARCHAR(255) NOT NULL,\n    message TEXT NOT NULL,\n    data JSONB,\n    is_read BOOLEAN DEFAULT false,\n    is_archived BOOLEAN DEFAULT false,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE INDEX idx_notifications_user_id ON notifications(user_id);\nCREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);\nCREATE INDEX idx_notifications_is_read ON notifications(is_read);\n```\nUse node-pg-migrate or similar migration tool. Add timestamp triggers for updated_at field.",
+        "testStrategy": "Verify table creation with psql commands. Test foreign key constraints, check constraints, and indexes. Insert sample data and verify all fields work correctly.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Notification API Endpoints",
+        "description": "Create RESTful API endpoints for notification management with proper authentication and validation",
+        "details": "Implement in Express with TypeScript:\n\n1. GET /api/notifications - Paginated list with query params: ?limit=20&offset=0&type=lead&is_read=false\n2. PUT /api/notifications/:id/read - Mark single as read\n3. PUT /api/notifications/read-all - Mark all as read\n4. PUT /api/notifications/:id/archive - Archive notification\n5. DELETE /api/notifications/clear - Clear all archived\n\nUse express-validator for input validation. Implement middleware:\n```typescript\nconst authenticateUser = async (req, res, next) => {\n  const userId = req.session?.userId;\n  if (!userId) return res.status(401).json({ error: 'Unauthorized' });\n  req.userId = userId;\n  next();\n};\n```",
+        "testStrategy": "Unit test each endpoint with Jest/Supertest. Test authentication, validation errors, SQL injection prevention, and proper status codes. Mock database calls.",
+        "priority": "high",
+        "dependencies": [
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Create Notification Triggers for Lead Creation",
+        "description": "Implement automatic notification generation when new leads are created via PRIMEIRINHO system",
+        "details": "Modify the existing POST /api/primeirinho/leads endpoint:\n\n```typescript\n// After lead creation success\nconst createLeadNotification = async (leadData: Lead, transaction: PoolClient) => {\n  const adminUsers = await transaction.query('SELECT id FROM users WHERE is_active = true');\n  \n  const notifications = adminUsers.rows.map(user => ({\n    user_id: user.id,\n    type: 'lead',\n    title: 'Novo PRIMEIRINHO',\n    message: `Novo PRIMEIRINHO: ${leadData.name} de ${leadData.city}, ${leadData.state}`,\n    data: { lead_id: leadData.id, tab: 'leads' }\n  }));\n  \n  const query = format(\n    'INSERT INTO notifications (user_id, type, title, message, data) VALUES %L',\n    notifications.map(n => [n.user_id, n.type, n.title, n.message, n.data])\n  );\n  \n  await transaction.query(query);\n};\n```\n\nUse pg-format for bulk insert. Wrap in transaction with lead creation.",
+        "testStrategy": "Integration test: Create lead via API and verify notifications are created for all active users. Test transaction rollback on failure.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Create Notification Triggers for Registration Creation",
+        "description": "Implement automatic notification generation when new event registrations are submitted",
+        "details": "Modify the existing POST /api/inscricoes endpoint:\n\n```typescript\nconst createRegistrationNotification = async (registrationData: Registration, transaction: PoolClient) => {\n  const adminUsers = await transaction.query('SELECT id FROM users WHERE is_active = true');\n  \n  const notifications = adminUsers.rows.map(user => ({\n    user_id: user.id,\n    type: 'inscricao',\n    title: 'Nova inscrição',\n    message: `Nova inscrição: ${registrationData.name} para ${registrationData.event_name}`,\n    data: { inscricao_id: registrationData.id, tab: 'inscricoes-view' }\n  }));\n  \n  // Use same bulk insert pattern as lead notifications\n  await bulkInsertNotifications(notifications, transaction);\n};\n```\n\nExtract common notification creation logic into a utility function for reusability.",
+        "testStrategy": "Integration test: Submit registration via API and verify notifications. Test with different event types and verify correct event names in notifications.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Build NotificationsDropdown React Component",
+        "description": "Create a React component for the notifications dropdown with real-time updates and interactive features",
+        "details": "Create NotificationsDropdown.tsx using shadcn/ui components:\n\n```typescript\nimport { Bell } from 'lucide-react';\nimport { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';\nimport { Badge } from '@/components/ui/badge';\nimport { ScrollArea } from '@/components/ui/scroll-area';\n\ninterface NotificationsDropdownProps {\n  notifications: Notification[];\n  unreadCount: number;\n  onNotificationClick: (notification: Notification) => void;\n  onMarkAsRead: (id: number) => void;\n  onArchive: (id: number) => void;\n}\n```\n\nImplement:\n- Badge with unread count\n- Scrollable list (max-height: 400px)\n- Hover states and click handlers\n- Empty state\n- Loading state with skeleton\n- Relative time display using date-fns",
+        "testStrategy": "Unit test with React Testing Library. Test click handlers, badge visibility, empty state rendering. Mock API calls and test loading states.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Create useNotifications Custom Hook",
+        "description": "Implement a custom React hook to manage notification state, polling, and API interactions",
+        "details": "Create hooks/useNotifications.ts:\n\n```typescript\nimport { useState, useEffect, useCallback } from 'react';\nimport { apiClient } from '@/services/api';\n\nexport const useNotifications = (pollInterval = 30000) => {\n  const [notifications, setNotifications] = useState<Notification[]>([]);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState<string | null>(null);\n  \n  const fetchNotifications = useCallback(async () => {\n    try {\n      const response = await apiClient.get('/api/notifications');\n      setNotifications(response.data);\n    } catch (err) {\n      setError(err.message);\n    } finally {\n      setLoading(false);\n    }\n  }, []);\n  \n  useEffect(() => {\n    fetchNotifications();\n    const interval = setInterval(fetchNotifications, pollInterval);\n    return () => clearInterval(interval);\n  }, [fetchNotifications, pollInterval]);\n  \n  const markAsRead = async (id: number) => {\n    await apiClient.put(`/api/notifications/${id}/read`);\n    await fetchNotifications();\n  };\n  \n  return { notifications, loading, error, markAsRead, refetch: fetchNotifications };\n};\n```\n\nConsider using SWR or React Query for better caching and real-time updates.",
+        "testStrategy": "Test hook with renderHook from React Testing Library. Mock API calls, test polling behavior, error states, and update functions.",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Integrate Notifications into Topbar Component",
+        "description": "Modify the existing Topbar component to integrate the notification system with the bell icon",
+        "details": "Update Topbar.tsx:\n\n```typescript\nimport { NotificationsDropdown } from './NotificationsDropdown';\nimport { useNotifications } from '@/hooks/useNotifications';\nimport { useRouter } from 'next/router';\n\nexport function Topbar() {\n  const router = useRouter();\n  const { notifications, markAsRead, loading } = useNotifications();\n  const unreadCount = notifications.filter(n => !n.is_read).length;\n  \n  const handleNotificationClick = async (notification: Notification) => {\n    await markAsRead(notification.id);\n    \n    // Navigate based on notification type\n    const tab = notification.data?.tab;\n    if (tab) {\n      router.push(`/painel?tab=${tab}`);\n    }\n  };\n  \n  // Replace static bell with NotificationsDropdown\n  return (\n    <div className=\"topbar\">\n      {/* existing content */}\n      <NotificationsDropdown\n        notifications={notifications}\n        unreadCount={unreadCount}\n        onNotificationClick={handleNotificationClick}\n        onMarkAsRead={markAsRead}\n      />\n    </div>\n  );\n}\n```",
+        "testStrategy": "Integration test: Verify bell shows correct count, dropdown opens/closes, navigation works correctly. Test with different notification types.",
+        "priority": "medium",
+        "dependencies": [
+          14,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Implement User Management API Endpoints",
+        "description": "Create secure RESTful API endpoints for user CRUD operations with proper validation and authorization",
+        "details": "Implement user management endpoints with Express:\n\n```typescript\nimport bcrypt from 'bcrypt';\nimport { body, validationResult } from 'express-validator';\n\n// Middleware to check admin permissions\nconst requireAdmin = async (req, res, next) => {\n  // Add admin check logic based on your auth system\n  next();\n};\n\n// GET /api/users - with pagination\nrouter.get('/users', authenticateUser, requireAdmin, async (req, res) => {\n  const { limit = 20, offset = 0 } = req.query;\n  const users = await db.query(\n    'SELECT id, email, is_active, created_at FROM users ORDER BY created_at DESC LIMIT $1 OFFSET $2',\n    [limit, offset]\n  );\n  res.json(users.rows);\n});\n\n// POST /api/users - with validation\nrouter.post('/users',\n  authenticateUser,\n  requireAdmin,\n  [\n    body('email').isEmail().normalizeEmail(),\n    body('password').isLength({ min: 8 }).matches(/^(?=.*[A-Za-z])(?=.*\\d)/)\n  ],\n  async (req, res) => {\n    const errors = validationResult(req);\n    if (!errors.isEmpty()) {\n      return res.status(400).json({ errors: errors.array() });\n    }\n    \n    const hashedPassword = await bcrypt.hash(req.body.password, 12);\n    // Insert user with duplicate check\n  }\n);\n```\n\nImplement rate limiting with express-rate-limit for security.",
+        "testStrategy": "Test all endpoints with different permission levels. Verify password hashing, email validation, duplicate prevention. Test SQL injection attempts.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Build UsersManager React Component",
+        "description": "Create a comprehensive user management interface component with table, actions, and forms",
+        "details": "Create UsersManager.tsx with shadcn/ui components:\n\n```typescript\nimport { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';\nimport { Button } from '@/components/ui/button';\nimport { Switch } from '@/components/ui/switch';\nimport { UserForm } from './UserForm';\nimport { AlertDialog } from '@/components/ui/alert-dialog';\nimport { useUsers } from '@/hooks/useUsers';\n\nexport function UsersManager() {\n  const { users, loading, createUser, updateUser, deleteUser, toggleStatus } = useUsers();\n  const [showForm, setShowForm] = useState(false);\n  const [editingUser, setEditingUser] = useState<User | null>(null);\n  \n  return (\n    <div className=\"p-6\">\n      <div className=\"flex justify-between mb-4\">\n        <h2 className=\"text-2xl font-bold\">Gerenciamento de Usuários</h2>\n        <Button onClick={() => setShowForm(true)}>Criar Usuário</Button>\n      </div>\n      \n      <Table>\n        <TableHeader>\n          <TableRow>\n            <TableHead>Email</TableHead>\n            <TableHead>Status</TableHead>\n            <TableHead>Criado em</TableHead>\n            <TableHead>Ações</TableHead>\n          </TableRow>\n        </TableHeader>\n        <TableBody>\n          {users.map(user => (\n            <TableRow key={user.id}>\n              <TableCell>{user.email}</TableCell>\n              <TableCell>\n                <Switch\n                  checked={user.is_active}\n                  onCheckedChange={() => toggleStatus(user.id)}\n                  disabled={user.id === currentUserId}\n                />\n              </TableCell>\n              <TableCell>{formatDate(user.created_at)}</TableCell>\n              <TableCell>\n                <Button variant=\"ghost\" onClick={() => handleEdit(user)}>Editar</Button>\n                <Button variant=\"ghost\" onClick={() => handleDelete(user)}>Excluir</Button>\n              </TableCell>\n            </TableRow>\n          ))}\n        </TableBody>\n      </Table>\n      \n      {showForm && (\n        <UserForm\n          user={editingUser}\n          onSubmit={handleSubmit}\n          onCancel={() => setShowForm(false)}\n        />\n      )}\n    </div>\n  );\n}\n```",
+        "testStrategy": "Test table rendering, user actions, form modal behavior. Mock API responses and test error handling. Verify current user protection.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Create UserForm Component with Validation",
+        "description": "Build a reusable form component for creating and editing users with client-side validation",
+        "details": "Create UserForm.tsx with react-hook-form and zod validation:\n\n```typescript\nimport { useForm } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { Input } from '@/components/ui/input';\nimport { Label } from '@/components/ui/label';\nimport { Button } from '@/components/ui/button';\nimport { Alert } from '@/components/ui/alert';\n\nconst userSchema = z.object({\n  email: z.string().email('Email inválido'),\n  password: z.string().min(8, 'Senha deve ter no mínimo 8 caracteres')\n    .regex(/^(?=.*[A-Za-z])(?=.*\\d)/, 'Senha deve conter letras e números'),\n  confirmPassword: z.string()\n}).refine((data) => data.password === data.confirmPassword, {\n  message: 'Senhas não coincidem',\n  path: ['confirmPassword'],\n});\n\ninterface UserFormProps {\n  user?: User;\n  onSubmit: (data: UserFormData) => Promise<void>;\n  onCancel: () => void;\n}\n\nexport function UserForm({ user, onSubmit, onCancel }: UserFormProps) {\n  const { register, handleSubmit, formState: { errors }, setError } = useForm({\n    resolver: zodResolver(userSchema),\n    defaultValues: { email: user?.email || '' }\n  });\n  \n  const onSubmitForm = async (data: UserFormData) => {\n    try {\n      await onSubmit(data);\n    } catch (error) {\n      if (error.message.includes('duplicate')) {\n        setError('email', { message: 'Email já cadastrado' });\n      }\n    }\n  };\n  \n  return (\n    <form onSubmit={handleSubmit(onSubmitForm)} className=\"space-y-4\">\n      {/* Form fields with error display */}\n    </form>\n  );\n}\n```",
+        "testStrategy": "Test form validation rules, error display, password confirmation. Test edit mode vs create mode. Verify API error handling.",
+        "priority": "medium",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Add Users Tab to Sidebar and Routing",
+        "description": "Integrate the users management feature into the existing admin panel navigation system",
+        "details": "Modify Sidebar.tsx to add Users tab:\n\n```typescript\nimport { Users } from 'lucide-react';\n\n// Add to navigation items\nconst navigationItems = [\n  // ... existing items\n  {\n    id: 'users',\n    label: 'Usuários',\n    icon: Users,\n    requiresAdmin: true, // Add permission check\n  }\n];\n```\n\nUpdate Painel.tsx routing:\n\n```typescript\nimport { UsersManager } from './UsersManager';\n\n// In the tab content switch\ncase 'users':\n  return <UsersManager />;\n```\n\nAdd permission check to hide/show based on user role if applicable. Consider lazy loading the UsersManager component for better performance.",
+        "testStrategy": "Test navigation, tab switching, deep linking with ?tab=users parameter. Verify permission-based visibility if implemented.",
+        "priority": "low",
+        "dependencies": [
+          18,
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Implement Security Enhancements and Audit Logging",
+        "description": "Add comprehensive security measures including rate limiting, audit logs, and permission validation",
+        "details": "Implement security layers:\n\n1. Rate limiting with express-rate-limit:\n```typescript\nimport rateLimit from 'express-rate-limit';\n\nconst createUserLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 5, // 5 requests per window\n  message: 'Too many user creation attempts'\n});\n\nrouter.post('/api/users', createUserLimiter, ...);\n```\n\n2. Audit logging table:\n```sql\nCREATE TABLE audit_logs (\n  id SERIAL PRIMARY KEY,\n  user_id INTEGER REFERENCES users(id),\n  action VARCHAR(50) NOT NULL,\n  entity_type VARCHAR(50) NOT NULL,\n  entity_id INTEGER,\n  old_values JSONB,\n  new_values JSONB,\n  ip_address INET,\n  user_agent TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n```\n\n3. Input sanitization with DOMPurify for XSS prevention\n4. CSRF protection with csurf middleware\n5. Session security with secure cookies",
+        "testStrategy": "Penetration testing: SQL injection attempts, XSS payloads, CSRF attacks. Test rate limiting thresholds. Verify audit logs capture all sensitive actions.",
+        "priority": "high",
+        "dependencies": [
+          11,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-10-02T17:20:59.226Z",
+      "updated": "2025-10-03T12:35:33.315Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

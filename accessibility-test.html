@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Checkbox Accessibility Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .pass { color: green; }
+        .fail { color: red; }
+        .info { color: blue; }
+
+        /* Simulate our enhanced checkbox styles for testing */
+        .enhanced-checkbox-container {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        .checkbox-area {
+            position: relative;
+        }
+        .checkbox-input {
+            width: 16px;
+            height: 16px;
+        }
+        .expanded-target {
+            position: absolute;
+            inset: 0;
+            width: 44px;
+            height: 44px;
+            margin: -14px;
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+        }
+        .expanded-target:hover {
+            background: rgba(0, 100, 200, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Enhanced Checkbox Accessibility Validation</h1>
+
+    <div class="test-section">
+        <h2>WCAG 2.1 Target Size Compliance Test</h2>
+        <p class="info">Testing 44x44px minimum touch target requirement</p>
+
+        <div class="enhanced-checkbox-container">
+            <div class="checkbox-area">
+                <input type="checkbox" id="test-checkbox" class="checkbox-input" />
+                <div class="expanded-target" onclick="document.getElementById('test-checkbox').click()"></div>
+            </div>
+            <label for="test-checkbox">Click anywhere in the highlighted area to toggle this checkbox</label>
+        </div>
+
+        <div id="target-size-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Keyboard Navigation Test</h2>
+        <p class="info">Use Tab to navigate, Space to toggle</p>
+
+        <div>
+            <input type="checkbox" id="kb-test-1" />
+            <label for="kb-test-1">First checkbox</label>
+        </div>
+        <div>
+            <input type="checkbox" id="kb-test-2" />
+            <label for="kb-test-2">Second checkbox</label>
+        </div>
+        <div>
+            <input type="checkbox" id="kb-test-3" />
+            <label for="kb-test-3">Third checkbox</label>
+        </div>
+
+        <div id="keyboard-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>ARIA Attributes Test</h2>
+        <p class="info">Testing proper accessibility attributes</p>
+
+        <div>
+            <input
+                type="checkbox"
+                id="aria-test"
+                aria-required="true"
+                aria-describedby="aria-description aria-error"
+                aria-invalid="false"
+            />
+            <label for="aria-test">Required checkbox with ARIA attributes</label>
+            <div id="aria-description">This checkbox demonstrates proper ARIA usage</div>
+            <div id="aria-error" style="display: none;">Error message would appear here</div>
+        </div>
+
+        <div id="aria-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Form Integration Test</h2>
+        <p class="info">Testing checkbox within form context</p>
+
+        <form onsubmit="return false;">
+            <div>
+                <input type="checkbox" id="form-test-1" required />
+                <label for="form-test-1">Required terms acceptance *</label>
+            </div>
+            <div>
+                <input type="checkbox" id="form-test-2" required />
+                <label for="form-test-2">Required no-refund policy *</label>
+            </div>
+            <button type="submit">Test Submit</button>
+        </form>
+
+        <div id="form-result"></div>
+    </div>
+
+    <script>
+        // Test target size compliance
+        function testTargetSize() {
+            const expandedTarget = document.querySelector('.expanded-target');
+            const rect = expandedTarget.getBoundingClientRect();
+            const result = document.getElementById('target-size-result');
+
+            const width = rect.width;
+            const height = rect.height;
+            const meetsStandard = width >= 44 && height >= 44;
+
+            result.innerHTML = `
+                <p>Target dimensions: ${width}px × ${height}px</p>
+                <p class="${meetsStandard ? 'pass' : 'fail'}">
+                    ${meetsStandard ? '✓ PASS' : '✗ FAIL'}: WCAG 2.1 Target Size (44×44px minimum)
+                </p>
+            `;
+        }
+
+        // Test keyboard navigation
+        function testKeyboardNavigation() {
+            const result = document.getElementById('keyboard-result');
+            let tabCount = 0;
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    tabCount++;
+                    result.innerHTML = `<p class="info">Tab presses detected: ${tabCount}</p>`;
+                }
+                if (e.key === ' ' && e.target.type === 'checkbox') {
+                    result.innerHTML += `<p class="pass">✓ Space key toggle working on ${e.target.id}</p>`;
+                }
+            });
+
+            result.innerHTML = '<p class="info">Try tabbing through checkboxes and pressing Space to toggle</p>';
+        }
+
+        // Test ARIA attributes
+        function testARIAAttributes() {
+            const checkbox = document.getElementById('aria-test');
+            const result = document.getElementById('aria-result');
+
+            const tests = [
+                { attr: 'aria-required', expected: 'true', description: 'Required attribute' },
+                { attr: 'aria-describedby', expected: 'aria-description aria-error', description: 'Description references' },
+                { attr: 'aria-invalid', expected: 'false', description: 'Invalid state' }
+            ];
+
+            let resultHTML = '<h4>ARIA Attribute Tests:</h4>';
+            tests.forEach(test => {
+                const actual = checkbox.getAttribute(test.attr);
+                const passes = actual === test.expected;
+                resultHTML += `
+                    <p class="${passes ? 'pass' : 'fail'}">
+                        ${passes ? '✓' : '✗'} ${test.description}:
+                        Expected "${test.expected}", Got "${actual}"
+                    </p>
+                `;
+            });
+
+            result.innerHTML = resultHTML;
+        }
+
+        // Test form integration
+        function testFormIntegration() {
+            const form = document.querySelector('form');
+            const result = document.getElementById('form-result');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const checkboxes = form.querySelectorAll('input[type="checkbox"][required]');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+                result.innerHTML = `
+                    <p class="${allChecked ? 'pass' : 'fail'}">
+                        ${allChecked ? '✓ PASS' : '✗ FAIL'}: Form validation - All required checkboxes checked: ${allChecked}
+                    </p>
+                `;
+            });
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', function() {
+            testTargetSize();
+            testKeyboardNavigation();
+            testARIAAttributes();
+            testFormIntegration();
+        });
+    </script>
+</body>
+</html>

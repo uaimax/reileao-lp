@@ -1,0 +1,159 @@
+# Sistema de Configuração e Inscrição de Eventos - UAIZOUK (Versão Simplificada)
+
+## Objetivo
+Criar **apenas 3 componentes** integrados ao sistema existente:
+
+1. **Nova aba no painel admin existente** - "Configuração do Formulário"
+2. **Página de inscrição** - Formulário dinâmico baseado na configuração
+3. **Página de confirmação** - Preview básico pós-envio
+
+## Integração com Sistema Existente
+
+### Painel Admin (Já existe)
+- **Arquivo**: `src/pages/Painel.tsx` e `src/components/painel/Sidebar.tsx`
+- **Ação**: Adicionar nova aba "Configuração do Formulário" no menu existente
+- **Padrão**: Seguir o mesmo padrão das outras abas (EventConfigManager, ArtistasManager, etc.)
+
+### Banco de Dados (Já existe)
+- **Arquivo**: `schema.sql` e `src/lib/schema.ts`
+- **Ação**: Adicionar apenas 2 tabelas simples ao schema existente
+- **Padrão**: Usar mesma estrutura das outras tabelas (serial, timestamp, etc.)
+
+### API (Já existe)
+- **Arquivo**: `api/index.js`
+- **Ação**: Adicionar endpoints seguindo o padrão existente
+- **Padrão**: Usar mesma estrutura de rotas e middleware
+
+## Especificações Técnicas Simplificadas
+
+### 1. Banco de Dados (2 tabelas apenas)
+
+#### Tabela: `event_form_configs`
+```sql
+CREATE TABLE event_form_configs (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER REFERENCES event_config(id),
+    is_active BOOLEAN DEFAULT false,
+    config_data JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Tabela: `event_registrations`
+```sql
+CREATE TABLE event_registrations (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER REFERENCES event_config(id),
+    cpf VARCHAR(14),
+    is_foreigner BOOLEAN DEFAULT false,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    whatsapp VARCHAR(20) NOT NULL,
+    birth_date DATE NOT NULL,
+    state VARCHAR(2),
+    city VARCHAR(255),
+    ticket_type VARCHAR(100) NOT NULL,
+    partner_name TEXT,
+    selected_products JSONB,
+    total DECIMAL(10,2) NOT NULL,
+    terms_accepted BOOLEAN NOT NULL,
+    payment_method VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 2. Estrutura JSONB Simples
+```json
+{
+  "foreignerOption": { "enabled": true },
+  "ticketTypes": [
+    { "name": "Individual", "price": 350.00, "requiresPartner": false },
+    { "name": "Dupla", "price": 600.00, "requiresPartner": true }
+  ],
+  "products": [
+    { "name": "Camiseta", "price": 85.00, "options": ["P", "M", "G", "GG"] },
+    { "name": "Combo Alimentação", "price": 145.00, "options": ["Sim", "Não"] }
+  ]
+}
+```
+
+### 3. Componentes React (3 apenas)
+
+#### 3.1. FormConfigManager.tsx
+- **Localização**: `src/components/painel/FormConfigManager.tsx`
+- **Padrão**: Seguir estrutura do `EventConfigManager.tsx`
+- **Funcionalidade**: CRUD simples da configuração JSONB
+
+#### 3.2. RegistrationForm.tsx
+- **Localização**: `src/pages/RegistrationForm.tsx`
+- **Padrão**: Seguir estrutura do `Bio.tsx`
+- **Funcionalidade**: Formulário dinâmico baseado na config ativa
+
+#### 3.3. RegistrationConfirmation.tsx
+- **Localização**: `src/pages/RegistrationConfirmation.tsx`
+- **Padrão**: Página simples como outras páginas existentes
+- **Funcionalidade**: Mostrar dados da inscrição
+
+### 4. API Endpoints (3 apenas)
+
+#### 4.1. Configuração
+- `GET /api/form-config` - Buscar config ativa
+- `POST /api/form-config` - Salvar nova config
+- `PUT /api/form-config/:id` - Atualizar config
+
+#### 4.2. Inscrições
+- `POST /api/registrations` - Criar nova inscrição
+- `GET /api/registrations/:id` - Buscar inscrição por ID
+
+### 5. Rotas (2 apenas)
+- `/inscricao` - Página do formulário
+- `/inscricao/confirmacao/:id` - Página de confirmação
+
+## Critérios de Aceite Simplificados
+
+### Painel Admin
+- [ ] Nova aba "Configuração do Formulário" aparece no menu
+- [ ] Consigo criar/editar tipos de ingresso
+- [ ] Consigo criar/editar produtos
+- [ ] Consigo salvar configuração
+- [ ] Interface segue o padrão das outras abas
+
+### Formulário de Inscrição
+- [ ] Campos aparecem conforme configuração
+- [ ] CPF só aparece se não for estrangeiro
+- [ ] Campo "nome da dupla" só aparece se ingresso dupla
+- [ ] Produtos aparecem conforme config
+- [ ] Validações básicas funcionam
+- [ ] Submissão salva no banco
+
+### Página de Confirmação
+- [ ] Mostra dados da inscrição
+- [ ] Página carrega corretamente
+- [ ] Não permite edição
+
+## Implementação em 3 Etapas
+
+### Etapa 1: Banco de Dados
+1. Adicionar 2 tabelas ao schema.sql
+2. Executar migração
+3. Atualizar schema.ts do Drizzle
+
+### Etapa 2: Painel Admin
+1. Adicionar nova aba no Sidebar.tsx
+2. Criar FormConfigManager.tsx
+3. Adicionar rota no Painel.tsx
+4. Criar endpoints da API
+
+### Etapa 3: Formulário e Confirmação
+1. Criar RegistrationForm.tsx
+2. Criar RegistrationConfirmation.tsx
+3. Adicionar rotas no App.tsx
+4. Criar endpoints de inscrição
+
+## Resultado Esperado
+- **Admin**: Nova aba funcional seguindo padrão existente
+- **Usuário**: Formulário dinâmico baseado na configuração
+- **Sistema**: Integração completa com sistema existente
+- **Código**: Reutilização máxima do que já existe
+

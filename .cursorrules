@@ -1,0 +1,179 @@
+# Cursor Rules - Evitar Comandos que Travam o Terminal
+
+## Comandos Proibidos que Esperam Entrada Interativa
+
+### PostgreSQL e Bancos de Dados
+- **NUNCA** execute comandos `psql` sem especificar senha via variável de ambiente
+- **NUNCA** execute comandos que pedem senha interativamente
+- **NUNCA** execute comandos `mysql`, `psql`, `sqlite3` que esperam entrada do usuário
+
+### Comandos Problemáticos Específicos:
+```bash
+# ❌ PROIBIDO - Espera senha interativamente
+psql -h localhost -U postgres -d database_name -f arquivo.sql
+psql -h localhost -U postgres -d database_name
+mysql -u root -p
+mysql -u root -p database_name < arquivo.sql
+
+# ✅ PERMITIDO - Com senha via variável de ambiente
+PGPASSWORD=senha psql -h localhost -U postgres -d database_name -f arquivo.sql
+PGPASSWORD=senha psql -h localhost -U postgres -d database_name -c "SELECT 1;"
+```
+
+### Outros Comandos que Podem Travar:
+- Comandos que pedem confirmação (`rm -i`, `cp -i`)
+- Comandos de instalação interativos (`npm init` sem flags)
+- Comandos que abrem editores (`git commit` sem `-m`)
+- Comandos que esperam input (`read`, `input()`)
+
+## Regras de Execução Segura
+
+### 1. Sempre Use Flags Não-Interativas
+```bash
+# ✅ Correto
+npm install --yes
+git commit -m "mensagem"
+rm -rf pasta/
+cp -r origem/ destino/
+
+# ❌ Evitar
+npm init
+git commit
+rm pasta/
+```
+
+### 2. Para PostgreSQL, Use Variáveis de Ambiente
+```bash
+# ✅ Sempre especificar senha via PGPASSWORD
+PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f arquivo.sql
+
+# ✅ Ou usar arquivo .pgpass
+psql -h localhost -U postgres -d database_name -f arquivo.sql
+```
+
+### 3. Para Scripts de Migração
+```bash
+# ✅ Use scripts que já têm as credenciais configuradas
+./db-migrate.sh
+node setup-db.js
+npm run migrate
+
+# ❌ Evite executar SQL diretamente sem credenciais
+psql -f migrations/arquivo.sql
+```
+
+### 4. Comandos de Teste Seguros
+```bash
+# ✅ Teste conexão sem interação
+PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c "SELECT 1;"
+node test-env.js
+npm run test:db
+```
+
+## Configuração de Ambiente
+
+### Variáveis de Ambiente Necessárias
+Certifique-se de que estas variáveis estão configuradas:
+```bash
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+DB_NAME=uaizouk_lp
+PGPASSWORD=sua_senha
+```
+
+### Scripts Seguros Disponíveis no Projeto
+Use estes scripts em vez de comandos diretos:
+- `./db-migrate.sh check` - Verificar se tabelas existem
+- `./db-migrate.sh migrate` - Executar migrações das tabelas
+- `./setup-db.js` - Para configuração inicial
+- `./test-env.js` - Para testar ambiente
+- `node test-env.js` - Testar configuração do ambiente
+- `npm run migrate` - Para migrações via npm (se disponível)
+
+### Configuração de Senha PostgreSQL
+O projeto usa Neon PostgreSQL. Configure a senha com:
+```bash
+# Para desenvolvimento local
+export PGPASSWORD="sua_senha_local"
+
+# Para produção (usar DATABASE_URL do _save_env)
+export PGPASSWORD="npg_BgyoHlKF1Tu3"
+```
+
+## Comandos Alternativos Seguros
+
+### Em vez de psql direto:
+```bash
+# ✅ Use scripts existentes (RECOMENDADO)
+./db-migrate.sh migrate
+
+# ✅ Para arquivos SQL específicos
+PGPASSWORD="npg_BgyoHlKF1Tu3" psql -h ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech -U uaizouklp_owner -d uaizouklp -f migrations/add-notifications-system.sql
+
+# ✅ Para comandos SQL simples
+PGPASSWORD="npg_BgyoHlKF1Tu3" psql -h ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech -U uaizouklp_owner -d uaizouklp -c "SELECT 1;"
+
+# ❌ NUNCA faça isso (trava o terminal)
+psql -h localhost -U postgres -d uaizouk_lp -f migrations/add-notifications-system.sql
+```
+
+### Para verificar status do banco:
+```bash
+# Use scripts de teste
+node test-env.js
+npm run test:db
+
+# Ou comandos não-interativos
+PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c "SELECT version();"
+```
+
+## Resumo das Regras
+
+1. **NUNCA** execute comandos que pedem senha interativamente
+2. **SEMPRE** use variáveis de ambiente para credenciais
+3. **PREFIRA** scripts existentes em vez de comandos diretos
+4. **TESTE** comandos antes de sugerir ao usuário
+5. **USE** flags não-interativas sempre que possível
+
+## Comandos de Emergência
+
+Se um comando travar:
+1. Pressione `Ctrl+C` para cancelar
+2. Use `pkill -f psql` para matar processos psql
+3. Verifique processos com `ps aux | grep psql`
+4. Reinicie o terminal se necessário
+
+## Comandos Seguros para Este Projeto Específico
+
+### Para Migrações:
+```bash
+# ✅ SEGURO - Usar script existente
+./db-migrate.sh migrate
+
+# ✅ SEGURO - Para arquivo específico com credenciais
+PGPASSWORD="npg_BgyoHlKF1Tu3" psql -h ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech -U uaizouklp_owner -d uaizouklp -f migrations/add-notifications-system.sql
+```
+
+### Para Testes de Conexão:
+```bash
+# ✅ SEGURO - Testar ambiente
+node test-env.js
+
+# ✅ SEGURO - Testar conexão direta
+PGPASSWORD="npg_BgyoHlKF1Tu3" psql -h ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech -U uaizouklp_owner -d uaizouklp -c "SELECT version();"
+```
+
+### Para Verificar Tabelas:
+```bash
+# ✅ SEGURO - Usar script de verificação
+./db-migrate.sh check
+
+# ✅ SEGURO - Verificar tabela específica
+PGPASSWORD="npg_BgyoHlKF1Tu3" psql -h ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech -U uaizouklp_owner -d uaizouklp -c "SELECT 1 FROM event_form_configs LIMIT 1;"
+```
+
+## Lembrete Importante
+
+**NUNCA execute comandos psql sem PGPASSWORD configurado!**
+O projeto usa Neon PostgreSQL com credenciais específicas que devem ser sempre fornecidas via variável de ambiente.

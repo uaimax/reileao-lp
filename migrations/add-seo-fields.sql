@@ -1,0 +1,4 @@
+ALTER TABLE event_config
+  ADD COLUMN IF NOT EXISTS meta_title VARCHAR(255),
+  ADD COLUMN IF NOT EXISTS meta_description TEXT,
+  ADD COLUMN IF NOT EXISTS meta_image_url TEXT;

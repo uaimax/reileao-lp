@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 2,
+  "dockerfileLines": [
+    "# CapRover deployment configuration",
+    "FROM node:18-alpine",
+    "WORKDIR /app",
+    "COPY package*.json ./",
+    "RUN npm ci",
+    "COPY . .",
+    "ENV VITE_API_URL=https://uaizouk-lp.a.webmaxdigital.com",
+    "RUN npm run build",
+    "RUN npm prune --production",
+    "EXPOSE 3002",
+    "ENV NODE_ENV=production",
+    "CMD [\"node\", \"api/index.js\"]"
+  ]
+}

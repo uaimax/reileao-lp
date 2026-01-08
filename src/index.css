@@ -1,0 +1,290 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+
+@layer base {
+  :root {
+    --background: 225 15% 6%;
+    --foreground: 231 100% 98%;
+
+    --card: 225 15% 8%;
+    --card-foreground: 231 100% 98%;
+
+    --popover: 225 15% 8%;
+    --popover-foreground: 231 100% 98%;
+
+    --primary: 324 100% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 267 100% 58%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 225 15% 15%;
+    --muted-foreground: 233 12% 69%;
+
+    --accent: 197 100% 54%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 225 15% 20%;
+    --input: 225 15% 20%;
+    --ring: 324 100% 55%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 225 15% 6%;
+    --sidebar-foreground: 233 12% 69%;
+    --sidebar-primary: 324 100% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 225 15% 15%;
+    --sidebar-accent-foreground: 231 100% 98%;
+    --sidebar-border: 225 15% 20%;
+    --sidebar-ring: 324 100% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-dark-bg text-soft-white font-inter;
+    background: linear-gradient(135deg, #0C0C1F 0%, #1a1332 50%, #0C0C1F 100%);
+    min-height: 100vh;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #ff1c8e 0%, #9225ff 50%, #14b9ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .neon-glow {
+    text-shadow: 0 0 10px rgba(255, 28, 142, 0.5), 0 0 20px rgba(255, 28, 142, 0.3);
+  }
+
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-neon {
+    background: linear-gradient(135deg, #ff1c8e 0%, #9225ff 100%);
+    box-shadow: 0 0 20px rgba(255, 28, 142, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .btn-neon:hover {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow: 0 0 30px rgba(255, 28, 142, 0.6);
+  }
+
+  .btn-neon:active {
+    transform: translateY(0) scale(0.98) translateZ(0);
+    transition: transform 0.1s ease;
+  }
+
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .hero-gradient {
+    background: radial-gradient(ellipse at center, rgba(146, 37, 255, 0.15) 0%, rgba(20, 185, 255, 0.1) 50%, transparent 70%);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes count-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes number-roll {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-20%);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow-intensify {
+  0% {
+    text-shadow: 0 0 10px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+  100% {
+    text-shadow: 0 0 10px currentColor;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes flip-in {
+  0% {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(147, 51, 234, 0.6);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-flip-in {
+  animation: flip-in 0.8s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-count-up {
+  animation: count-up 0.6s ease-out forwards;
+}
+
+.animate-number-roll {
+  animation: number-roll 0.5s ease-out;
+}
+
+.animate-glow-intensify {
+  animation: glow-intensify 2s ease-in-out infinite;
+}
+
+
+/* YOLO Performance Optimizations */
+@keyframes yolo-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+.yolo-optimize {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.yolo-bounce {
+  animation: yolo-bounce 1s ease-in-out;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile Performance Optimizations - YOLO */
+@media (max-width: 768px) {
+  .btn-neon {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(5px);
+  }
+
+  .gradient-text {
+    background-attachment: scroll;
+  }
+}

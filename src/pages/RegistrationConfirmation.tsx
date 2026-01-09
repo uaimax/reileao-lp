@@ -320,10 +320,10 @@ const RegistrationConfirmation = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-          <p className="text-soft-white">Carregando confirmação...</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-slate-50" />
+          <p className="text-slate-50">Carregando confirmação...</p>
         </div>
       </div>
     );
@@ -331,10 +331,10 @@ const RegistrationConfirmation = () => {
 
   if (error || !registration) {
     return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-8 h-8 mx-auto mb-4 text-red-400" />
-          <p className="text-soft-white mb-4">{error || 'Inscrição não encontrada'}</p>
+          <p className="text-slate-50 mb-4">{error || 'Inscrição não encontrada'}</p>
           <Button onClick={handleBackToHome}>
             <Home className="w-4 h-4 mr-2" />
             Voltar para Home
@@ -345,26 +345,26 @@ const RegistrationConfirmation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg py-8">
+    <div className="min-h-screen bg-slate-900 py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header for Installment Registrations */}
         {(registration.installments > 1 && registration.asaasPaymentId) ? (
           <div className="text-center mb-8">
             <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold gradient-text mb-2">
+            <h1 className="text-3xl font-bold text-slate-50 mb-2">
               ✅ Pré-inscrição realizada!
             </h1>
-            <p className="text-lg text-text-gray">
+            <p className="text-lg text-slate-400">
               Agora é só manter suas parcelas em dia.
             </p>
           </div>
         ) : (
         <div className="text-center mb-8">
           <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold gradient-text mb-2">
+          <h1 className="text-3xl font-bold text-slate-50 mb-2">
             ✅ INSCRIÇÃO REALIZADA COM SUCESSO!
           </h1>
-          <p className="text-text-gray">
+          <p className="text-slate-400">
             Você receberá um email com as instruções de pagamento
           </p>
         </div>
@@ -375,8 +375,8 @@ const RegistrationConfirmation = () => {
           <div className="mb-8">
             {isLoadingInstallments ? (
               <div className="text-center py-8">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-                <p className="text-text-gray">Carregando parcelas...</p>
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-slate-50" />
+                <p className="text-slate-400">Carregando parcelas...</p>
               </div>
             ) : installments && installments.installments.length > 0 ? (
               (() => {
@@ -502,7 +502,7 @@ const RegistrationConfirmation = () => {
             ) : (
               <div className="text-center py-8">
                 <AlertCircle className="w-8 h-8 mx-auto mb-4 text-slate-400" />
-                <p className="text-text-gray">Não foi possível carregar as parcelas</p>
+                <p className="text-slate-400">Não foi possível carregar as parcelas</p>
               </div>
             )}
           </div>
@@ -537,7 +537,7 @@ const RegistrationConfirmation = () => {
         {(registration.installments > 1 && registration.asaasPaymentId) && (
           <Card className="mb-6">
           <CardHeader>
-              <CardTitle className="flex items-center justify-between text-lg">
+              <CardTitle className="flex items-center justify-between text-lg text-slate-50">
                 <span>
                   📊 Status Rápido
               </span>
@@ -712,7 +712,7 @@ const RegistrationConfirmation = () => {
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <p className="text-text-gray">Carregando status...</p>
+                  <p className="text-slate-400">Carregando status...</p>
                 </div>
               )}
             </CardContent>
@@ -723,7 +723,7 @@ const RegistrationConfirmation = () => {
         {(registration.installments > 1 && registration.asaasPaymentId) ? (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle className="flex items-center text-lg">
+              <CardTitle className="flex items-center text-lg text-slate-50">
                 📝 Resumo da Inscrição
               </CardTitle>
             </CardHeader>
@@ -805,41 +805,41 @@ const RegistrationConfirmation = () => {
           {/* Personal Data */}
           <Card>
             <CardHeader>
-              <CardTitle>📋 DADOS DA INSCRIÇÃO</CardTitle>
+              <CardTitle className="text-slate-50">📋 DADOS DA INSCRIÇÃO</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium">Nome:</span>
-                <span className="ml-2">{registration.fullName}</span>
+                <span className="font-medium text-slate-400">Nome:</span>
+                <span className="ml-2 text-slate-50">{registration.fullName}</span>
               </div>
 
               <div>
-                <span className="font-medium">CPF/Estrangeiro:</span>
-                <span className="ml-2">
+                <span className="font-medium text-slate-400">CPF/Estrangeiro:</span>
+                <span className="ml-2 text-slate-50">
                   {registration.isForeigner ? 'Estrangeiro' : registration.cpf}
                 </span>
               </div>
 
               <div>
-                <span className="font-medium">Email:</span>
-                <span className="ml-2">{registration.email}</span>
+                <span className="font-medium text-slate-400">Email:</span>
+                <span className="ml-2 text-slate-50">{registration.email}</span>
               </div>
 
               <div>
-                <span className="font-medium">WhatsApp:</span>
-                <span className="ml-2">{registration.whatsapp}</span>
+                <span className="font-medium text-slate-400">WhatsApp:</span>
+                <span className="ml-2 text-slate-50">{registration.whatsapp}</span>
               </div>
 
               {!registration.isForeigner && (
                 <>
                   <div>
-                    <span className="font-medium">Estado:</span>
-                    <span className="ml-2">{registration.state}</span>
+                    <span className="font-medium text-slate-400">Estado:</span>
+                    <span className="ml-2 text-slate-50">{registration.state}</span>
                   </div>
 
                   <div>
-                    <span className="font-medium">Cidade:</span>
-                    <span className="ml-2">{registration.city}</span>
+                    <span className="font-medium text-slate-400">Cidade:</span>
+                    <span className="ml-2 text-slate-50">{registration.city}</span>
                   </div>
                 </>
               )}
@@ -849,18 +849,18 @@ const RegistrationConfirmation = () => {
           {/* Ticket & Products */}
           <Card>
             <CardHeader>
-              <CardTitle>🎟️ INGRESSO E PRODUTOS</CardTitle>
+              <CardTitle className="text-slate-50">🎟️ INGRESSO E PRODUTOS</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium">Tipo:</span>
-                <span className="ml-2">{registration.ticketType}</span>
+                <span className="font-medium text-slate-400">Tipo:</span>
+                <span className="ml-2 text-slate-50">{registration.ticketType}</span>
               </div>
 
               {registration.partnerName && (
                 <div>
-                  <span className="font-medium">Nome da Dupla:</span>
-                  <span className="ml-2">{registration.partnerName}</span>
+                  <span className="font-medium text-slate-400">Nome da Dupla:</span>
+                  <span className="ml-2 text-slate-50">{registration.partnerName}</span>
                 </div>
               )}
 
@@ -872,7 +872,7 @@ const RegistrationConfirmation = () => {
                       const product = config?.products?.find(p => p.name === productName);
                       return (
                         <div key={productName} className="text-sm">
-                          <div className="text-text-gray">
+                          <div className="text-slate-400">
                             • {productName}: {selectedOption}
                           </div>
                           {product?.description && (
@@ -895,15 +895,15 @@ const RegistrationConfirmation = () => {
         {!(registration.installments > 1 && registration.asaasPaymentId) && (
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>💰 RESUMO FINANCEIRO</CardTitle>
+            <CardTitle className="text-slate-50">💰 RESUMO FINANCEIRO</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-center">
-              <div className="text-3xl font-bold text-neon-purple mb-2">
+              <div className="text-3xl font-bold text-yellow-500 mb-2">
                 R$ {Number(registration.total).toFixed(2)}
               </div>
               <div className="space-y-2">
-                <p className="text-text-gray">
+                <p className="text-slate-400">
                   Método de pagamento: {
                     registration.paymentMethod === 'pix' ? 'PIX' :
                       registration.paymentMethod === 'pix_installment' ? 'PIX Parcelado' :
@@ -914,7 +914,7 @@ const RegistrationConfirmation = () => {
                   }
                 </p>
                   {(registration.paymentMethod === 'credit_card' || registration.paymentMethod === 'pix_installment') && registration.installments > 1 && (
-                  <p className="text-text-gray">
+                  <p className="text-slate-400">
                     Parcelado em {registration.installments}x de R$ {(Number(registration.total) / registration.installments).toFixed(2)}
                   </p>
                 )}
@@ -929,7 +929,7 @@ const RegistrationConfirmation = () => {
         {!(registration.installments > 1 && registration.asaasPaymentId) && (
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>⚠️ PRÓXIMOS PASSOS</CardTitle>
+            <CardTitle className="text-slate-50">⚠️ PRÓXIMOS PASSOS</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -938,11 +938,11 @@ const RegistrationConfirmation = () => {
                   <p className="text-green-400 font-medium">
                     ✅ Pagamento confirmado! Sua inscrição está ativa.
                   </p>
-                  <p>
-                    Você receberá um email em <strong>{registration.email}</strong> com os detalhes do evento.
+                  <p className="text-slate-400">
+                    Você receberá um email em <strong className="text-slate-50">{registration.email}</strong> com os detalhes do evento.
                   </p>
-                  <p>
-                    Guarde este protocolo <strong>#{generateProtocol(registration.id)}</strong> para futuras consultas.
+                  <p className="text-slate-400">
+                    Guarde este protocolo <strong className="text-slate-50">#{generateProtocol(registration.id)}</strong> para futuras consultas.
                   </p>
                 </>
               ) : registration.paymentStatus === 'refunded' ? (
@@ -950,7 +950,7 @@ const RegistrationConfirmation = () => {
                   <p className="text-orange-400 font-medium">
                     ⚠️ Pagamento reembolsado. Entre em contato conosco para mais informações.
                   </p>
-                  <p>
+                  <p className="text-slate-400">
                     Em caso de dúvidas, entre em contato conosco através do WhatsApp.
                   </p>
                 </>
@@ -959,25 +959,25 @@ const RegistrationConfirmation = () => {
                   <p className="text-red-400 font-medium">
                     ❌ Pagamento vencido. Entre em contato conosco para regularizar.
                   </p>
-                  <p>
+                  <p className="text-slate-400">
                     O pagamento deve ser realizado para garantir sua vaga no evento.
                   </p>
-                  <p>
+                  <p className="text-slate-400">
                     Em caso de dúvidas, entre em contato conosco através do WhatsApp.
                   </p>
                 </>
               ) : (
                 <>
-                  <p>
-                    Você receberá um email em <strong>{registration.email}</strong> com as instruções de pagamento.
+                  <p className="text-slate-400">
+                    Você receberá um email em <strong className="text-slate-50">{registration.email}</strong> com as instruções de pagamento.
                   </p>
-                  <p>
+                  <p className="text-slate-400">
                     O pagamento deve ser realizado em até 48 horas para garantir sua vaga no evento.
                   </p>
-                  <p>
-                    <strong>Esta página será atualizada automaticamente</strong> quando o pagamento for confirmado.
+                  <p className="text-slate-400">
+                    <strong className="text-slate-50">Esta página será atualizada automaticamente</strong> quando o pagamento for confirmado.
                   </p>
-                  <p>
+                  <p className="text-slate-400">
                     Em caso de dúvidas, entre em contato conosco através do WhatsApp.
                   </p>
                 </>
@@ -1028,10 +1028,10 @@ const RegistrationConfirmation = () => {
                 background: white !important;
                 color: black !important;
               }
-              .bg-dark-bg {
+              .bg-slate-900 {
                 background: white !important;
               }
-              .text-soft-white, .text-text-gray {
+              .text-slate-50, .text-slate-400 {
                 color: black !important;
               }
               .gradient-text {

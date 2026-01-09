@@ -112,6 +112,20 @@ const RegistrationConfirmation = () => {
     }
   }, [id]);
 
+  // Set page title when registration is loaded
+  useEffect(() => {
+    if (registration) {
+      const statusText = registration.installments > 1 && registration.asaasPaymentId
+        ? 'Pré-inscrição realizada'
+        : 'Inscrição realizada';
+      document.title = `${statusText} - ${SITE_NAME}`;
+    } else if (isLoading) {
+      document.title = `Carregando... - ${SITE_NAME}`;
+    } else {
+      document.title = `Confirmação de Inscrição - ${SITE_NAME}`;
+    }
+  }, [registration, isLoading]);
+
   // Track purchase when registration is loaded
   useEffect(() => {
     if (registration && config) {
@@ -747,10 +761,10 @@ const RegistrationConfirmation = () => {
                 {(() => {
                   // Usar productsSnapshot se disponível (mais confiável), senão usar selectedProducts
                   let productsToShow: string[] = [];
-                  
+
                   if (registration.productsSnapshot && Array.isArray(registration.productsSnapshot) && registration.productsSnapshot.length > 0) {
                     // Usar snapshot dos produtos (dados salvos no momento da inscrição)
-                    productsToShow = registration.productsSnapshot.map(p => 
+                    productsToShow = registration.productsSnapshot.map(p =>
                       p.option === 'Sim' ? p.name : `${p.name} ${p.option}`
                     );
                   } else if (registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0) {
@@ -888,7 +902,7 @@ const RegistrationConfirmation = () => {
               {(() => {
                 // Usar productsSnapshot se disponível (mais confiável), senão usar selectedProducts
                 let productsToShow: Array<{ name: string; option: string }> = [];
-                
+
                 if (registration.productsSnapshot && Array.isArray(registration.productsSnapshot) && registration.productsSnapshot.length > 0) {
                   // Usar snapshot dos produtos (dados salvos no momento da inscrição)
                   productsToShow = registration.productsSnapshot.map(p => ({

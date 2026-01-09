@@ -1,6 +1,9 @@
 require('dotenv').config();
 const { Client } = require('pg');
 
+// Nome do evento/site - configurável via variável de ambiente
+const SITE_NAME = process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento';
+
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
@@ -20,8 +23,8 @@ const additionalFaqs = [
     isActive: true
   },
   {
-    question: "Quantos dias dura o UAIZOUK?",
-    answer: "<p>O UAIZOUK é uma <strong>imersão completa de 3 dias</strong> (sexta a domingo) para respirar Zouk do início ao fim, com programação intensiva de aulas, workshops e baladas.</p><p>São mais de 300 horas de balada distribuídas ao longo desses dias!</p>",
+    question: `Quantos dias dura o ${SITE_NAME}?`,
+    answer: `<p>O ${SITE_NAME} é uma <strong>imersão completa de 3 dias</strong> (sexta a domingo) para respirar Zouk do início ao fim, com programação intensiva de aulas, workshops e baladas.</p><p>São mais de 300 horas de balada distribuídas ao longo desses dias!</p>`,
     displayOrder: 8,
     isActive: true
   },
@@ -33,7 +36,7 @@ const additionalFaqs = [
   },
   {
     question: "Preciso ter experiência em Zouk para participar?",
-    answer: "<p><strong>Não é necessário!</strong> O UAIZOUK é conhecido por receber <strong>participantes de todos os níveis</strong>, desde iniciantes até avançados.</p><p>Temos aulas específicas para cada nível e o ambiente é totalmente acolhedor para quem está começando.</p>",
+    answer: `<p><strong>Não é necessário!</strong> O ${SITE_NAME} é conhecido por receber <strong>participantes de todos os níveis</strong>, desde iniciantes até avançados.</p><p>Temos aulas específicas para cada nível e o ambiente é totalmente acolhedor para quem está começando.</p>`,
     displayOrder: 10,
     isActive: true
   },
@@ -44,14 +47,14 @@ const additionalFaqs = [
     isActive: true
   },
   {
-    question: "Quando acontece o UAIZOUK?",
-    answer: "<p>O UAIZOUK 2026 está marcado para <strong>4–7 de Setembro de 2026</strong> em Uberlândia, MG.</p><p>O evento sempre acontece em <strong>setembro</strong> e é uma tradição anual que reúne zoukeiros de todo o Brasil e do mundo!</p>",
+    question: `Quando acontece o ${SITE_NAME}?`,
+    answer: `<p>O ${SITE_NAME} 2026 está marcado para <strong>4–7 de Setembro de 2026</strong> em Uberlândia, MG.</p><p>O evento sempre acontece em <strong>setembro</strong> e é uma tradição anual que reúne zoukeiros de todo o Brasil e do mundo!</p>`,
     displayOrder: 12,
     isActive: true
   },
   {
     question: "Onde exatamente acontece o evento?",
-    answer: "<p>O UAIZOUK acontece no <strong>Recanto da Lua</strong>, uma chácara localizada no bairro Chácaras Panorama em Uberlândia-MG.</p><p>É um ambiente único: uma chácara dentro da cidade, oferecendo toda a infraestrutura necessária para o evento em um cenário natural e acolhedor.</p>",
+    answer: `<p>O ${SITE_NAME} acontece no <strong>Recanto da Lua</strong>, uma chácara localizada no bairro Chácaras Panorama em Uberlândia-MG.</p><p>É um ambiente único: uma chácara dentro da cidade, oferecendo toda a infraestrutura necessária para o evento em um cenário natural e acolhedor.</p>`,
     displayOrder: 13,
     isActive: true
   },
@@ -73,9 +76,9 @@ async function addFaqs() {
   try {
     console.log('🔄 Conectando ao banco de dados...');
     await client.connect();
-    
+
     console.log('🔄 Adicionando FAQs adicionais...');
-    
+
     for (const faq of additionalFaqs) {
       const result = await client.query(`
         INSERT INTO faqs (question, answer, display_order, is_active)
@@ -83,21 +86,21 @@ async function addFaqs() {
         ON CONFLICT DO NOTHING
         RETURNING id
       `, [faq.question, faq.answer, faq.displayOrder, faq.isActive]);
-      
+
       if (result.rows.length > 0) {
         console.log(`✅ FAQ adicionada: "${faq.question}" (ID: ${result.rows[0].id})`);
       } else {
         console.log(`⚠️  FAQ já existe: "${faq.question}"`);
       }
     }
-    
+
     console.log('🎉 Processo concluído!');
     console.log(`📊 Total de ${additionalFaqs.length} FAQs processadas.`);
-    
+
     // Mostrar estatísticas finais
     const totalFaqs = await client.query('SELECT COUNT(*) as count FROM faqs WHERE is_active = true');
     console.log(`📝 Total de FAQs ativas no banco: ${totalFaqs.rows[0].count}`);
-    
+
   } catch (err) {
     console.error('❌ Erro ao adicionar FAQs:', err);
     process.exit(1);

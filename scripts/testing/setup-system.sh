@@ -3,20 +3,25 @@
 # Script para executar migração do banco de dados
 # Este script usa PGPASSWORD para evitar prompt de senha
 
+# Configuração - usar variáveis de ambiente ou valores default
+DB_NAME="${DB_NAME:-uaizouk_lp}"
+DB_USER="${DB_USER:-postgres}"
+DB_HOST="${DB_HOST:-localhost}"
+
 echo "🚀 Executando migração do sistema de formulário de eventos..."
 
 # Configurar senha do PostgreSQL (ajuste conforme necessário)
-export PGPASSWORD="postgres"
+export PGPASSWORD="${DB_PASSWORD:-postgres}"
 
 # Verificar se as tabelas já existem
 echo "📋 Verificando se as tabelas já existem..."
-psql -h localhost -U postgres -d uaizouk_lp -c "SELECT 1 FROM event_form_configs LIMIT 1;" 2>/dev/null
+psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1 FROM event_form_configs LIMIT 1;" 2>/dev/null
 
 if [ $? -eq 0 ]; then
     echo "✅ Tabelas já existem! Pulando migração."
 else
     echo "📦 Executando migração..."
-    psql -h localhost -U postgres -d uaizouk_lp -f migrate-event-form.sql
+    psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -f migrate-event-form.sql
 
     if [ $? -eq 0 ]; then
         echo "✅ Migração executada com sucesso!"

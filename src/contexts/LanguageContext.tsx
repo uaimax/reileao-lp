@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import ptTranslations from '../locales/pt.json';
 import enTranslations from '../locales/en.json';
+import { getStorageKey } from '@/lib/site-config';
 
 export type Language = 'pt' | 'en';
 
@@ -10,7 +11,7 @@ interface LanguageContextType {
   t: (key: string, replacements?: Record<string, string | number>) => string;
 }
 
-const STORAGE_KEY = 'uaizouk-language';
+const STORAGE_KEY = getStorageKey('language');
 
 const translations: Record<Language, Record<string, string>> = {
   pt: ptTranslations,

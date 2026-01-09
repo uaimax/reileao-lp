@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { useLandingData } from '@/hooks/use-landing-data';
 import { handleLinkClick } from '@/utils/link-handler';
-import { SITE_NAME, getSiteNameWithYear, getCopyrightText } from '@/lib/site-config';
+import { SITE_NAME, getSiteNameWithYear, getCopyrightText, getRegistrationUrl, INSTAGRAM_URL } from '@/lib/site-config';
 
 const BioTest = () => {
   console.log('🚀 BioTest component mounted');
@@ -10,10 +10,10 @@ const BioTest = () => {
   const eventData = landingData?.event;
 
   const testLinks = [
-    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes' },
+    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: eventData?.registrationUrl || getRegistrationUrl() },
     { id: 2, title: '📍 Localização do Evento', url: 'https://maps.google.com' },
     { id: 3, title: '🏨 Hospedagem Recomendada', url: 'https://booking.com' },
-    { id: 4, title: '📱 Instagram Oficial', url: 'https://instagram.com/uaizouk' },
+    ...(INSTAGRAM_URL ? [{ id: 4, title: '📱 Instagram Oficial', url: INSTAGRAM_URL }] : []),
     { id: 5, title: '🎵 Playlist Spotify', url: 'https://spotify.com' }
   ];
 

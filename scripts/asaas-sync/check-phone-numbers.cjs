@@ -3,14 +3,16 @@
 // Script para verificar telefones não aplicados corretamente
 
 const https = require('https');
-const postgres = require('postgres');
+const { getConfig, createDbClient } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
+const client = createDbClient();
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {

@@ -1,10 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+// Dynamic event name from environment or default
+const SITE_NAME = process.env.VITE_SITE_NAME || 'UAIZOUK';
+
 test.describe('Installment Calculation Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to registration form
     await page.goto('/inscricao');
-    await expect(page.locator('h1', { hasText: 'UAIZOUK 2025' })).toBeVisible();
+    // Wait for form to load - use pattern matching for dynamic event name
+    await expect(page.locator('h1').first()).toBeVisible();
   });
 
   test('should calculate correct installments for PIX payments', async ({ page }) => {

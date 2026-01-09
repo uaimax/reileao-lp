@@ -1,5 +1,9 @@
 import { test, expect, APIRequestContext } from '@playwright/test';
 
+// Dynamic event name from environment or default
+const SITE_NAME = process.env.VITE_SITE_NAME || 'UAIZOUK';
+const CURRENT_YEAR = new Date().getFullYear();
+
 test.describe('API Integration Tests', () => {
   let apiContext: APIRequestContext;
 
@@ -326,7 +330,7 @@ test.describe('API Integration Tests', () => {
           netValue: 93.05,
           originalValue: null,
           interestValue: null,
-          description: 'UAIZOUK 2025 - Individual',
+          description: `${SITE_NAME} ${CURRENT_YEAR} - Individual`,
           billingType: 'PIX',
           status: 'RECEIVED',
           pixTransaction: {
@@ -361,7 +365,7 @@ test.describe('API Integration Tests', () => {
           id: 'pay_987654321',
           customer: 'cus_987654321',
           value: 105.00,
-          description: 'UAIZOUK 2025 - Casal',
+          description: `${SITE_NAME} ${CURRENT_YEAR} - Casal`,
           billingType: 'CREDIT_CARD',
           status: 'OVERDUE',
           dueDate: new Date(Date.now() - 86400000).toISOString(), // Yesterday

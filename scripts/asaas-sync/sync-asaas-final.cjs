@@ -1,23 +1,19 @@
 #!/usr/bin/env node
 
 // Script de Sincronização ASAAS -> Base Local
-// Sincroniza clientes e cobranças do UAIZOUK do ASAAS com nossa base
+// Sincroniza clientes e cobranças do evento do ASAAS com nossa base
 
 const https = require('https');
-const { Client } = require('postgres');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const client = new Client({
-  host: 'ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech',
-  port: 5432,
-  database: 'uaizouklp',
-  user: 'uaizouklp_owner',
-  password: 'npg_BgyoHlKF1Tu3',
-  ssl: true
-});
+const client = createDbClient();
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -67,9 +63,9 @@ function parseDescription(description) {
     result.totalInstallments = parseInt(installmentMatch[2]);
   }
 
-  // Verificar evento UAIZOUK
-  if (/UAIZOUK|Uaizouk/i.test(description)) {
-    result.eventName = 'UAIZOUK';
+  // Verificar evento usando configuração dinâmica
+  if (isEventPayment(description)) {
+    result.eventName = SITE_NAME;
   }
 
   // Verificar ano
@@ -89,22 +85,22 @@ function parseDescription(description) {
 async function syncAsaasData() {
   console.log('🚀 Iniciando sincronização ASAAS -> Base Local');
   console.log('📅 Período: Setembro 2024 em diante');
-  console.log('🎯 Foco: Clientes e cobranças do UAIZOUK');
+  console.log(`🎯 Foco: Clientes e cobranças do ${SITE_NAME}`);
 
   try {
     await client.connect();
     console.log('✅ Conectado ao banco de dados');
 
     let totalPayments = 0;
-    let uaizoukPayments = 0;
+    let eventPayments = 0;
     let syncedCustomers = 0;
     let updatedPayments = 0;
     let offset = 0;
     const limit = 100;
     const processedCustomers = new Set();
 
-    // 1. Buscar cobranças recentes do UAIZOUK
-    console.log('\n📅 Buscando cobranças do UAIZOUK...');
+    // 1. Buscar cobranças recentes do evento
+    console.log(`\n📅 Buscando cobranças do ${SITE_NAME}...`);
 
     while (true) {
       const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?dateCreated[ge]=2024-09-01&limit=${limit}&offset=${offset}`);
@@ -124,8 +120,8 @@ async function syncAsaasData() {
       for (const payment of payments) {
         const parsed = parseDescription(payment.description);
 
-        if (parsed && parsed.eventName === 'UAIZOUK') {
-          uaizoukPayments++;
+        if (parsed && parsed.eventName === SITE_NAME) {
+          eventPayments++;
 
           // Buscar dados do cliente se ainda não processado
           if (!processedCustomers.has(payment.customer)) {
@@ -145,7 +141,7 @@ async function syncAsaasData() {
 
                 if (existingCustomer.length === 0) {
                   // Cliente não existe, criar novo registro
-                  console.log(`\n👤 Novo cliente UAIZOUK: ${customer.name}`);
+                  console.log(`\n👤 Novo cliente ${SITE_NAME}: ${customer.name}`);
                   console.log(`   - CPF: ${customer.cpfCnpj}`);
                   console.log(`   - Email: ${customer.email}`);
 
@@ -207,7 +203,7 @@ async function syncAsaasData() {
     // 2. Resumo da sincronização
     console.log('\n📊 RESUMO DA SINCRONIZAÇÃO:');
     console.log(`   - Total de cobranças analisadas: ${totalPayments}`);
-    console.log(`   - Cobranças do UAIZOUK: ${uaizoukPayments}`);
+    console.log(`   - Cobranças do ${SITE_NAME}: ${eventPayments}`);
     console.log(`   - Clientes únicos processados: ${processedCustomers.size}`);
     console.log(`   - Novos clientes sincronizados: ${syncedCustomers}`);
     console.log(`   - Pagamentos atualizados: ${updatedPayments}`);
@@ -218,13 +214,13 @@ async function syncAsaasData() {
       SELECT COUNT(*) as total FROM event_registrations
     `;
 
-    const ourUaizoukRegistrations = await client`
+    const ourEventRegistrations = await client`
       SELECT COUNT(*) as total FROM event_registrations
       WHERE created_at >= '2024-09-01'
     `;
 
     console.log(`   - Total de registros na base: ${ourRegistrations[0].total}`);
-    console.log(`   - Registros desde setembro 2024: ${ourUaizoukRegistrations[0].total}`);
+    console.log(`   - Registros desde setembro 2024: ${ourEventRegistrations[0].total}`);
 
   } catch (error) {
     console.error('❌ Erro durante sincronização:', error.message);

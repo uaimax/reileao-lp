@@ -1,9 +1,15 @@
 /**
- * Script de Teste do Meta Pixel - UAIZOUK
+ * Script de Teste do Meta Pixel
  * Execute este script no console do navegador para testar todos os eventos
+ * Configurar SITE_NAME via variável de ambiente antes de executar
  */
 
-console.log('🧪 INICIANDO TESTE DO META PIXEL - UAIZOUK');
+// Nome do evento/site - para testes, usar valor de exemplo ou configurar
+const SITE_NAME = typeof process !== 'undefined' && process.env
+  ? (process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento')
+  : 'Meu Evento';
+
+console.log(`🧪 INICIANDO TESTE DO META PIXEL - ${SITE_NAME}`);
 console.log('Dataset ID: 630477477390150');
 
 // Verificar se o Meta Pixel está carregado
@@ -30,7 +36,7 @@ function testMetaPixelEvents() {
   window.fbq('track', 'Lead', {
     value: 449,
     currency: 'BRL',
-    content_name: 'UAIZOUK Event Registration',
+    content_name: `${SITE_NAME} Event Registration`,
     content_category: 'event'
   });
   console.log('✅ Lead enviado');
@@ -38,7 +44,7 @@ function testMetaPixelEvents() {
   // 3. Teste ViewContent
   console.log('3. Testando ViewContent...');
   window.fbq('track', 'ViewContent', {
-    content_name: 'UAIZOUK 2026',
+    content_name: `${SITE_NAME} 2026`,
     content_ids: ['landing-page'],
     content_type: 'product',
     content_category: 'event'
@@ -77,7 +83,7 @@ function testMetaPixelEvents() {
   // 7. Teste Search
   console.log('7. Testando Search...');
   window.fbq('track', 'Search', {
-    search_string: 'uaizouk'
+    search_string: SITE_NAME.toLowerCase()
   });
   console.log('✅ Search enviado');
 
@@ -86,9 +92,9 @@ function testMetaPixelEvents() {
 
   // LandingPageView
   window.fbq('trackCustom', 'LandingPageView', {
-    content_name: 'UAIZOUK 2026',
+    content_name: `${SITE_NAME} 2026`,
     content_category: 'event',
-    event_name: 'UAIZOUK 2026',
+    event_name: `${SITE_NAME} 2026`,
     event_date: '5–7 SET 2025'
   });
   console.log('✅ LandingPageView customizado enviado');
@@ -97,7 +103,7 @@ function testMetaPixelEvents() {
   window.fbq('trackCustom', 'NoEscuroPageView', {
     content_name: 'O Pacote no Escuro',
     content_category: 'special-offer',
-    event_name: 'UAIZOUK 2026',
+    event_name: `${SITE_NAME} 2026`,
     offer_type: 'early-bird',
     price: 449,
     currency: 'BRL'
@@ -109,7 +115,7 @@ function testMetaPixelEvents() {
     content_name: 'QUERO PARTICIPAR',
     content_category: 'cta',
     button_text: 'QUERO PARTICIPAR',
-    event_name: 'UAIZOUK 2026',
+    event_name: `${SITE_NAME} 2026`,
     cta_type: 'primary'
   });
   console.log('✅ CTAClick customizado enviado');
@@ -118,7 +124,7 @@ function testMetaPixelEvents() {
   window.fbq('trackCustom', 'RegistrationFormView', {
     content_name: 'Event Registration Form',
     content_category: 'form',
-    event_name: 'UAIZOUK 2026'
+    event_name: `${SITE_NAME} 2026`
   });
   console.log('✅ RegistrationFormView customizado enviado');
 
@@ -126,7 +132,7 @@ function testMetaPixelEvents() {
   window.fbq('trackCustom', 'RegistrationSubmit', {
     content_name: 'Event Registration',
     content_category: 'form',
-    event_name: 'UAIZOUK 2026',
+    event_name: `${SITE_NAME} 2026`,
     ticket_type: 'full-pass',
     payment_method: 'pix',
     total_value: 449,
@@ -140,7 +146,7 @@ function testMetaPixelEvents() {
   window.fbq('trackCustom', 'RegistrationComplete', {
     content_name: 'Event Registration Complete',
     content_category: 'conversion',
-    event_name: 'UAIZOUK 2026',
+    event_name: `${SITE_NAME} 2026`,
     registration_id: 'TEST123',
     ticket_type: 'full-pass',
     payment_method: 'pix',
@@ -181,7 +187,7 @@ function testMetaPixelEvents() {
     content_name: 'QUERO SABER MAIS',
     content_category: 'cta',
     button_text: 'QUERO SABER MAIS',
-    event_name: 'UAIZOUK 2026',
+    event_name: `${SITE_NAME} 2026`,
     cta_type: 'primary'
   });
   console.log('✅ HeroCTAClick customizado enviado');
@@ -202,9 +208,9 @@ function testPageSpecificEvents(pageName) {
     case 'home':
     case '/':
       window.fbq('trackCustom', 'LandingPageView', {
-        content_name: 'UAIZOUK 2026',
+        content_name: `${SITE_NAME} 2026`,
         content_category: 'event',
-        event_name: 'UAIZOUK 2026'
+        event_name: `${SITE_NAME} 2026`
       });
       console.log('✅ LandingPageView testado');
       break;

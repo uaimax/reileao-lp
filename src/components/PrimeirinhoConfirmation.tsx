@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { FileUpload } from '@/components/ui/file-upload';
 import { CheckCircle, Plane, CreditCard, Upload } from 'lucide-react';
 import { toast } from 'sonner';
+import { PIX_EMAIL } from '@/lib/site-config';
 
 interface PrimeirinhoConfirmationProps {
   leadUuid: string;
@@ -286,7 +287,7 @@ const PrimeirinhoConfirmation = ({ leadUuid, onConfirmationSubmit }: Primeirinho
 
               <div className="bg-gray-900 border-2 border-green-500/50 rounded-xl p-6">
                 <div className="text-2xl font-mono font-bold text-green-400 break-all">
-                  pix@uaizouk.com.br
+                  {PIX_EMAIL}
                 </div>
                 <div className="text-gray-400 text-sm mt-2">
                   Chave PIX (e-mail)

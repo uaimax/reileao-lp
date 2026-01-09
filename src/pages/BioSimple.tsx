@@ -1,6 +1,6 @@
 import { useLandingData } from '@/hooks/use-landing-data';
 import { handleLinkClick } from '@/utils/link-handler';
-import { SITE_NAME, getSiteNameWithYear } from '@/lib/site-config';
+import { SITE_NAME, getSiteNameWithYear, getRegistrationUrl, INSTAGRAM_URL } from '@/lib/site-config';
 
 const BioSimple = () => {
   console.log('🚀 BioSimple component rendered');
@@ -8,9 +8,9 @@ const BioSimple = () => {
   const eventData = landingData?.event;
 
   const testData = [
-    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br' },
+    { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: eventData?.registrationUrl || getRegistrationUrl() },
     { id: 2, title: "📍 Localização", url: "https://maps.google.com" },
-    { id: 3, title: "📱 Instagram", url: "https://instagram.com/uaizouk" }
+    ...(INSTAGRAM_URL ? [{ id: 3, title: "📱 Instagram", url: INSTAGRAM_URL }] : [])
   ];
 
   return (

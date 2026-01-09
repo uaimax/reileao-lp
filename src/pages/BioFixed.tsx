@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Play, ExternalLink } from 'lucide-react';
 import WhatsAppFloat from '@/components/ui/whatsapp-float';
 import { handleLinkClick } from '@/utils/link-handler';
-import { SITE_NAME, getSiteNameWithYear, getCopyrightText } from '@/lib/site-config';
+import { SITE_NAME, getSiteNameWithYear, getCopyrightText, getRegistrationUrl } from '@/lib/site-config';
 
 interface BioLink {
   id: number;
@@ -66,7 +66,7 @@ const BioFixed = () => {
         } else {
           console.warn('⚠️ Bio links API failed, using fallback');
           setBioLinks([
-            { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
+            { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: getRegistrationUrl(), displayOrder: 1, isActive: true, isScheduled: false },
             { id: 2, title: '📍 Localização', url: 'https://maps.google.com', displayOrder: 2, isActive: true, isScheduled: false }
           ]);
         }
@@ -81,9 +81,9 @@ const BioFixed = () => {
         }
       } catch (error) {
         console.error('❌ Error fetching bio data:', error);
-        // Fallback data
+        // Fallback data - usar configuração dinâmica
         setBioLinks([
-          { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
+          { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: getRegistrationUrl(), displayOrder: 1, isActive: true, isScheduled: false },
           { id: 2, title: '📍 Localização', url: 'https://maps.google.com', displayOrder: 2, isActive: true, isScheduled: false }
         ]);
         setBioConfig({ id: 1, showEventDate: true, showTrailerButton: true });

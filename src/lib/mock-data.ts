@@ -1,18 +1,18 @@
 // Mock data for development until we have a proper backend API
-import { SITE_NAME, getSiteNameWithYear, getWhatsAppMessage, getSectionTitle, getCopyrightText } from './site-config';
+import { SITE_NAME, getSiteNameWithYear, getWhatsAppMessage, getSectionTitle, getCopyrightText, getRegistrationUrl } from './site-config';
 
 export const mockEventConfig = {
   id: 1,
-  eventTitle: 'RÉVEILLON em Uberlândia com Luan e Adriana',
-  eventSubtitle: '31/12/2025 a 04/01/2026 – liberdade, conexão e muita dança.',
-  eventTagline: 'liberdade, conexão e muita dança.',
-  eventDateDisplay: '31/12/2025 a 04/01/2026',
+  eventTitle: getSiteNameWithYear('2025'),
+  eventSubtitle: 'Uma experiência única',
+  eventTagline: 'Seu evento especial',
+  eventDateDisplay: 'Data a definir',
   eventCountdownTarget: '2025-12-31T14:59:00',
-  eventCountdownText: 'A experiência completa inicia em:',
-  heroVideoUrl: null, // Usando imagem de fundo
-  registrationUrl: 'https://uaizouk.com.br/inscricoes',
-  whatsappNumber: '5513991737852',
-  whatsappMessage: 'Olá! Gostaria de saber mais sobre o Réveillon em Uberlândia.',
+  eventCountdownText: 'O evento inicia em:',
+  heroVideoUrl: null,
+  registrationUrl: getRegistrationUrl(),
+  whatsappNumber: '',
+  whatsappMessage: getWhatsAppMessage(),
   whatsappEnabled: true,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -124,9 +124,9 @@ export const mockArtistsContent = {
 export const mockTestimonials = [
   {
     id: 1,
-    name: 'Trícia',
-    cityState: 'Belém (PA)',
-    testimonialText: 'Esta foi minha 2° vez no UaiZouk e posso dizer com toda certeza que não existe congresso melhor. A conexão que existe entre as pessoas, o carinho, acolhimento e cuidado da equipe (maravilhosa!), os bailes incríveis (sério, os melhores bailes de zouk de todos!). Sou APAIXONADA por este evento. Quem gosta de zouk ou quer conhecer o ritmo PRECISA viver o UZ!',
+    name: 'Participante',
+    cityState: 'Brasil',
+    testimonialText: `Esta foi minha experiência no ${SITE_NAME} e posso dizer com toda certeza que foi incrível. A conexão que existe entre as pessoas, o carinho, acolhimento e cuidado da equipe. Sou apaixonado(a) por este evento!`,
     displayOrder: 1,
     isActive: true,
     createdAt: new Date(),

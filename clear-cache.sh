@@ -29,3 +29,4 @@ echo ""
 echo "   4. Verifique o console do navegador (F12) para ver o log de debug"
 echo "      que mostra o valor de SITE_NAME sendo lido"
 
+

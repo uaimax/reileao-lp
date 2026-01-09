@@ -4,14 +4,16 @@
 // Verifica telefones em cobranças e outros dados
 
 const https = require('https');
-const postgres = require('postgres');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
+const client = createDbClient();
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -76,9 +78,9 @@ function parseDescription(description) {
     result.totalInstallments = parseInt(installmentMatch[2]);
   }
 
-  // Verificar evento UAIZOUK
-  if (/UAIZOUK|Uaizouk/i.test(description)) {
-    result.eventName = 'UAIZOUK';
+  // Verificar evento usando configuração dinâmica
+  if (isEventPayment(description)) {
+    result.eventName = SITE_NAME;
   }
 
   // Verificar ano
@@ -98,76 +100,76 @@ function parseDescription(description) {
 async function investigateAsaasData() {
   console.log('🔍 INVESTIGANDO DADOS DO ASAAS');
   console.log('===============================');
-  
+
   try {
-    // 1. Buscar cobranças do UAIZOUK
-    console.log('\n📅 Buscando cobranças do UAIZOUK...');
-    
+    // 1. Buscar cobranças do evento
+    console.log(`\n📅 Buscando cobranças do ${SITE_NAME}...`);
+
     const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?dateCreated[ge]=2024-09-01&limit=50`);
-    
+
     if (paymentsResponse.status !== 200) {
       throw new Error(`Erro ao buscar cobranças: ${paymentsResponse.status}`);
     }
-    
+
     const payments = paymentsResponse.data.data || [];
     console.log(`   - Total de cobranças encontradas: ${payments.length}`);
-    
-    // 2. Filtrar cobranças do UAIZOUK
-    const uaizoukPayments = [];
+
+    // 2. Filtrar cobranças do evento
+    const eventPayments = [];
     for (const payment of payments) {
       const parsed = parseDescription(payment.description);
-      if (parsed && parsed.eventName === 'UAIZOUK') {
-        uaizoukPayments.push(payment);
+      if (parsed && parsed.eventName === SITE_NAME) {
+        eventPayments.push(payment);
       }
     }
-    
-    console.log(`   - Cobranças do UAIZOUK: ${uaizoukPayments.length}`);
-    
-    // 3. Analisar cobranças do UAIZOUK
-    console.log('\n📊 ANÁLISE DAS COBRANÇAS UAIZOUK:');
-    
+
+    console.log(`   - Cobranças do ${SITE_NAME}: ${eventPayments.length}`);
+
+    // 3. Analisar cobranças do evento
+    console.log(`\n📊 ANÁLISE DAS COBRANÇAS ${SITE_NAME}:`);
+
     let totalValue = 0;
     let receivedValue = 0;
     let pendingValue = 0;
     let customers = new Set();
     let installmentPayments = 0;
-    
-    for (const payment of uaizoukPayments) {
+
+    for (const payment of eventPayments) {
       totalValue += payment.value;
       customers.add(payment.customer);
-      
+
       if (payment.status === 'RECEIVED') {
         receivedValue += payment.value;
       } else if (payment.status === 'PENDING') {
         pendingValue += payment.value;
       }
-      
+
       const parsed = parseDescription(payment.description);
       if (parsed && parsed.isInstallment) {
         installmentPayments++;
       }
     }
-    
+
     console.log(`   - Total de clientes únicos: ${customers.size}`);
     console.log(`   - Valor total: R$ ${totalValue.toFixed(2)}`);
     console.log(`   - Valor recebido: R$ ${receivedValue.toFixed(2)}`);
     console.log(`   - Valor pendente: R$ ${pendingValue.toFixed(2)}`);
     console.log(`   - Cobranças parceladas: ${installmentPayments}`);
-    
+
     // 4. Verificar alguns clientes específicos
     console.log('\n👤 VERIFICANDO CLIENTES ESPECÍFICOS:');
-    
+
     const customerIds = Array.from(customers).slice(0, 5); // Primeiros 5 clientes
-    
+
     for (let i = 0; i < customerIds.length; i++) {
       const customerId = customerIds[i];
-      
+
       try {
         console.log(`\n   [${i + 1}/5] Cliente ID: ${customerId}`);
-        
+
         // Buscar dados do cliente
         const customerResponse = await makeRequest(`${ASAAS_URL}/customers/${customerId}`);
-        
+
         if (customerResponse.status === 200) {
           const customer = customerResponse.data;
           console.log(`   - Nome: ${customer.name}`);
@@ -175,20 +177,20 @@ async function investigateAsaasData() {
           console.log(`   - Email: ${customer.email}`);
           console.log(`   - Telefone: ${customer.phone || 'Não informado'}`);
           console.log(`   - Data criação: ${customer.dateCreated}`);
-          
+
           // Buscar cobranças deste cliente
           const customerPaymentsResponse = await makeRequest(`${ASAAS_URL}/payments?customer=${customerId}&limit=10`);
-          
+
           if (customerPaymentsResponse.status === 200) {
             const customerPayments = customerPaymentsResponse.data.data || [];
-            const uaizoukCustomerPayments = customerPayments.filter(p => {
+            const eventCustomerPayments = customerPayments.filter(p => {
               const parsed = parseDescription(p.description);
-              return parsed && parsed.eventName === 'UAIZOUK';
+              return parsed && parsed.eventName === SITE_NAME;
             });
-            
-            console.log(`   - Cobranças UAIZOUK: ${uaizoukCustomerPayments.length}`);
-            
-            uaizoukCustomerPayments.forEach((payment, index) => {
+
+            console.log(`   - Cobranças ${SITE_NAME}: ${eventCustomerPayments.length}`);
+
+            eventCustomerPayments.forEach((payment, index) => {
               const parsed = parseDescription(payment.description);
               console.log(`     ${index + 1}. ${payment.description}`);
               console.log(`        - Valor: R$ ${payment.value}`);
@@ -200,39 +202,39 @@ async function investigateAsaasData() {
             });
           }
         }
-        
+
         // Evitar rate limiting
         await new Promise(resolve => setTimeout(resolve, 300));
-        
+
       } catch (error) {
         console.log(`   ❌ Erro ao verificar cliente ${customerId}: ${error.message}`);
       }
     }
-    
+
     // 5. Verificar se há telefones em outros campos
     console.log('\n📱 VERIFICANDO CAMPOS DE TELEFONE:');
-    
+
     const sampleCustomer = await makeRequest(`${ASAAS_URL}/customers/${customerIds[0]}`);
     if (sampleCustomer.status === 200) {
       const customer = sampleCustomer.data;
       console.log('   - Estrutura completa do cliente:');
       console.log(JSON.stringify(customer, null, 2));
     }
-    
+
     // 6. Resumo da investigação
     console.log('\n📋 RESUMO DA INVESTIGAÇÃO:');
     console.log('===========================');
-    console.log(`   - Cobranças UAIZOUK encontradas: ${uaizoukPayments.length}`);
+    console.log(`   - Cobranças ${SITE_NAME} encontradas: ${eventPayments.length}`);
     console.log(`   - Clientes únicos: ${customers.size}`);
     console.log(`   - Receita total: R$ ${totalValue.toFixed(2)}`);
     console.log(`   - Taxa de recebimento: ${((receivedValue / totalValue) * 100).toFixed(1)}%`);
-    
+
     console.log('\n🔍 PRÓXIMOS PASSOS:');
     console.log('1. Verificar se telefones estão em outros campos');
     console.log('2. Implementar busca por email para matching');
     console.log('3. Criar sistema de cálculo de status baseado em parcelas');
     console.log('4. Desenvolver sincronização inteligente');
-    
+
   } catch (error) {
     console.error('❌ Erro durante investigação:', error.message);
   } finally {

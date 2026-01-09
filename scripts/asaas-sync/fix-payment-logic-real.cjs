@@ -3,16 +3,17 @@
 // Script para corrigir a lógica de pagamentos
 // Considera apenas parcelas com data de pagamento real
 
-const postgres = require('postgres');
 const https = require('https');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
+
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const ASAAS_TOKEN = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
-
-// Configuração ASAAS
-const ASAAS_URL = 'https://www.asaas.com/api/v3';
-const ASAAS_TOKEN = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+const client = createDbClient();
 
 function log(message) {
   const timestamp = new Date().toISOString();
@@ -67,7 +68,7 @@ function makeRequest(url, options = {}) {
 
 function parseDescription(description) {
   if (!description) return null;
-  
+
   const installmentPatterns = [
     /(\d+)\/(\d+)/,
     /parcela\s*(\d+)\s*de\s*(\d+)/i,
@@ -90,11 +91,11 @@ function parseDescription(description) {
 
 function calculatePaymentStatusReal(payments) {
   if (!payments || payments.length === 0) {
-    return { 
-      status: 'pending', 
-      paidValue: 0, 
-      totalValue: 0, 
-      paidInstallments: 0, 
+    return {
+      status: 'pending',
+      paidValue: 0,
+      totalValue: 0,
+      paidInstallments: 0,
       totalInstallments: 0,
       details: []
     };
@@ -108,13 +109,13 @@ function calculatePaymentStatusReal(payments) {
 
   for (const payment of payments) {
     totalValue += payment.value;
-    
+
     // NOVA LÓGICA: Considera pago apenas se tem data de pagamento
-    const isPaid = (payment.status === 'RECEIVED' || payment.status === 'CONFIRMED') && 
-                   payment.paymentDate && 
+    const isPaid = (payment.status === 'RECEIVED' || payment.status === 'CONFIRMED') &&
+                   payment.paymentDate &&
                    payment.paymentDate !== 'N/A' &&
                    payment.paymentDate !== null;
-    
+
     if (isPaid) {
       paidValue += payment.value;
     }
@@ -172,7 +173,7 @@ async function fixPaymentStatusReal() {
     // Buscar todos os clientes
     const clients = await client`
       SELECT id, cpf, full_name, email, payment_status, total, installments, asaas_payment_id
-      FROM event_registrations 
+      FROM event_registrations
       ORDER BY created_at DESC
     `;
 
@@ -187,18 +188,18 @@ async function fixPaymentStatusReal() {
 
         // Buscar cliente no ASAAS
         const customerResponse = await makeRequest(`${ASAAS_URL}/customers?cpfCnpj=${clientData.cpf}`);
-        
+
         if (customerResponse.status !== 200 || !customerResponse.data.data || customerResponse.data.data.length === 0) {
           log(`⚠️ Cliente não encontrado no ASAAS para ${clientData.email}`);
           continue;
         }
-        
+
         const asaasCustomer = customerResponse.data.data[0];
         const customerId = asaasCustomer.id;
-        
-        // Buscar pagamentos UAIZOUK
+
+        // Buscar pagamentos do evento
         const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?customer=${customerId}&limit=100`);
-        
+
         if (paymentsResponse.status !== 200) {
           log(`⚠️ Erro ao buscar pagamentos para ${clientData.email}: ${paymentsResponse.status}`);
           errorCount++;
@@ -206,34 +207,34 @@ async function fixPaymentStatusReal() {
         }
 
         const allPayments = paymentsResponse.data.data || [];
-        const uaizoukPayments = allPayments.filter(payment => 
-          payment.description && 
-          payment.description.toLowerCase().includes('uaizouk')
+        const eventPayments = allPayments.filter(payment =>
+          payment.description &&
+          isEventPayment(payment.description)
         );
 
-        if (uaizoukPayments.length === 0) {
-          log(`⚠️ Nenhum pagamento UAIZOUK encontrado para ${clientData.email}`);
+        if (eventPayments.length === 0) {
+          log(`⚠️ Nenhum pagamento ${SITE_NAME} encontrado para ${clientData.email}`);
           continue;
         }
 
         // Calcular status com lógica real
-        const paymentInfo = calculatePaymentStatusReal(uaizoukPayments);
-        
+        const paymentInfo = calculatePaymentStatusReal(eventPayments);
+
         log(`📊 Status calculado: ${paymentInfo.status} (${paymentInfo.paidValue}/${paymentInfo.totalValue}) - ${paymentInfo.paidInstallments}/${paymentInfo.totalInstallments} parcelas`);
-        
+
         // Mostrar detalhes dos pagamentos
         paymentInfo.details.forEach((detail, i) => {
           log(`   ${i+1}. ${detail.description} - Status: ${detail.status} - Pago: ${detail.isPaid ? 'SIM' : 'NÃO'} - Data: ${detail.paymentDate || 'N/A'}`);
         });
 
         // Atualizar se necessário
-        if (paymentInfo.status !== clientData.payment_status || 
+        if (paymentInfo.status !== clientData.payment_status ||
             paymentInfo.totalValue !== parseFloat(clientData.total) ||
             paymentInfo.totalInstallments !== clientData.installments) {
-          
+
           await client`
-            UPDATE event_registrations 
-            SET 
+            UPDATE event_registrations
+            SET
               payment_status = ${paymentInfo.status},
               total = ${paymentInfo.totalValue},
               installments = ${paymentInfo.totalInstallments},
@@ -275,7 +276,7 @@ async function generateReport() {
 
   try {
     const stats = await client`
-      SELECT 
+      SELECT
         COUNT(*) as total_clients,
         COUNT(CASE WHEN payment_status = 'paid' THEN 1 END) as paid_clients,
         COUNT(CASE WHEN payment_status = 'partial' THEN 1 END) as partial_clients,

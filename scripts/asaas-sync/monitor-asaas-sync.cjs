@@ -3,13 +3,16 @@
 // Sistema de Monitoramento e Relatórios para Sincronização ASAAS
 // Gera relatórios detalhados e monitora a qualidade dos dados
 
-const postgres = require('postgres');
 const fs = require('fs');
 const path = require('path');
+const { getConfig, createDbClient } = require('../config.cjs');
+
+// Carregar configuração
+const config = getConfig();
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
+const client = createDbClient();
 
 // Configuração de relatórios
 const REPORTS_DIR = './reports';
@@ -28,7 +31,7 @@ function log(message) {
 async function generateMonitorReport() {
   log('📊 GERANDO RELATÓRIO DE MONITORAMENTO');
   log('=====================================');
-  
+
   try {
     const report = {
       timestamp: new Date().toISOString(),
@@ -41,9 +44,9 @@ async function generateMonitorReport() {
 
     // 1. Resumo geral
     log('📈 Calculando métricas gerais...');
-    
+
     const generalStats = await client`
-      SELECT 
+      SELECT
         COUNT(*) as total_registrations,
         COUNT(CASE WHEN created_at >= '2024-09-01' THEN 1 END) as recent_registrations,
         COUNT(CASE WHEN payment_status = 'received' THEN 1 END) as paid_registrations,
@@ -59,7 +62,7 @@ async function generateMonitorReport() {
     `;
 
     const stats = generalStats[0];
-    
+
     report.summary = {
       totalRegistrations: parseInt(stats.total_registrations),
       recentRegistrations: parseInt(stats.recent_registrations),
@@ -74,12 +77,12 @@ async function generateMonitorReport() {
 
     // 2. Qualidade dos dados
     log('🔍 Analisando qualidade dos dados...');
-    
+
     const phoneQuality = await client`
-      SELECT 
+      SELECT
         whatsapp,
         COUNT(*) as count
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at >= '2024-09-01'
       GROUP BY whatsapp
       ORDER BY count DESC
@@ -104,23 +107,23 @@ async function generateMonitorReport() {
       asaasIntegration: {
         withAsaasId: parseInt(stats.with_asaas_id),
         withoutAsaasId: parseInt(stats.recent_registrations) - parseInt(stats.with_asaas_id),
-        integrationRate: parseInt(stats.recent_registrations) > 0 ? 
+        integrationRate: parseInt(stats.recent_registrations) > 0 ?
           (parseInt(stats.with_asaas_id) / parseInt(stats.recent_registrations) * 100).toFixed(1) : 0
       }
     };
 
     // 3. Métricas financeiras
     log('💰 Calculando métricas financeiras...');
-    
+
     const financialStats = await client`
-      SELECT 
+      SELECT
         payment_status,
         COUNT(*) as count,
         AVG(total) as avg_value,
         SUM(total) as total_value,
         MIN(total) as min_value,
         MAX(total) as max_value
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at >= '2024-09-01'
       GROUP BY payment_status
       ORDER BY total_value DESC
@@ -130,7 +133,7 @@ async function generateMonitorReport() {
     const partialRevenue = financialStats.find(s => s.payment_status === 'partial')?.total_value || 0;
     const pendingRevenue = financialStats.find(s => s.payment_status === 'pending')?.total_value || 0;
     const totalRevenue = parseFloat(stats.total_revenue);
-    
+
     const collectionRate = totalRevenue > 0 ? (paidRevenue / totalRevenue * 100).toFixed(1) : 0;
 
     report.financialMetrics = {
@@ -151,14 +154,14 @@ async function generateMonitorReport() {
 
     // 4. Análise de parcelas
     log('📅 Analisando distribuição de parcelas...');
-    
+
     const installmentStats = await client`
-      SELECT 
+      SELECT
         installments,
         COUNT(*) as count,
         AVG(total) as avg_total,
         SUM(total) as total_value
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at >= '2024-09-01'
       GROUP BY installments
       ORDER BY installments
@@ -182,14 +185,14 @@ async function generateMonitorReport() {
 
     // 5. Análise temporal
     log('📈 Analisando tendências temporais...');
-    
+
     const monthlyStats = await client`
-      SELECT 
+      SELECT
         DATE_TRUNC('month', created_at) as month,
         COUNT(*) as registrations,
         SUM(total) as revenue,
         COUNT(CASE WHEN payment_status = 'received' THEN 1 END) as paid_count
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at >= '2024-09-01'
       GROUP BY DATE_TRUNC('month', created_at)
       ORDER BY month
@@ -206,14 +209,14 @@ async function generateMonitorReport() {
 
     // 6. Status da sincronização
     log('🔄 Verificando status da sincronização...');
-    
+
     const lastSync = await client`
       SELECT MAX(updated_at) as last_sync
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at >= '2024-09-01'
     `;
 
-    const syncAge = lastSync[0].last_sync ? 
+    const syncAge = lastSync[0].last_sync ?
       Math.floor((new Date() - new Date(lastSync[0].last_sync)) / (1000 * 60 * 60)) : null;
 
     report.syncStatus = {
@@ -225,7 +228,7 @@ async function generateMonitorReport() {
 
     // 7. Recomendações
     log('💡 Gerando recomendações...');
-    
+
     const recommendations = [];
 
     if (parseFloat(phoneQualityPercentage) < 95) {
@@ -268,9 +271,9 @@ async function generateMonitorReport() {
 
     // 8. Salvar relatório
     log('💾 Salvando relatório...');
-    
+
     fs.writeFileSync(REPORT_FILE, JSON.stringify(report, null, 2));
-    
+
     // 9. Exibir resumo
     log('\n📊 RESUMO DO RELATÓRIO:');
     log('========================');

@@ -1,6 +1,9 @@
 #!/bin/bash
 
-echo "🔍 Verificando ambiente do projeto UAIZOUK..."
+# Nome do projeto - configurável via variável de ambiente
+SITE_NAME="${SITE_NAME:-${VITE_SITE_NAME:-Meu Projeto}}"
+
+echo "🔍 Verificando ambiente do projeto $SITE_NAME..."
 echo "=============================================="
 
 # Verificar diretório atual
@@ -92,7 +95,7 @@ if [ -f ".env" ]; then
     else
         echo "⚠️  ASAAS_SANDBOX não configurado como true"
     fi
-    
+
     if grep -q "ASAAS_API_KEY_SANDBOX" .env; then
         echo "✅ ASAAS_API_KEY_SANDBOX configurado"
     else

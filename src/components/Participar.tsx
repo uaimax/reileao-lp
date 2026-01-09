@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useLandingData } from '@/hooks/use-landing-data';
 import { useMetaPixelTracking, useButtonTracking } from '@/hooks/use-meta-pixel';
-import { SITE_NAME } from '@/lib/site-config';
+import { SITE_NAME, getRegistrationUrl } from '@/lib/site-config';
 
 const Participar = () => {
   const { data: landingData } = useLandingData();
@@ -76,7 +76,7 @@ const Participar = () => {
                   });
 
                   // Open registration page
-                  window.open(eventData?.registrationUrl || 'https://uaizouk.com.br/inscricoes', '_blank');
+                  window.open(eventData?.registrationUrl || getRegistrationUrl(), '_blank');
                 }}
                 className="btn-neon text-white font-bold py-6 px-16 rounded-full text-2xl"
               >

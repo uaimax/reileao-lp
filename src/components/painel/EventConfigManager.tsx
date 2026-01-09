@@ -352,7 +352,7 @@ const EventConfigManager = () => {
               type="url"
               value={eventData.registrationUrl}
               onChange={(e) => handleChange('registrationUrl', e.target.value)}
-              placeholder="https://uaizouk.com.br/inscricoes"
+              placeholder="https://meuevento.com.br/inscricoes"
               className="bg-slate-700 border-slate-600 text-slate-50"
             />
             <p className="text-slate-400 text-sm">
@@ -431,7 +431,7 @@ const EventConfigManager = () => {
                 id="temporaryRedirectUrl"
                 value={eventData.temporaryRedirectUrl}
                 onChange={(e) => handleChange('temporaryRedirectUrl', e.target.value)}
-                placeholder="https://uaizouk.com.br/no-escuro"
+                placeholder="https://meuevento.com.br/outra-pagina"
                 className="bg-slate-700 border-slate-600 text-slate-50 placeholder:text-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
               />
               <p className="text-slate-400 text-sm">

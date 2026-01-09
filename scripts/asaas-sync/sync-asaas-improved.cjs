@@ -4,14 +4,16 @@
 // Versão corrigida com melhorias identificadas
 
 const https = require('https');
-const postgres = require('postgres');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
-// Configuração do banco (mesma do projeto)
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
+// Configuração do banco
+const client = createDbClient();
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -62,9 +64,9 @@ function parseDescription(description) {
     result.totalInstallments = parseInt(installmentMatch[2]);
   }
 
-  // Verificar evento UAIZOUK
-  if (/UAIZOUK|Uaizouk/i.test(description)) {
-    result.eventName = 'UAIZOUK';
+  // Verificar evento usando configuração dinâmica
+  if (isEventPayment(description)) {
+    result.eventName = SITE_NAME;
   }
 
   // Verificar ano
@@ -125,21 +127,21 @@ async function getCustomerPaymentDetails(customerId) {
     }
 
     const payments = paymentsResponse.data.data || [];
-    const uaizoukPayments = payments.filter(payment => {
+    const eventPayments = payments.filter(payment => {
       const parsed = parseDescription(payment.description);
-      return parsed && parsed.eventName === 'UAIZOUK';
+      return parsed && parsed.eventName === SITE_NAME;
     });
 
-    if (uaizoukPayments.length === 0) {
+    if (eventPayments.length === 0) {
       return null;
     }
 
     // Ordenar por data de criação para pegar a primeira cobrança
-    uaizoukPayments.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
+    eventPayments.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
 
-    const firstPayment = uaizoukPayments[0];
-    const totalValue = uaizoukPayments.reduce((sum, p) => sum + p.value, 0);
-    const paidValue = uaizoukPayments
+    const firstPayment = eventPayments[0];
+    const totalValue = eventPayments.reduce((sum, p) => sum + p.value, 0);
+    const paidValue = eventPayments
       .filter(p => p.status === 'RECEIVED')
       .reduce((sum, p) => sum + p.value, 0);
 
@@ -156,8 +158,8 @@ async function getCustomerPaymentDetails(customerId) {
       totalValue,
       paidValue,
       overallStatus,
-      installments: uaizoukPayments.length,
-      allPayments: uaizoukPayments
+      installments: eventPayments.length,
+      allPayments: eventPayments
     };
   } catch (error) {
     console.log(`❌ Erro ao buscar cobranças do cliente ${customerId}: ${error.message}`);
@@ -168,22 +170,22 @@ async function getCustomerPaymentDetails(customerId) {
 async function syncAsaasDataImproved() {
   console.log('🚀 SINCRONIZAÇÃO ASAAS MELHORADA');
   console.log('📅 Período: Setembro 2024 em diante');
-  console.log('🎯 Foco: Clientes e cobranças do UAIZOUK');
+  console.log(`🎯 Foco: Clientes e cobranças do ${SITE_NAME}`);
   console.log('⚠️  MODO REAL - Alterações serão feitas no banco!');
 
   try {
     console.log('✅ Conectado ao banco de dados');
 
     let totalPayments = 0;
-    let uaizoukPayments = 0;
+    let eventPayments = 0;
     let syncedCustomers = 0;
     let updatedPayments = 0;
     let offset = 0;
     const limit = 100;
     const processedCustomers = new Set();
 
-    // 1. Buscar cobranças recentes do UAIZOUK
-    console.log('\n📅 Buscando cobranças do UAIZOUK...');
+    // 1. Buscar cobranças recentes do evento
+    console.log(`\n📅 Buscando cobranças do ${SITE_NAME}...`);
 
     while (true) {
       const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?dateCreated[ge]=2024-09-01&limit=${limit}&offset=${offset}`);
@@ -203,8 +205,8 @@ async function syncAsaasDataImproved() {
       for (const payment of payments) {
         const parsed = parseDescription(payment.description);
 
-        if (parsed && parsed.eventName === 'UAIZOUK') {
-          uaizoukPayments++;
+        if (parsed && parsed.eventName === SITE_NAME) {
+          eventPayments++;
 
           // Buscar dados do cliente se ainda não processado
           if (!processedCustomers.has(payment.customer)) {
@@ -219,7 +221,7 @@ async function syncAsaasDataImproved() {
                 const paymentDetails = await getCustomerPaymentDetails(payment.customer);
 
                 if (!paymentDetails) {
-                  console.log(`⚠️ Cliente ${customer.name} sem cobranças UAIZOUK válidas`);
+                  console.log(`⚠️ Cliente ${customer.name} sem cobranças ${SITE_NAME} válidas`);
                   continue;
                 }
 
@@ -232,7 +234,7 @@ async function syncAsaasDataImproved() {
 
                 if (existingCustomer.length === 0) {
                   // Cliente não existe, criar novo registro
-                  console.log(`\n👤 Novo cliente UAIZOUK: ${customer.name}`);
+                  console.log(`\n👤 Novo cliente ${SITE_NAME}: ${customer.name}`);
                   console.log(`   - CPF: ${customer.cpfCnpj}`);
                   console.log(`   - Email: ${customer.email}`);
                   console.log(`   - Telefone: ${customer.phone || 'Não informado'}`);
@@ -313,7 +315,7 @@ async function syncAsaasDataImproved() {
     // 2. Resumo da sincronização
     console.log('\n📊 RESUMO DA SINCRONIZAÇÃO MELHORADA:');
     console.log(`   - Total de cobranças analisadas: ${totalPayments}`);
-    console.log(`   - Cobranças do UAIZOUK: ${uaizoukPayments}`);
+    console.log(`   - Cobranças do ${SITE_NAME}: ${eventPayments}`);
     console.log(`   - Clientes únicos processados: ${processedCustomers.size}`);
     console.log(`   - Novos clientes sincronizados: ${syncedCustomers}`);
     console.log(`   - Pagamentos atualizados: ${updatedPayments}`);
@@ -324,7 +326,7 @@ async function syncAsaasDataImproved() {
       SELECT COUNT(*) as total FROM event_registrations
     `;
 
-    const ourUaizoukRegistrations = await client`
+    const ourEventRegistrations = await client`
       SELECT COUNT(*) as total FROM event_registrations
       WHERE created_at >= '2024-09-01'
     `;
@@ -345,7 +347,7 @@ async function syncAsaasDataImproved() {
     `;
 
     console.log(`   - Total de registros na base: ${ourRegistrations[0].total}`);
-    console.log(`   - Registros desde setembro 2024: ${ourUaizoukRegistrations[0].total}`);
+    console.log(`   - Registros desde setembro 2024: ${ourEventRegistrations[0].total}`);
     console.log(`   - Registros pagos: ${paidRegistrations[0].total}`);
     console.log(`   - Registros pagos parcialmente: ${partialRegistrations[0].total}`);
     console.log(`   - Registros pendentes: ${pendingRegistrations[0].total}`);

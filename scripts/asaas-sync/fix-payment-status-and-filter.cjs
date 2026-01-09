@@ -4,16 +4,17 @@
 // Remove clientes com parcelamentos antes de setembro de 2025
 // Corrige status de pagamento baseado nos dados reais do ASAAS
 
-const postgres = require('postgres');
 const https = require('https');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
+
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const ASAAS_TOKEN = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
-
-// Configuração ASAAS
-const ASAAS_URL = 'https://www.asaas.com/api/v3';
-const ASAAS_TOKEN = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+const client = createDbClient();
 
 // Data limite: setembro de 2025
 const CUTOFF_DATE = new Date('2025-09-01');
@@ -71,7 +72,7 @@ function makeRequest(url, options = {}) {
 
 function parseDescription(description) {
   if (!description) return null;
-  
+
   // Padrões para identificar parcelamentos
   const installmentPatterns = [
     /(\d+)\/(\d+)/,  // 1/3, 2/3, etc.
@@ -105,7 +106,7 @@ function calculatePaymentStatus(payments) {
 
   for (const payment of payments) {
     totalValue += payment.value;
-    
+
     if (payment.status === 'RECEIVED' || payment.status === 'CONFIRMED') {
       paidValue += payment.value;
     }
@@ -152,7 +153,7 @@ async function removeOldClients() {
     // Buscar clientes com created_at antes de setembro 2025
     const oldClients = await client`
       SELECT id, cpf, full_name, email, created_at, payment_status
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at < ${CUTOFF_DATE.toISOString()}
       ORDER BY created_at
     `;
@@ -167,7 +168,7 @@ async function removeOldClients() {
 
       // Remover clientes antigos
       const result = await client`
-        DELETE FROM event_registrations 
+        DELETE FROM event_registrations
         WHERE created_at < ${CUTOFF_DATE.toISOString()}
       `;
 
@@ -191,7 +192,7 @@ async function fixPaymentStatus() {
     // Buscar todos os clientes restantes
     const clients = await client`
       SELECT id, cpf, full_name, email, payment_status, total, installments, asaas_payment_id
-      FROM event_registrations 
+      FROM event_registrations
       ORDER BY created_at DESC
     `;
 
@@ -206,18 +207,18 @@ async function fixPaymentStatus() {
 
         // Primeiro buscar o customer ID pelo CPF
         const customerResponse = await makeRequest(`${ASAAS_URL}/customers?cpfCnpj=${clientData.cpf}`);
-        
+
         if (customerResponse.status !== 200 || !customerResponse.data.data || customerResponse.data.data.length === 0) {
           log(`⚠️ Cliente não encontrado no ASAAS para ${clientData.email}`);
           continue;
         }
-        
+
         const asaasCustomer = customerResponse.data.data[0];
         const customerId = asaasCustomer.id;
-        
-        // Buscar todos os pagamentos UAIZOUK para este cliente usando Customer ID
+
+        // Buscar todos os pagamentos do evento para este cliente usando Customer ID
         const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?customer=${customerId}&limit=100`);
-        
+
         if (paymentsResponse.status !== 200) {
           log(`⚠️ Erro ao buscar pagamentos para ${clientData.email}: ${paymentsResponse.status}`);
           errorCount++;
@@ -225,29 +226,29 @@ async function fixPaymentStatus() {
         }
 
         const allPayments = paymentsResponse.data.data || [];
-        const uaizoukPayments = allPayments.filter(payment => 
-          payment.description && 
-          payment.description.toLowerCase().includes('uaizouk')
+        const eventPayments = allPayments.filter(payment =>
+          payment.description &&
+          isEventPayment(payment.description)
         );
 
-        if (uaizoukPayments.length === 0) {
-          log(`⚠️ Nenhum pagamento UAIZOUK encontrado para ${clientData.email}`);
+        if (eventPayments.length === 0) {
+          log(`⚠️ Nenhum pagamento ${SITE_NAME} encontrado para ${clientData.email}`);
           continue;
         }
 
         // Calcular status correto
-        const paymentInfo = calculatePaymentStatus(uaizoukPayments);
-        
+        const paymentInfo = calculatePaymentStatus(eventPayments);
+
         log(`📊 Status calculado: ${paymentInfo.status} (${paymentInfo.paidValue}/${paymentInfo.totalValue}) - ${paymentInfo.paidInstallments}/${paymentInfo.totalInstallments} parcelas`);
 
         // Atualizar se necessário
-        if (paymentInfo.status !== clientData.payment_status || 
+        if (paymentInfo.status !== clientData.payment_status ||
             paymentInfo.totalValue !== parseFloat(clientData.total) ||
             paymentInfo.totalInstallments !== clientData.installments) {
-          
+
           await client`
-            UPDATE event_registrations 
-            SET 
+            UPDATE event_registrations
+            SET
               payment_status = ${paymentInfo.status},
               total = ${paymentInfo.totalValue},
               installments = ${paymentInfo.totalInstallments},
@@ -289,7 +290,7 @@ async function generateReport() {
 
   try {
     const stats = await client`
-      SELECT 
+      SELECT
         COUNT(*) as total_clients,
         COUNT(CASE WHEN payment_status = 'paid' THEN 1 END) as paid_clients,
         COUNT(CASE WHEN payment_status = 'partial' THEN 1 END) as partial_clients,

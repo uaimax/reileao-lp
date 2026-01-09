@@ -3,6 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useLandingData } from '@/hooks/use-landing-data';
 import ArtistModal from '@/components/ui/artist-modal';
 import { useState } from 'react';
+import { getRegistrationUrl } from '@/lib/site-config';
 
 interface Artist {
   id: number;
@@ -101,7 +102,7 @@ const Artistas = () => {
 
         <div className="text-center animate-slide-up" style={{ animationDelay: '0.5s' }}>
           <Button
-            onClick={() => window.open(eventData?.registrationUrl || 'https://uaizouk.com.br/inscricoes', '_blank')}
+            onClick={() => window.open(eventData?.registrationUrl || getRegistrationUrl(), '_blank')}
             className="btn-neon text-white font-bold py-4 px-12 rounded-full text-xl animate-glow-pulse"
           >
             {artistsSection?.ctaButtonText || "QUERO PARTICIPAR"}

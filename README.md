@@ -76,9 +76,25 @@ FRONTEND_PORT=5174 API_PORT=3003 ./dev-start.sh
 
 O projeto precisa do arquivo `_save_env` na raiz com as seguintes variáveis:
 
+**Obrigatórias:**
 - `DATABASE_URL` - URL de conexão do PostgreSQL
 - `VITE_API_URL` - URL da API (configurado automaticamente pelo script)
-- `VITE_SITE_NAME` - Nome do site (padrão: 'UAIZOUK')
+
+**Configuração do Site (para white-label):**
+- `VITE_SITE_NAME` - Nome do site/evento (ex: 'Meu Evento')
+- `VITE_SITE_URL` - URL base do site (ex: 'https://meuevento.com.br')
+- `VITE_SITE_SLUG` - Slug para storage keys (auto-gerado do nome se não definido)
+- `VITE_CONTACT_EMAIL` - Email de contato
+- `VITE_PIX_EMAIL` - Email para PIX (usa contact_email se não definido)
+- `VITE_INSTAGRAM_URL` - URL do perfil Instagram
+- `VITE_TWITTER_HANDLE` - Handle do Twitter/X (sem @)
+- `VITE_WHATSAPP_GROUP_URL` - URL do grupo do WhatsApp
+
+**API (também usa SITE_NAME e SITE_URL sem VITE_):**
+- `SITE_NAME` - Nome do site para a API
+- `SITE_URL` - URL base para callbacks do ASAAS
+
+**Pagamento (Asaas):**
 - `ASAAS_SANDBOX` - Modo sandbox do Asaas
 - `ASAAS_API_KEY_SANDBOX` - Chave da API Asaas (sandbox)
 - `ASAAS_API_KEY_PRODUCTION` - Chave da API Asaas (produção)

@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
-import { SITE_NAME } from '@/lib/site-config';
+import { SITE_NAME, PIX_EMAIL } from '@/lib/site-config';
 
 interface Lead {
   id: string;
@@ -497,7 +497,7 @@ const LeadDetails = () => {
                           <div className="space-y-2">
                             <div className="flex justify-between items-center py-2 border-b border-gray-700">
                               <span className="text-gray-400">Chave PIX:</span>
-                              <span className="text-white font-mono text-sm">pix@uaizouk.com.br</span>
+                              <span className="text-white font-mono text-sm">{PIX_EMAIL}</span>
                             </div>
                             <div className="flex justify-between items-center py-2 border-b border-gray-700">
                               <span className="text-gray-400">Valor:</span>

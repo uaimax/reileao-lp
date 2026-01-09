@@ -4,16 +4,18 @@
 // Integra todas as funcionalidades: normalização, matching, cálculo de status
 
 const https = require('https');
-const postgres = require('postgres');
 const fs = require('fs');
 const path = require('path');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
+const client = createDbClient();
 
 // Configuração de logs
 const LOG_DIR = './logs';
@@ -28,7 +30,7 @@ function log(message, level = 'INFO') {
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] [${level}] ${message}`;
   console.log(logMessage);
-  
+
   // Salvar no arquivo de log
   fs.appendFileSync(LOG_FILE, logMessage + '\n');
 }
@@ -54,7 +56,7 @@ function makeRequest(url, options = {}, retries = 3) {
           clearTimeout(timeout);
           try {
             const jsonData = JSON.parse(data);
-            
+
             if (res.statusCode >= 200 && res.statusCode < 300) {
               resolve({ status: res.statusCode, data: jsonData });
             } else if (res.statusCode === 429 && retryCount > 0) {
@@ -100,30 +102,30 @@ function makeRequest(url, options = {}, retries = 3) {
 
 function normalizePhone(phone) {
   if (!phone) return null;
-  
+
   // Remover caracteres especiais e espaços
   const cleaned = phone.replace(/[^\d]/g, '');
-  
+
   // Se tem 11 dígitos e começa com 11, manter como está
   if (cleaned.length === 11 && cleaned.startsWith('11')) {
     return cleaned;
   }
-  
+
   // Se tem 10 dígitos, adicionar 11 no início
   if (cleaned.length === 10) {
     return '11' + cleaned;
   }
-  
+
   // Se tem 13 dígitos e começa com 55, remover o 55
   if (cleaned.length === 13 && cleaned.startsWith('55')) {
     return cleaned.substring(2);
   }
-  
+
   // Se tem 12 dígitos e começa com 55, remover o 55
   if (cleaned.length === 12 && cleaned.startsWith('55')) {
     return cleaned.substring(2);
   }
-  
+
   return cleaned;
 }
 
@@ -148,9 +150,9 @@ function parseDescription(description) {
     result.totalInstallments = parseInt(installmentMatch[2]);
   }
 
-  // Verificar evento UAIZOUK
-  if (/UAIZOUK|Uaizouk/i.test(description)) {
-    result.eventName = 'UAIZOUK';
+  // Verificar evento usando configuração dinâmica
+  if (isEventPayment(description)) {
+    result.eventName = SITE_NAME;
   }
 
   // Verificar ano
@@ -180,7 +182,7 @@ function calculatePaymentStatus(payments) {
   // Calcular valores e parcelas
   for (const payment of payments) {
     totalValue += payment.value;
-    
+
     if (payment.status === 'RECEIVED' || payment.status === 'CONFIRMED') {
       paidValue += payment.value;
     }
@@ -188,7 +190,7 @@ function calculatePaymentStatus(payments) {
     const parsed = parseDescription(payment.description);
     if (parsed && parsed.isInstallment) {
       totalInstallments = Math.max(totalInstallments, parsed.totalInstallments);
-      
+
       if (payment.status === 'RECEIVED' || payment.status === 'CONFIRMED') {
         paidInstallments++;
       }
@@ -205,7 +207,7 @@ function calculatePaymentStatus(payments) {
 
   // Determinar status
   let status = 'pending';
-  
+
   if (paidValue >= totalValue) {
     status = 'received';
   } else if (paidValue > 0) {
@@ -225,11 +227,11 @@ function calculatePaymentStatus(payments) {
 async function syncAsaasRobust() {
   log('🚀 INICIANDO SINCRONIZAÇÃO ROBUSTA ASAAS -> BASE LOCAL');
   log('=====================================================');
-  
+
   const startTime = Date.now();
   let stats = {
     totalPayments: 0,
-    uaizoukPayments: 0,
+    eventPayments: 0,
     customersProcessed: 0,
     customersCreated: 0,
     customersUpdated: 0,
@@ -239,18 +241,18 @@ async function syncAsaasRobust() {
   };
 
   try {
-    // 1. Buscar cobranças do UAIZOUK
-    log('📅 Buscando cobranças do UAIZOUK...');
-    
+    // 1. Buscar cobranças do evento
+    log(`📅 Buscando cobranças do ${SITE_NAME}...`);
+
     let offset = 0;
     const limit = 100;
     const processedCustomers = new Set();
-    const uaizoukPayments = [];
+    const eventPayments = [];
 
     while (true) {
       try {
         const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?dateCreated[ge]=2024-09-01&limit=${limit}&offset=${offset}`);
-        
+
         if (paymentsResponse.status !== 200) {
           throw new Error(`Erro ao buscar cobranças: ${paymentsResponse.status}`);
         }
@@ -263,21 +265,21 @@ async function syncAsaasRobust() {
         // Processar cada cobrança
         for (const payment of payments) {
           const parsed = parseDescription(payment.description);
-          
-          if (parsed && parsed.eventName === 'UAIZOUK') {
-            uaizoukPayments.push(payment);
-            stats.uaizoukPayments++;
+
+          if (parsed && parsed.eventName === SITE_NAME) {
+            eventPayments.push(payment);
+            stats.eventPayments++;
           }
         }
 
         offset += limit;
-        
+
         // Evitar rate limiting
         await new Promise(resolve => setTimeout(resolve, 100));
-        
+
         // Limitar para não sobrecarregar
         if (offset >= 1000) break;
-        
+
       } catch (error) {
         log(`Erro ao buscar cobranças (offset ${offset}): ${error.message}`, 'ERROR');
         stats.errors++;
@@ -285,19 +287,19 @@ async function syncAsaasRobust() {
       }
     }
 
-    log(`✅ Encontradas ${stats.uaizoukPayments} cobranças do UAIZOUK`);
+    log(`✅ Encontradas ${stats.eventPayments} cobranças do ${SITE_NAME}`);
 
     // 2. Processar clientes únicos
-    const uniqueCustomers = new Set(uaizoukPayments.map(p => p.customer));
+    const uniqueCustomers = new Set(eventPayments.map(p => p.customer));
     log(`👥 Processando ${uniqueCustomers.size} clientes únicos...`);
 
     for (const customerId of uniqueCustomers) {
       try {
         stats.customersProcessed++;
-        
+
         // Buscar dados do cliente
         const customerResponse = await makeRequest(`${ASAAS_URL}/customers/${customerId}`);
-        
+
         if (customerResponse.status !== 200) {
           log(`Erro ao buscar cliente ${customerId}: ${customerResponse.status}`, 'ERROR');
           stats.errors++;
@@ -309,7 +311,7 @@ async function syncAsaasRobust() {
 
         // Buscar cobranças do cliente
         const customerPaymentsResponse = await makeRequest(`${ASAAS_URL}/payments?customer=${customerId}&limit=20`);
-        
+
         if (customerPaymentsResponse.status !== 200) {
           log(`Erro ao buscar cobranças do cliente ${customerId}: ${customerPaymentsResponse.status}`, 'ERROR');
           stats.errors++;
@@ -317,14 +319,14 @@ async function syncAsaasRobust() {
         }
 
         const allPayments = customerPaymentsResponse.data.data || [];
-        const customerUaizoukPayments = allPayments.filter(payment => {
+        const customerEventPayments = allPayments.filter(payment => {
           const parsed = parseDescription(payment.description);
-          return parsed && parsed.eventName === 'UAIZOUK';
+          return parsed && parsed.eventName === SITE_NAME;
         });
 
         // Calcular status real
-        const realStatus = calculatePaymentStatus(customerUaizoukPayments);
-        
+        const realStatus = calculatePaymentStatus(customerEventPayments);
+
         // Normalizar telefone
         const phoneToUse = customer.mobilePhone || customer.phone;
         const normalizedPhone = normalizePhone(phoneToUse);
@@ -348,17 +350,17 @@ async function syncAsaasRobust() {
                 installments, created_at, payment_status, asaas_payment_id
               ) VALUES (
                 1, ${customer.cpfCnpj}, false, ${customer.name}, ${customer.email},
-                ${normalizedPhone || '11999999999'}, '1990-01-01', 
+                ${normalizedPhone || '11999999999'}, '1990-01-01',
                 ${customer.state || 'SP'}, ${customer.cityName || 'São Paulo'},
                 'Individual', null, '{}', ${realStatus.totalValue}, true,
                 'pix', ${realStatus.totalInstallments},
-                ${customer.dateCreated}, ${realStatus.status}, ${customerUaizoukPayments[0]?.id || null}
+                ${customer.dateCreated}, ${realStatus.status}, ${customerEventPayments[0]?.id || null}
               )
             `;
 
             stats.customersCreated++;
             log(`✅ Cliente criado: ${customer.name}`);
-            
+
           } catch (error) {
             log(`Erro ao criar cliente ${customer.name}: ${error.message}`, 'ERROR');
             stats.errors++;
@@ -377,7 +379,7 @@ async function syncAsaasRobust() {
           }
 
           // Verificar status de pagamento
-          if (realStatus.status !== existing.payment_status || 
+          if (realStatus.status !== existing.payment_status ||
               realStatus.totalValue !== parseFloat(existing.total) ||
               realStatus.totalInstallments !== existing.installments) {
             updates.payment_status = realStatus.status;
@@ -398,7 +400,7 @@ async function syncAsaasRobust() {
 
               stats.customersUpdated++;
               log(`✅ Cliente atualizado: ${customer.name}`);
-              
+
             } catch (error) {
               log(`Erro ao atualizar cliente ${customer.name}: ${error.message}`, 'ERROR');
               stats.errors++;
@@ -410,7 +412,7 @@ async function syncAsaasRobust() {
 
         // Evitar rate limiting
         await new Promise(resolve => setTimeout(resolve, 200));
-        
+
       } catch (error) {
         log(`Erro ao processar cliente ${customerId}: ${error.message}`, 'ERROR');
         stats.errors++;
@@ -420,12 +422,12 @@ async function syncAsaasRobust() {
     // 3. Resumo final
     const endTime = Date.now();
     const duration = ((endTime - startTime) / 1000).toFixed(2);
-    
+
     log('\n📊 RESUMO DA SINCRONIZAÇÃO:');
     log('============================');
     log(`   - Duração: ${duration} segundos`);
     log(`   - Cobranças analisadas: ${stats.totalPayments}`);
-    log(`   - Cobranças UAIZOUK: ${stats.uaizoukPayments}`);
+    log(`   - Cobranças ${SITE_NAME}: ${stats.eventPayments}`);
     log(`   - Clientes processados: ${stats.customersProcessed}`);
     log(`   - Clientes criados: ${stats.customersCreated}`);
     log(`   - Clientes atualizados: ${stats.customersUpdated}`);
@@ -435,20 +437,20 @@ async function syncAsaasRobust() {
 
     // 4. Verificar estado final da base
     const finalStats = await client`
-      SELECT 
+      SELECT
         COUNT(*) as total,
         COUNT(CASE WHEN payment_status = 'received' THEN 1 END) as paid,
         COUNT(CASE WHEN payment_status = 'partial' THEN 1 END) as partial,
         COUNT(CASE WHEN payment_status = 'pending' THEN 1 END) as pending,
         COUNT(CASE WHEN whatsapp = '11999999999' THEN 1 END) as default_phone,
         SUM(total) as total_revenue
-      FROM event_registrations 
+      FROM event_registrations
       WHERE created_at >= '2024-09-01'
     `;
 
     const final = finalStats[0];
     const correctPhonePercentage = ((final.total - final.default_phone) / final.total * 100).toFixed(1);
-    
+
     log('\n📈 ESTADO FINAL DA BASE:');
     log('========================');
     log(`   - Total de registros: ${final.total}`);
@@ -459,7 +461,7 @@ async function syncAsaasRobust() {
     log(`   - Receita total: R$ ${parseFloat(final.total_revenue).toFixed(2)}`);
 
     log('\n✅ SINCRONIZAÇÃO CONCLUÍDA COM SUCESSO!');
-    
+
   } catch (error) {
     log(`❌ Erro crítico durante sincronização: ${error.message}`, 'ERROR');
     stats.errors++;
@@ -470,10 +472,10 @@ async function syncAsaasRobust() {
       duration: Date.now() - startTime,
       ...stats
     };
-    
+
     const statsFile = path.join(LOG_DIR, `sync-stats-${new Date().toISOString().split('T')[0]}.json`);
     fs.writeFileSync(statsFile, JSON.stringify(finalStats, null, 2));
-    
+
     log(`📁 Logs salvos em: ${LOG_FILE}`);
     log(`📊 Estatísticas salvas em: ${statsFile}`);
     log('✅ Sincronização finalizada');

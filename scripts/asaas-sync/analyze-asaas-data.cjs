@@ -4,9 +4,13 @@
 // Versão simplificada para análise dos dados
 
 const https = require('https');
+const { getConfig, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -56,9 +60,9 @@ function parseDescription(description) {
     result.totalInstallments = parseInt(installmentMatch[2]);
   }
 
-  // Verificar evento UAIZOUK
-  if (/UAIZOUK|Uaizouk/i.test(description)) {
-    result.eventName = 'UAIZOUK';
+  // Verificar evento usando configuração dinâmica
+  if (isEventPayment(description)) {
+    result.eventName = SITE_NAME;
   }
 
   // Verificar ano
@@ -82,9 +86,9 @@ async function analyzeAsaasData() {
   try {
     let totalCustomers = 0;
     let totalPayments = 0;
-    let uaizoukPayments = 0;
+    let eventPayments = 0;
     let installmentPayments = 0;
-    let customersWithUaizouk = new Set();
+    let customersWithEvent = new Set();
     let offset = 0;
     const limit = 100;
 
@@ -109,17 +113,17 @@ async function analyzeAsaasData() {
       for (const payment of payments) {
         const parsed = parseDescription(payment.description);
 
-        if (parsed && parsed.eventName === 'UAIZOUK') {
-          uaizoukPayments++;
-          customersWithUaizouk.add(payment.customer);
+        if (parsed && parsed.eventName === SITE_NAME) {
+          eventPayments++;
+          customersWithEvent.add(payment.customer);
 
           if (parsed.isInstallment) {
             installmentPayments++;
           }
 
           // Log de exemplo
-          if (uaizoukPayments <= 5) {
-            console.log(`\n💳 Exemplo ${uaizoukPayments}:`);
+          if (eventPayments <= 5) {
+            console.log(`\n💳 Exemplo ${eventPayments}:`);
             console.log(`   - Cliente: ${payment.customer}`);
             console.log(`   - Valor: R$ ${payment.value}`);
             console.log(`   - Status: ${payment.status}`);
@@ -141,9 +145,9 @@ async function analyzeAsaasData() {
     }
 
     // 2. Analisar clientes únicos
-    console.log('\n👥 Analisando clientes únicos com cobranças UAIZOUK...');
+    console.log(`\n👥 Analisando clientes únicos com cobranças ${SITE_NAME}...`);
 
-    const uniqueCustomers = Array.from(customersWithUaizouk);
+    const uniqueCustomers = Array.from(customersWithEvent);
     let customersWithDetails = 0;
 
     for (let i = 0; i < Math.min(10, uniqueCustomers.length); i++) {
@@ -175,9 +179,9 @@ async function analyzeAsaasData() {
     // 3. Resumo da análise
     console.log('\n📊 RESUMO DA ANÁLISE:');
     console.log(`   - Total de cobranças analisadas: ${totalPayments}`);
-    console.log(`   - Cobranças do UAIZOUK: ${uaizoukPayments}`);
+    console.log(`   - Cobranças do ${SITE_NAME}: ${eventPayments}`);
     console.log(`   - Cobranças parceladas: ${installmentPayments}`);
-    console.log(`   - Clientes únicos com UAIZOUK: ${uniqueCustomers.length}`);
+    console.log(`   - Clientes únicos com ${SITE_NAME}: ${uniqueCustomers.length}`);
     console.log(`   - Clientes analisados em detalhes: ${customersWithDetails}`);
 
     // 4. Recomendações

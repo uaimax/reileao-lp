@@ -6,9 +6,10 @@
 # Para usar sem senha interativa, configure:
 # export PGPASSWORD="sua_senha_aqui"
 
-DB_HOST="localhost"
-DB_USER="postgres"
-DB_NAME="uaizouk_lp"
+# Configuração - usar variáveis de ambiente ou valores default
+DB_HOST="${DB_HOST:-localhost}"
+DB_USER="${DB_USER:-postgres}"
+DB_NAME="${DB_NAME:-uaizouk_lp}"
 
 # Verificar se PGPASSWORD está configurado
 if [ -z "$PGPASSWORD" ]; then

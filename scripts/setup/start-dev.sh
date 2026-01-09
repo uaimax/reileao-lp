@@ -7,7 +7,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}🚀 Iniciando desenvolvimento UAIZOUK LP${NC}"
+# Nome do projeto - configurável via variável de ambiente
+SITE_NAME="${SITE_NAME:-${VITE_SITE_NAME:-Meu Projeto}}"
+
+echo -e "${GREEN}🚀 Iniciando desenvolvimento ${SITE_NAME} LP${NC}"
 echo -e "${BLUE}======================================${NC}"
 
 # Verificar se o .env existe
@@ -79,11 +82,11 @@ cleanup() {
     echo -e "\n${YELLOW}🛑 Parando servidores...${NC}"
     kill $API_PID 2>/dev/null || true
     kill $VITE_PID 2>/dev/null || true
-    
+
     # Matar processos nas portas caso ainda existam
     kill -9 $(lsof -ti:3002) 2>/dev/null || true
     kill -9 $(lsof -ti:8080) 2>/dev/null || true
-    
+
     echo -e "${GREEN}✅ Servidores parados${NC}"
     exit 0
 }

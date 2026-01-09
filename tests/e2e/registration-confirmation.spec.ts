@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+// Dynamic event name from environment or default
+const SITE_NAME = process.env.VITE_SITE_NAME || 'UAIZOUK';
+const CURRENT_YEAR = new Date().getFullYear();
+const REGISTRATION_NUMBER_PREFIX = `${SITE_NAME}${CURRENT_YEAR}`;
+
 test.describe('Registration Confirmation Page Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Mock successful registration flow
@@ -30,7 +35,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-001',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-001`,
           fullName: 'João Silva',
           email: 'joao@example.com',
           paymentMethod: 'pix',
@@ -85,7 +90,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-002',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-002`,
           fullName: 'Maria Silva',
           email: 'maria@example.com',
           paymentMethod: 'credit_card',
@@ -132,7 +137,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-003',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-003`,
           fullName: 'Carlos Santos',
           email: 'carlos@example.com',
           paymentMethod: 'pix_installment',
@@ -179,7 +184,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-004',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-004`,
           fullName: 'Ana Costa',
           email: 'ana@example.com',
           paymentMethod: 'pix',
@@ -243,7 +248,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-005',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-005`,
           fullName: 'Pedro Oliveira',
           email: 'pedro@example.com',
           whatsapp: '(11) 99999-9999',
@@ -307,7 +312,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-006',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-006`,
           fullName: 'Test User',
           email: 'test@example.com',
           status: 'confirmed',
@@ -332,7 +337,7 @@ test.describe('Registration Confirmation Page Tests', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: 'test-123',
-          registrationNumber: 'UAIZOUK2025-007',
+          registrationNumber: `${REGISTRATION_NUMBER_PREFIX}-007`,
           fullName: 'Receipt Test User',
           email: 'receipt@example.com',
           paymentMethod: 'pix',
@@ -377,8 +382,8 @@ test.describe('Registration Confirmation Page Tests', () => {
     await expect(page.locator('text=suporte')).toBeVisible();
     await expect(page.locator('text=dúvidas')).toBeVisible();
 
-    // Should show event information
-    await expect(page.locator('text=UAIZOUK 2025')).toBeVisible();
+    // Should show event information - use dynamic pattern
+    await expect(page.locator(`text=${SITE_NAME}`)).toBeVisible();
   });
 
   test('should handle different browser sizes responsively', async ({ page }) => {

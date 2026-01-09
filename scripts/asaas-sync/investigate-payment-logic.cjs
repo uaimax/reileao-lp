@@ -3,16 +3,17 @@
 // Script para investigar a lógica de cálculo de pagamentos
 // Verifica se estamos considerando parcelamentos corretamente
 
-const postgres = require('postgres');
 const https = require('https');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
+
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const ASAAS_TOKEN = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
-
-// Configuração ASAAS
-const ASAAS_URL = 'https://www.asaas.com/api/v3';
-const ASAAS_TOKEN = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+const client = createDbClient();
 
 function log(message) {
   const timestamp = new Date().toISOString();
@@ -67,7 +68,7 @@ function makeRequest(url, options = {}) {
 
 function parseDescription(description) {
   if (!description) return null;
-  
+
   // Padrões para identificar parcelamentos
   const installmentPatterns = [
     /(\d+)\/(\d+)/,  // 1/3, 2/3, etc.
@@ -91,11 +92,11 @@ function parseDescription(description) {
 
 function calculatePaymentStatusDetailed(payments) {
   if (!payments || payments.length === 0) {
-    return { 
-      status: 'pending', 
-      paidValue: 0, 
-      totalValue: 0, 
-      paidInstallments: 0, 
+    return {
+      status: 'pending',
+      paidValue: 0,
+      totalValue: 0,
+      paidInstallments: 0,
       totalInstallments: 0,
       details: []
     };
@@ -109,7 +110,7 @@ function calculatePaymentStatusDetailed(payments) {
 
   for (const payment of payments) {
     totalValue += payment.value;
-    
+
     const isPaid = payment.status === 'RECEIVED' || payment.status === 'CONFIRMED';
     if (isPaid) {
       paidValue += payment.value;
@@ -166,7 +167,7 @@ async function investigateClient(email) {
     // Buscar cliente no banco local
     const localClient = await client`
       SELECT cpf, full_name, email, payment_status, total, installments, created_at
-      FROM event_registrations 
+      FROM event_registrations
       WHERE email = ${email}
     `;
 
@@ -186,7 +187,7 @@ async function investigateClient(email) {
 
     // Buscar cliente no ASAAS
     const customerResponse = await makeRequest(`${ASAAS_URL}/customers?cpfCnpj=${clientData.cpf}`);
-    
+
     if (customerResponse.status !== 200 || !customerResponse.data.data || customerResponse.data.data.length === 0) {
       log(`❌ Cliente não encontrado no ASAAS`);
       return;
@@ -200,23 +201,23 @@ async function investigateClient(email) {
 
     // Buscar pagamentos
     const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?customer=${asaasCustomer.id}&limit=100`);
-    
+
     if (paymentsResponse.status !== 200) {
       log(`❌ Erro ao buscar pagamentos: ${paymentsResponse.status}`);
       return;
     }
 
     const allPayments = paymentsResponse.data.data || [];
-    const uaizoukPayments = allPayments.filter(payment => 
-      payment.description && 
-      payment.description.toLowerCase().includes('uaizouk')
+    const eventPayments = allPayments.filter(payment =>
+      payment.description &&
+      isEventPayment(payment.description)
     );
 
-    log(`📊 PAGAMENTOS UAIZOUK:`);
-    log(`   Total encontrados: ${uaizoukPayments.length}`);
+    log(`📊 PAGAMENTOS ${SITE_NAME}:`);
+    log(`   Total encontrados: ${eventPayments.length}`);
 
-    if (uaizoukPayments.length > 0) {
-      uaizoukPayments.forEach((payment, i) => {
+    if (eventPayments.length > 0) {
+      eventPayments.forEach((payment, i) => {
         log(`   ${i+1}. ${payment.description}`);
         log(`      Status: ${payment.status}`);
         log(`      Valor: R$ ${payment.value}`);
@@ -226,8 +227,8 @@ async function investigateClient(email) {
       });
 
       // Calcular status detalhado
-      const paymentInfo = calculatePaymentStatusDetailed(uaizoukPayments);
-      
+      const paymentInfo = calculatePaymentStatusDetailed(eventPayments);
+
       log(`📊 CÁLCULO DETALHADO:`);
       log(`   Status calculado: ${paymentInfo.status}`);
       log(`   Valor total: R$ ${paymentInfo.totalValue}`);
@@ -257,7 +258,7 @@ async function investigateClient(email) {
       }
 
     } else {
-      log(`❌ Nenhum pagamento UAIZOUK encontrado`);
+      log(`❌ Nenhum pagamento ${SITE_NAME} encontrado`);
     }
 
   } catch (error) {

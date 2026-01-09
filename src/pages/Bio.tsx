@@ -4,7 +4,7 @@ import { Play, ExternalLink } from 'lucide-react';
 import { useLandingData } from '@/hooks/use-landing-data';
 import WhatsAppFloat from '@/components/ui/whatsapp-float';
 import { handleLinkClick } from '@/utils/link-handler';
-import { SITE_NAME, getSiteNameWithYear, getCopyrightText } from '@/lib/site-config';
+import { SITE_NAME, getSiteNameWithYear, getCopyrightText, getRegistrationUrl, INSTAGRAM_URL } from '@/lib/site-config';
 
 interface BioLink {
   id: number;
@@ -56,12 +56,12 @@ const Bio = () => {
         }
       } catch (error) {
         console.error('Error fetching bio data:', error);
-        // Fallback data
+        // Fallback data - use valores dinâmicos do site-config
         setBioLinks([
-          { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: 'https://uaizouk.com.br/inscricoes', displayOrder: 1, isActive: true, isScheduled: false },
-          { id: 2, title: '📍 Localização do Evento', url: 'https://maps.google.com/maps?q=Recanto+da+Lua,+Uberlândia,+MG', displayOrder: 2, isActive: true, isScheduled: false },
-          { id: 3, title: '🏨 Hospedagem Recomendada', url: 'https://www.booking.com/searchresults.pt-br.html?ss=Uberlândia', displayOrder: 3, isActive: true, isScheduled: false },
-          { id: 4, title: '📱 Instagram Oficial', url: 'https://www.instagram.com/uaizouk/', displayOrder: 4, isActive: true, isScheduled: false }
+          { id: 1, title: `🎫 Inscrições ${eventData?.eventTitle || getSiteNameWithYear('2025')}`, url: eventData?.registrationUrl || getRegistrationUrl(), displayOrder: 1, isActive: true, isScheduled: false },
+          { id: 2, title: '📍 Localização do Evento', url: '#localizacao', displayOrder: 2, isActive: true, isScheduled: false },
+          { id: 3, title: '🏨 Hospedagem Recomendada', url: '#hospedagem', displayOrder: 3, isActive: true, isScheduled: false },
+          ...(INSTAGRAM_URL ? [{ id: 4, title: '📱 Instagram Oficial', url: INSTAGRAM_URL, displayOrder: 4, isActive: true, isScheduled: false }] : [])
         ]);
         setBioConfig({ id: 1, showEventDate: true, showTrailerButton: true });
       } finally {

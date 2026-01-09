@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Copy, Download, RefreshCw, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { SITE_NAME } from '@/lib/site-config';
+import { SITE_NAME, getDownloadFilename } from '@/lib/site-config';
 
 interface StructuredData {
   metadata: {
@@ -171,7 +171,7 @@ const StructuredData = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `uaizouk-structured-data-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = getDownloadFilename('structured-data', 'json');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

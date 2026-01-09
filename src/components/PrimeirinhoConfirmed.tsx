@@ -1,7 +1,7 @@
 import { CheckCircle, Calendar, MapPin, Users, Gift } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLandingData } from '@/hooks/use-landing-data';
-import { getSiteNameWithYear } from '@/lib/site-config';
+import { getSiteNameWithYear, CONTACT_EMAIL } from '@/lib/site-config';
 
 const PrimeirinhoConfirmed = () => {
   const { data: landingData } = useLandingData();
@@ -172,7 +172,7 @@ const PrimeirinhoConfirmed = () => {
           </p>
           <div className="bg-gray-900 border border-cyan-500/30 rounded-xl p-4 max-w-md mx-auto">
             <p className="text-2xl font-bold text-cyan-400">
-              contato@uaizouk.com.br
+              {CONTACT_EMAIL}
             </p>
           </div>
           <p className="text-gray-400 text-sm mt-4">

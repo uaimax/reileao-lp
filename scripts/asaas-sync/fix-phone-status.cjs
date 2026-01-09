@@ -3,14 +3,16 @@
 // Script para corrigir telefones e status de pagamento
 
 const https = require('https');
-const postgres = require('postgres');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const connectionString = 'postgresql://uaizouklp_owner:npg_BgyoHlKF1Tu3@ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech:5432/uaizouklp?sslmode=require';
-const client = postgres(connectionString);
+const client = createDbClient();
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -77,20 +79,20 @@ async function getCustomerPaymentDetails(customerId) {
     }
 
     const payments = paymentsResponse.data.data || [];
-    const uaizoukPayments = payments.filter(payment => {
-      return payment.description && /UAIZOUK|Uaizouk/i.test(payment.description);
+    const eventPayments = payments.filter(payment => {
+      return payment.description && isEventPayment(payment.description);
     });
 
-    if (uaizoukPayments.length === 0) {
+    if (eventPayments.length === 0) {
       return null;
     }
 
     // Ordenar por data de criação para pegar a primeira cobrança
-    uaizoukPayments.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
+    eventPayments.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
 
-    const firstPayment = uaizoukPayments[0];
-    const totalValue = uaizoukPayments.reduce((sum, p) => sum + p.value, 0);
-    const paidValue = uaizoukPayments
+    const firstPayment = eventPayments[0];
+    const totalValue = eventPayments.reduce((sum, p) => sum + p.value, 0);
+    const paidValue = eventPayments
       .filter(p => p.status === 'RECEIVED')
       .reduce((sum, p) => sum + p.value, 0);
 
@@ -107,8 +109,8 @@ async function getCustomerPaymentDetails(customerId) {
       totalValue,
       paidValue,
       overallStatus,
-      installments: uaizoukPayments.length,
-      allPayments: uaizoukPayments
+      installments: eventPayments.length,
+      allPayments: eventPayments
     };
   } catch (error) {
     console.log(`❌ Erro ao buscar cobranças do cliente ${customerId}: ${error.message}`);

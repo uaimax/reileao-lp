@@ -6,13 +6,14 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { getRegistrationUrl } from '@/lib/site-config';
 
 const EventoConfig = () => {
   const [dataInicio, setDataInicio] = useState('2025-09-05T14:00');
   const [dataFim, setDataFim] = useState('2025-09-07T18:00');
   const [videoFundo, setVideoFundo] = useState('https://youtu.be/U2QPiVaMAVc');
   const [videoLocal, setVideoLocal] = useState('https://youtu.be/sDHDoiNoMjU');
-  const [linkCTA, setLinkCTA] = useState('https://uaizouk.com.br/inscricoes');
+  const [linkCTA, setLinkCTA] = useState(getRegistrationUrl());
   const { toast } = useToast();
 
   const handleSave = () => {

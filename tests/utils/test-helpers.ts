@@ -1,7 +1,8 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 /**
- * Test data generators and helpers for UAIZOUK registration form testing
+ * Test data generators and helpers for Event registration form testing
+ * Note: Event name is configured via VITE_SITE_NAME environment variable
  */
 
 export interface TestUserData {
@@ -72,10 +73,10 @@ export async function fillRegistrationForm(page: Page, userData: TestUserData): 
     await page.click('[data-testid="isForeigner"]', { force: true });
   } else {
     await page.fill('[data-testid="cpf"]', userData.cpf);
-    
+
     // Try multiple approaches for state selection
     await page.click('[data-testid="state"]');
-    
+
     // Approach 1: Use keyboard navigation
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');
@@ -104,13 +105,13 @@ export async function fillRegistrationForm(page: Page, userData: TestUserData): 
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
-    
+
     // Wait for cities to load
     await page.waitForTimeout(1000);
-    
+
     // Try multiple approaches for city selection
     await page.click('[data-testid="city"]');
-    
+
     // Approach 1: Use keyboard navigation for city
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');

@@ -4,20 +4,16 @@
 // Sincroniza clientes e cobranças do ASAAS com nossa base de dados
 
 const https = require('https');
-const { Client } = require('postgres');
+const { getConfig, createDbClient, isEventPayment } = require('../config.cjs');
 
-const ASAAS_URL = 'https://api.asaas.com/v3';
-const API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJlMDA3YWEwLWNiNDEtNDMxYy1hMmQ0LTAzOTBmNDRkY2Q3NTo6JGFhY2hfNGU5YzliMzMtY2M3MC00MWRmLTgyZDQtNzViZGQ3ZTY2OWZh';
+// Carregar configuração
+const config = getConfig();
+const ASAAS_URL = config.asaasUrl;
+const API_KEY = config.asaasApiKey;
+const SITE_NAME = config.siteName;
 
 // Configuração do banco
-const client = new Client({
-  host: 'ep-mute-base-a8dewk2d-pooler.eastus2.azure.neon.tech',
-  port: 5432,
-  database: 'uaizouklp',
-  user: 'uaizouklp_owner',
-  password: 'npg_BgyoHlKF1Tu3',
-  ssl: true
-});
+const client = createDbClient();
 
 function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -50,13 +46,13 @@ function parseDescription(description) {
   if (!description) return null;
 
   // Padrões encontrados nas descrições:
-  // "Parcela 1 de 3. UAIZOUK 2026"
-  // "Uaizouk 2026"
-  // "Parcela 6 de 6. Valor contempla todas as aulas e bailes oficiais da edição de 2026 do UAIZOUK."
+  // Exemplos de descrições de pagamento:
+  // "Parcela 1 de 3. [EVENTO] 2026"
+  // "Parcela 6 de 6. Valor contempla todas as aulas e bailes oficiais da edição de 2026 do [EVENTO]."
 
   const patterns = {
     installment: /Parcela (\d+) de (\d+)/,
-    event: /UAIZOUK|Uaizouk/i,
+    event: new RegExp(SITE_NAME, 'i'),
     year: /202[4-6]/,
     products: /(?:aulas|bailes|oficiais|edição)/i
   };
@@ -81,7 +77,7 @@ function parseDescription(description) {
 
   // Verificar evento
   if (patterns.event.test(description)) {
-    result.eventName = 'UAIZOUK';
+    result.eventName = SITE_NAME;
   }
 
   // Verificar ano
@@ -140,24 +136,24 @@ async function syncAsaasData() {
         `;
 
         if (existingCustomer.length === 0) {
-          // Cliente não existe, vamos verificar se tem cobranças do UAIZOUK
+          // Cliente não existe, vamos verificar se tem cobranças do evento
           const paymentsResponse = await makeRequest(`${ASAAS_URL}/payments?customer=${customer.id}&limit=10`);
 
           if (paymentsResponse.status === 200) {
             const paymentsData = paymentsResponse.data;
             const payments = paymentsData.data || [];
 
-            // Filtrar apenas cobranças do UAIZOUK
-            const uaizoukPayments = payments.filter(payment => {
+            // Filtrar apenas cobranças do evento
+            const eventPayments = payments.filter(payment => {
               const parsed = parseDescription(payment.description);
-              return parsed && parsed.eventName === 'UAIZOUK';
+              return parsed && parsed.eventName === SITE_NAME;
             });
 
-            if (uaizoukPayments.length > 0) {
-              console.log(`\n👤 Novo cliente UAIZOUK encontrado: ${customer.name}`);
+            if (eventPayments.length > 0) {
+              console.log(`\n👤 Novo cliente ${SITE_NAME} encontrado: ${customer.name}`);
               console.log(`   - CPF: ${customer.cpfCnpj}`);
               console.log(`   - Email: ${customer.email}`);
-              console.log(`   - Cobranças UAIZOUK: ${uaizoukPayments.length}`);
+              console.log(`   - Cobranças ${SITE_NAME}: ${eventPayments.length}`);
 
               // Criar registro na nossa base
               try {
@@ -170,9 +166,9 @@ async function syncAsaasData() {
                   ) VALUES (
                     1, ${customer.cpfCnpj}, false, ${customer.name}, ${customer.email},
                     ${customer.phone || '11999999999'}, '1990-01-01', 'SP', 'São Paulo',
-                    'Individual', null, '{}', ${uaizoukPayments[0].value}, true,
-                    'pix', ${uaizoukPayments[0].installmentCount || 1},
-                    ${customer.dateCreated}, 'pending', ${uaizoukPayments[0].id}
+                    'Individual', null, '{}', ${eventPayments[0].value}, true,
+                    'pix', ${eventPayments[0].installmentCount || 1},
+                    ${customer.dateCreated}, 'pending', ${eventPayments[0].id}
                   )
                 `;
 
@@ -214,7 +210,7 @@ async function syncAsaasData() {
       for (const payment of payments) {
         const parsed = parseDescription(payment.description);
 
-        if (parsed && parsed.eventName === 'UAIZOUK') {
+        if (parsed && parsed.eventName === SITE_NAME) {
           // Atualizar status na nossa base
           try {
             const updateResult = await client`

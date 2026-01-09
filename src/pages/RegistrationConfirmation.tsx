@@ -8,6 +8,12 @@ import { apiClient } from '@/lib/api-client';
 import { usePageTracking, useMetaPixelTracking } from '@/hooks/use-meta-pixel';
 import { SITE_NAME, WHATSAPP_GROUP_URL } from '@/lib/site-config';
 
+interface ProductSnapshot {
+  name: string;
+  option: string;
+  price: number;
+}
+
 interface RegistrationData {
   id: number;
   cpf: string | null;
@@ -21,6 +27,7 @@ interface RegistrationData {
   ticketType: string;
   partnerName: string | null;
   selectedProducts: { [key: string]: string } | null;
+  productsSnapshot?: ProductSnapshot[] | null;
   total: number | string;
   termsAccepted: boolean;
   paymentMethod: string;
@@ -737,24 +744,29 @@ const RegistrationConfirmation = () => {
                     {registration.partnerName && ` (Dupla: ${registration.partnerName})`}
                   </span>
                 </div>
-                {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (() => {
-                  // Filtrar apenas produtos que existem na configuração atual
-                  const validProducts = Object.entries(registration.selectedProducts)
-                    .filter(([productName, option]) => {
-                      // Verificar se o produto existe na configuração
-                      const productExists = config?.products?.some(p => p.name === productName);
-                      // Filtrar opções "Não" e produtos que não existem mais
-                      return option !== 'Não' && productExists;
-                    })
-                    .map(([productName, selectedOption]) =>
-                      selectedOption === 'Sim' ? productName : `${productName} ${selectedOption}`
+                {(() => {
+                  // Usar productsSnapshot se disponível (mais confiável), senão usar selectedProducts
+                  let productsToShow: string[] = [];
+                  
+                  if (registration.productsSnapshot && Array.isArray(registration.productsSnapshot) && registration.productsSnapshot.length > 0) {
+                    // Usar snapshot dos produtos (dados salvos no momento da inscrição)
+                    productsToShow = registration.productsSnapshot.map(p => 
+                      p.option === 'Sim' ? p.name : `${p.name} ${p.option}`
                     );
+                  } else if (registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0) {
+                    // Fallback: usar selectedProducts, filtrando apenas "Não"
+                    productsToShow = Object.entries(registration.selectedProducts)
+                      .filter(([_, option]) => option !== 'Não' && option)
+                      .map(([productName, selectedOption]) =>
+                        selectedOption === 'Sim' ? productName : `${productName} ${selectedOption}`
+                      );
+                  }
 
-                  return validProducts.length > 0 ? (
+                  return productsToShow.length > 0 ? (
                     <div>
                       <span className="font-medium text-slate-600">Produtos:</span>
                       <span className="ml-2 text-slate-900">
-                        {validProducts.join(', ')}
+                        {productsToShow.join(', ')}
                       </span>
                     </div>
                   ) : null;
@@ -873,21 +885,32 @@ const RegistrationConfirmation = () => {
                 </div>
               )}
 
-              {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (() => {
-                // Filtrar apenas produtos que existem na configuração atual
-                const validProducts = Object.entries(registration.selectedProducts)
-                  .filter(([productName, option]) => {
-                    // Verificar se o produto existe na configuração
-                    const productExists = config?.products?.some(p => p.name === productName);
-                    // Filtrar opções "Não" e produtos que não existem mais
-                    return option !== 'Não' && productExists;
-                  });
+              {(() => {
+                // Usar productsSnapshot se disponível (mais confiável), senão usar selectedProducts
+                let productsToShow: Array<{ name: string; option: string }> = [];
+                
+                if (registration.productsSnapshot && Array.isArray(registration.productsSnapshot) && registration.productsSnapshot.length > 0) {
+                  // Usar snapshot dos produtos (dados salvos no momento da inscrição)
+                  productsToShow = registration.productsSnapshot.map(p => ({
+                    name: p.name,
+                    option: p.option
+                  }));
+                } else if (registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0) {
+                  // Fallback: usar selectedProducts, filtrando apenas "Não"
+                  productsToShow = Object.entries(registration.selectedProducts)
+                    .filter(([_, option]) => option !== 'Não' && option)
+                    .map(([productName, selectedOption]) => ({
+                      name: productName,
+                      option: selectedOption
+                    }));
+                }
 
-                return validProducts.length > 0 ? (
+                return productsToShow.length > 0 ? (
                   <div>
                     <span className="font-medium">Produtos Adicionais:</span>
                     <div className="mt-2 space-y-2">
-                      {validProducts.map(([productName, selectedOption]) => {
+                      {productsToShow.map(({ name: productName, option: selectedOption }) => {
+                        // Tentar buscar descrição da configuração atual (opcional)
                         const product = config?.products?.find(p => p.name === productName);
                         return (
                           <div key={productName} className="text-sm">

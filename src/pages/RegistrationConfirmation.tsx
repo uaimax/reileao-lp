@@ -511,10 +511,10 @@ const RegistrationConfirmation = () => {
 
         {/* WhatsApp Group Button - Only for Installments */}
         {(registration.installments > 1 && registration.asaasPaymentId) && (
-          <Card className="mb-6">
+          <Card className="mb-6 bg-white border border-slate-200">
             <CardContent className="text-center py-6">
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-50">
+                <h3 className="text-lg font-semibold text-slate-900">
                   Entre para o grupo de participantes!
                 </h3>
                 <Button
@@ -535,9 +535,9 @@ const RegistrationConfirmation = () => {
 
         {/* Visual Status - Only for Installments */}
         {(registration.installments > 1 && registration.asaasPaymentId) && (
-          <Card className="mb-6">
+          <Card className="mb-6 bg-white border border-slate-200">
           <CardHeader>
-              <CardTitle className="flex items-center justify-between text-lg text-slate-50">
+              <CardTitle className="flex items-center justify-between text-lg text-slate-900">
                 <span>
                   📊 Status Rápido
               </span>
@@ -567,8 +567,8 @@ const RegistrationConfirmation = () => {
                   {/* Progress Bar */}
                   <div className="mb-6">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-slate-400">Progresso das parcelas</span>
-                      <span className="text-sm font-bold text-slate-50">
+                      <span className="text-sm text-slate-600">Progresso das parcelas</span>
+                      <span className="text-sm font-bold text-slate-900">
                         {(() => {
                           // Contar parcelas pagas/confirmadas
                           const isCreditCard = installments.installments[0]?.billingType === 'CREDIT_CARD';
@@ -610,7 +610,7 @@ const RegistrationConfirmation = () => {
                     </div>
 
                     {/* Total Value (Secondary) */}
-                    <div className="text-center text-sm text-slate-400">
+                    <div className="text-center text-sm text-slate-600 font-medium">
                       Total: R$ {Number(registration.total).toFixed(2)}
                     </div>
                   </div>
@@ -620,7 +620,7 @@ const RegistrationConfirmation = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-slate-400 border-slate-600 hover:text-slate-50 hover:border-slate-400 text-sm"
+                      className="text-slate-700 border-slate-300 hover:text-slate-900 hover:border-slate-400 hover:bg-slate-50 text-sm"
                       onClick={() => setShowAllInstallments(!showAllInstallments)}
                     >
                       {showAllInstallments ? 'Ocultar parcelas ▲' : 'Ver todas as parcelas ▼'}
@@ -638,21 +638,21 @@ const RegistrationConfirmation = () => {
                         return (
                         <div
                           key={installment.id}
-                          className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg"
+                          className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
                         >
                           <div className="flex items-center space-x-3">
-                            <div className={`w-3 h-3 rounded-full ${
+                            <div className={`w-4 h-4 rounded-full ${
                               installment.status === 'PENDING'
                                 ? 'bg-yellow-500'
                                 : isPaid
                                 ? 'bg-green-500'
-                                : 'bg-gray-500'
+                                : 'bg-slate-300'
                             }`} />
                             <div>
-                              <div className="text-sm font-medium text-slate-50">
+                              <div className="text-sm font-semibold text-slate-900">
                                 Parcela {installment.installmentNumber}
                               </div>
-                              <div className="text-xs text-slate-400">
+                              <div className="text-xs text-slate-600">
                                 Vence em {new Date(installment.dueDate).toLocaleDateString('pt-BR')}
                               </div>
                             </div>
@@ -660,15 +660,15 @@ const RegistrationConfirmation = () => {
 
                           <div className="flex items-center space-x-3">
                             <div className="text-right">
-                              <div className="text-sm font-bold text-slate-50">
+                              <div className="text-sm font-bold text-slate-900">
                                 R$ {installment.value.toFixed(2)}
                               </div>
-                              <div className={`text-xs ${
+                              <div className={`text-xs font-medium ${
                                 installment.status === 'PENDING'
-                                  ? 'text-yellow-400'
+                                  ? 'text-yellow-600'
                                   : isPaid
-                                  ? 'text-green-400'
-                                  : 'text-slate-400'
+                                  ? 'text-green-600'
+                                  : 'text-slate-500'
                               }`}>
                                 {installment.status === 'PENDING' ? 'Pendente' :
                                  isPaid ? (isCreditCard ? 'Confirmado' : 'Pago') :
@@ -710,9 +710,9 @@ const RegistrationConfirmation = () => {
                     </div>
                   )}
                 </div>
-              ) : (
+                              ) : (
                 <div className="text-center py-4">
-                  <p className="text-slate-400">Carregando status...</p>
+                  <p className="text-slate-600">Carregando status...</p>
                 </div>
               )}
             </CardContent>
@@ -721,9 +721,9 @@ const RegistrationConfirmation = () => {
 
         {/* Registration Summary - Only for Installments */}
         {(registration.installments > 1 && registration.asaasPaymentId) ? (
-          <Card className="mb-6">
+          <Card className="mb-6 bg-white border border-slate-200">
             <CardHeader>
-              <CardTitle className="flex items-center text-lg text-slate-50">
+              <CardTitle className="flex items-center text-lg text-slate-900">
                 📝 Resumo da Inscrição
               </CardTitle>
             </CardHeader>
@@ -731,16 +731,16 @@ const RegistrationConfirmation = () => {
               {/* Essential Info Only */}
               <div className="space-y-2">
                 <div>
-                  <span className="font-medium text-slate-400">Ingresso:</span>
-                  <span className="ml-2 text-slate-50">
+                  <span className="font-medium text-slate-600">Ingresso:</span>
+                  <span className="ml-2 text-slate-900">
                     {registration.ticketType}
                     {registration.partnerName && ` (Dupla: ${registration.partnerName})`}
                   </span>
                 </div>
                 {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (
                   <div>
-                    <span className="font-medium text-slate-400">Produtos:</span>
-                    <span className="ml-2 text-slate-50">
+                    <span className="font-medium text-slate-600">Produtos:</span>
+                    <span className="ml-2 text-slate-900">
                       {Object.entries(registration.selectedProducts)
                         .filter(([_, option]) => option !== 'Não')
                         .map(([productName, selectedOption]) =>
@@ -757,7 +757,7 @@ const RegistrationConfirmation = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-slate-400 border-slate-600 hover:text-slate-50 hover:border-slate-400 text-sm"
+                  className="text-slate-700 border-slate-300 hover:text-slate-900 hover:border-slate-400 hover:bg-slate-50 text-sm"
                   onClick={() => setShowFullDetails(!showFullDetails)}
                 >
                   {showFullDetails ? 'Ocultar detalhes ▲' : 'Ver detalhes completos ▼'}
@@ -765,35 +765,35 @@ const RegistrationConfirmation = () => {
               </div>
 
               {showFullDetails && (
-                <div className="mt-4 pt-4 border-t border-slate-700 space-y-2">
+                <div className="mt-4 pt-4 border-t border-slate-200 space-y-2">
                   <div>
-                    <span className="font-medium text-slate-400">Nome:</span>
-                    <span className="ml-2 text-slate-50">{registration.fullName}</span>
+                    <span className="font-medium text-slate-600">Nome:</span>
+                    <span className="ml-2 text-slate-900">{registration.fullName}</span>
                   </div>
                   <div>
-                    <span className="font-medium text-slate-400">Email:</span>
-                    <span className="ml-2 text-slate-50">{registration.email}</span>
+                    <span className="font-medium text-slate-600">Email:</span>
+                    <span className="ml-2 text-slate-900">{registration.email}</span>
                   </div>
                   <div>
-                    <span className="font-medium text-slate-400">WhatsApp:</span>
-                    <span className="ml-2 text-slate-50">{registration.whatsapp}</span>
+                    <span className="font-medium text-slate-600">WhatsApp:</span>
+                    <span className="ml-2 text-slate-900">{registration.whatsapp}</span>
                   </div>
                   {!registration.isForeigner && registration.cpf && (
                     <div>
-                      <span className="font-medium text-slate-400">CPF:</span>
-                      <span className="ml-2 text-slate-50">{registration.cpf}</span>
+                      <span className="font-medium text-slate-600">CPF:</span>
+                      <span className="ml-2 text-slate-900">{registration.cpf}</span>
                     </div>
                   )}
                   {registration.isForeigner && (
                     <div>
-                      <span className="font-medium text-slate-400">Status:</span>
-                      <span className="ml-2 text-slate-50">Estrangeiro</span>
+                      <span className="font-medium text-slate-600">Status:</span>
+                      <span className="ml-2 text-slate-900">Estrangeiro</span>
                     </div>
                   )}
                   {!registration.isForeigner && registration.state && (
                     <div>
-                      <span className="font-medium text-slate-400">Localização:</span>
-                      <span className="ml-2 text-slate-50">{registration.city}, {registration.state}</span>
+                      <span className="font-medium text-slate-600">Localização:</span>
+                      <span className="ml-2 text-slate-900">{registration.city}, {registration.state}</span>
                     </div>
                   )}
                 </div>
@@ -803,43 +803,43 @@ const RegistrationConfirmation = () => {
         ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Personal Data */}
-          <Card>
+          <Card className="bg-white border border-slate-200">
             <CardHeader>
-              <CardTitle className="text-slate-50">📋 DADOS DA INSCRIÇÃO</CardTitle>
+              <CardTitle className="text-slate-900">📋 DADOS DA INSCRIÇÃO</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium text-slate-400">Nome:</span>
-                <span className="ml-2 text-slate-50">{registration.fullName}</span>
+                <span className="font-medium text-slate-600">Nome:</span>
+                <span className="ml-2 text-slate-900">{registration.fullName}</span>
               </div>
 
               <div>
-                <span className="font-medium text-slate-400">CPF/Estrangeiro:</span>
-                <span className="ml-2 text-slate-50">
+                <span className="font-medium text-slate-600">CPF/Estrangeiro:</span>
+                <span className="ml-2 text-slate-900">
                   {registration.isForeigner ? 'Estrangeiro' : registration.cpf}
                 </span>
               </div>
 
               <div>
-                <span className="font-medium text-slate-400">Email:</span>
-                <span className="ml-2 text-slate-50">{registration.email}</span>
+                <span className="font-medium text-slate-600">Email:</span>
+                <span className="ml-2 text-slate-900">{registration.email}</span>
               </div>
 
               <div>
-                <span className="font-medium text-slate-400">WhatsApp:</span>
-                <span className="ml-2 text-slate-50">{registration.whatsapp}</span>
+                <span className="font-medium text-slate-600">WhatsApp:</span>
+                <span className="ml-2 text-slate-900">{registration.whatsapp}</span>
               </div>
 
               {!registration.isForeigner && (
                 <>
                   <div>
-                    <span className="font-medium text-slate-400">Estado:</span>
-                    <span className="ml-2 text-slate-50">{registration.state}</span>
+                    <span className="font-medium text-slate-600">Estado:</span>
+                    <span className="ml-2 text-slate-900">{registration.state}</span>
                   </div>
 
                   <div>
-                    <span className="font-medium text-slate-400">Cidade:</span>
-                    <span className="ml-2 text-slate-50">{registration.city}</span>
+                    <span className="font-medium text-slate-600">Cidade:</span>
+                    <span className="ml-2 text-slate-900">{registration.city}</span>
                   </div>
                 </>
               )}
@@ -847,20 +847,20 @@ const RegistrationConfirmation = () => {
           </Card>
 
           {/* Ticket & Products */}
-          <Card>
+          <Card className="bg-white border border-slate-200">
             <CardHeader>
-              <CardTitle className="text-slate-50">🎟️ INGRESSO E PRODUTOS</CardTitle>
+              <CardTitle className="text-slate-900">🎟️ INGRESSO E PRODUTOS</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <span className="font-medium text-slate-400">Tipo:</span>
-                <span className="ml-2 text-slate-50">{registration.ticketType}</span>
+                <span className="font-medium text-slate-600">Tipo:</span>
+                <span className="ml-2 text-slate-900">{registration.ticketType}</span>
               </div>
 
               {registration.partnerName && (
                 <div>
-                  <span className="font-medium text-slate-400">Nome da Dupla:</span>
-                  <span className="ml-2 text-slate-50">{registration.partnerName}</span>
+                  <span className="font-medium text-slate-600">Nome da Dupla:</span>
+                  <span className="ml-2 text-slate-900">{registration.partnerName}</span>
                 </div>
               )}
 
@@ -872,11 +872,11 @@ const RegistrationConfirmation = () => {
                       const product = config?.products?.find(p => p.name === productName);
                       return (
                         <div key={productName} className="text-sm">
-                          <div className="text-slate-400">
+                          <div className="text-slate-700">
                             • {productName}: {selectedOption}
                           </div>
                           {product?.description && (
-                            <div className="text-slate-500 text-xs mt-1 ml-4">
+                            <div className="text-slate-600 text-xs mt-1 ml-4">
                               {product.description}
                             </div>
                           )}
@@ -893,17 +893,17 @@ const RegistrationConfirmation = () => {
 
         {/* Financial Summary - Only for non-installment registrations */}
         {!(registration.installments > 1 && registration.asaasPaymentId) && (
-        <Card className="mt-8">
+        <Card className="mt-8 bg-white border border-slate-200">
           <CardHeader>
-            <CardTitle className="text-slate-50">💰 RESUMO FINANCEIRO</CardTitle>
+            <CardTitle className="text-slate-900">💰 RESUMO FINANCEIRO</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-500 mb-2">
+              <div className="text-3xl font-bold text-yellow-600 mb-2">
                 R$ {Number(registration.total).toFixed(2)}
               </div>
               <div className="space-y-2">
-                <p className="text-slate-400">
+                <p className="text-slate-700">
                   Método de pagamento: {
                     registration.paymentMethod === 'pix' ? 'PIX' :
                       registration.paymentMethod === 'pix_installment' ? 'PIX Parcelado' :
@@ -914,7 +914,7 @@ const RegistrationConfirmation = () => {
                   }
                 </p>
                   {(registration.paymentMethod === 'credit_card' || registration.paymentMethod === 'pix_installment') && registration.installments > 1 && (
-                  <p className="text-slate-400">
+                  <p className="text-slate-700">
                     Parcelado em {registration.installments}x de R$ {(Number(registration.total) / registration.installments).toFixed(2)}
                   </p>
                 )}
@@ -927,57 +927,57 @@ const RegistrationConfirmation = () => {
 
         {/* Next Steps - Only for non-installment registrations */}
         {!(registration.installments > 1 && registration.asaasPaymentId) && (
-        <Card className="mt-8">
+        <Card className="mt-8 bg-white border border-slate-200">
           <CardHeader>
-            <CardTitle className="text-slate-50">⚠️ PRÓXIMOS PASSOS</CardTitle>
+            <CardTitle className="text-slate-900">⚠️ PRÓXIMOS PASSOS</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {registration.paymentStatus === 'paid' ? (
                 <>
-                  <p className="text-green-400 font-medium">
+                  <p className="text-green-600 font-medium">
                     ✅ Pagamento confirmado! Sua inscrição está ativa.
                   </p>
-                  <p className="text-slate-400">
-                    Você receberá um email em <strong className="text-slate-50">{registration.email}</strong> com os detalhes do evento.
+                  <p className="text-slate-700">
+                    Você receberá um email em <strong className="text-slate-900">{registration.email}</strong> com os detalhes do evento.
                   </p>
-                  <p className="text-slate-400">
-                    Guarde este protocolo <strong className="text-slate-50">#{generateProtocol(registration.id)}</strong> para futuras consultas.
+                  <p className="text-slate-700">
+                    Guarde este protocolo <strong className="text-slate-900">#{generateProtocol(registration.id)}</strong> para futuras consultas.
                   </p>
                 </>
               ) : registration.paymentStatus === 'refunded' ? (
                 <>
-                  <p className="text-orange-400 font-medium">
+                  <p className="text-orange-600 font-medium">
                     ⚠️ Pagamento reembolsado. Entre em contato conosco para mais informações.
                   </p>
-                  <p className="text-slate-400">
+                  <p className="text-slate-700">
                     Em caso de dúvidas, entre em contato conosco através do WhatsApp.
                   </p>
                 </>
               ) : registration.paymentStatus === 'overdue' ? (
                 <>
-                  <p className="text-red-400 font-medium">
+                  <p className="text-red-600 font-medium">
                     ❌ Pagamento vencido. Entre em contato conosco para regularizar.
                   </p>
-                  <p className="text-slate-400">
+                  <p className="text-slate-700">
                     O pagamento deve ser realizado para garantir sua vaga no evento.
                   </p>
-                  <p className="text-slate-400">
+                  <p className="text-slate-700">
                     Em caso de dúvidas, entre em contato conosco através do WhatsApp.
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="text-slate-400">
-                    Você receberá um email em <strong className="text-slate-50">{registration.email}</strong> com as instruções de pagamento.
+                  <p className="text-slate-700">
+                    Você receberá um email em <strong className="text-slate-900">{registration.email}</strong> com as instruções de pagamento.
                   </p>
-                  <p className="text-slate-400">
+                  <p className="text-slate-700">
                     O pagamento deve ser realizado em até 48 horas para garantir sua vaga no evento.
                   </p>
-                  <p className="text-slate-400">
-                    <strong className="text-slate-50">Esta página será atualizada automaticamente</strong> quando o pagamento for confirmado.
+                  <p className="text-slate-700">
+                    <strong className="text-slate-900">Esta página será atualizada automaticamente</strong> quando o pagamento for confirmado.
                   </p>
-                  <p className="text-slate-400">
+                  <p className="text-slate-700">
                     Em caso de dúvidas, entre em contato conosco através do WhatsApp.
                   </p>
                 </>

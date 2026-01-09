@@ -74,14 +74,48 @@ if (!connectionString) {
 
 const client = connectionString ? postgres(connectionString) : null;
 
+// CORS: Use SITE_URL from environment or fallback to localhost origins
+// SITE_URL = URL do frontend (origem das requisições)
+// VITE_API_URL = URL da API (pode ser usado para extrair o domínio se SITE_URL não estiver definido)
+let siteUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || '';
+
+// Se não tiver SITE_URL mas tiver VITE_API_URL, tenta extrair o domínio base
+if (!siteUrl && process.env.VITE_API_URL) {
+  try {
+    const apiUrl = new URL(process.env.VITE_API_URL);
+    // Se a API está no mesmo domínio, usa o mesmo domínio para o frontend
+    siteUrl = `${apiUrl.protocol}//${apiUrl.host}`;
+    console.log('🔧 CORS: Extracted siteUrl from VITE_API_URL:', siteUrl);
+  } catch (e) {
+    console.warn('⚠️ CORS: Could not parse VITE_API_URL:', process.env.VITE_API_URL);
+  }
+}
+
+// Log para debug
+console.log('🌐 CORS Configuration:');
+console.log('   NODE_ENV:', process.env.NODE_ENV);
+console.log('   SITE_URL:', process.env.SITE_URL || 'not set');
+console.log('   VITE_SITE_URL:', process.env.VITE_SITE_URL || 'not set');
+console.log('   VITE_API_URL:', process.env.VITE_API_URL || 'not set');
+console.log('   Final siteUrl:', siteUrl || 'not set');
+
 const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://www.uaizouk.com.br', 'https://uaizouk.com.br'] // agora aceita ambos
+  ? (siteUrl ? [
+      siteUrl,
+      siteUrl.replace('https://www.', 'https://'),
+      siteUrl.replace('https://', 'https://www.'),
+      // Adiciona variações comuns
+      siteUrl.replace(/\/$/, ''), // Remove trailing slash
+      siteUrl + '/', // Adiciona trailing slash
+    ].filter((url, index, self) => self.indexOf(url) === index) : []) // Remove duplicatas
   : [
       'http://localhost:8080',
       'http://localhost:3000',
       'http://localhost:5173',
       'http://localhost:3002'
     ];
+
+console.log('✅ CORS Allowed Origins:', allowedOrigins);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -408,19 +442,23 @@ app.get('/api/event-config', async (req, res) => {
 });
 
 app.put('/api/event-config', async (req, res) => {
+  // Defaults para o event config - usar variáveis de ambiente quando disponível
+  const siteName = process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento';
+  const defaultWhatsAppMessage = `Oi! Quero mais informações sobre o ${siteName}`;
+
   try {
     const data = req.body;
     const result = await client`
       UPDATE event_config
       SET
-        event_title = ${data.eventTitle || 'UAIZOUK 2025'},
-        event_subtitle = ${data.eventSubtitle || 'UMA IMERSÃO NAS POSSIBILIDADES DO ZOUK BRASILEIRO'},
-        event_tagline = ${data.eventTagline || 'Muita aula. Muita dança. Muito Zouk.'},
-        event_date_display = ${data.eventDateDisplay || '5–7 SET 2025, Uberlândia–MG'},
+        event_title = ${data.eventTitle || `${siteName} 2025`},
+        event_subtitle = ${data.eventSubtitle || 'Uma experiência única'},
+        event_tagline = ${data.eventTagline || 'Seu evento especial'},
+        event_date_display = ${data.eventDateDisplay || 'Data a definir'},
         event_countdown_target = ${data.eventCountdownTarget || '2025-09-05 14:00:00-03'},
-        event_countdown_text = ${data.eventCountdownText || 'A experiência completa inicia em:'},
+        event_countdown_text = ${data.eventCountdownText || 'O evento inicia em:'},
         hero_video_url = ${data.heroVideoUrl || ''},
-        registration_url = ${data.registrationUrl || 'https://uaizouk.com.br/inscricoes'},
+        registration_url = ${data.registrationUrl || '/inscricoes'},
         s3_endpoint = ${data.s3Endpoint || ''},
         s3_access_key = ${data.s3AccessKey || ''},
         s3_secret_key = ${data.s3SecretKey || ''},
@@ -429,7 +467,7 @@ app.put('/api/event-config', async (req, res) => {
         s3_public_domain = ${data.s3PublicDomain || ''},
         s3_enabled = ${data.s3Enabled || false},
         whatsapp_number = ${data.whatsappNumber || ''},
-        whatsapp_message = ${data.whatsappMessage || 'Oi! Quero mais informações sobre o UAIZOUK'},
+        whatsapp_message = ${data.whatsappMessage || defaultWhatsAppMessage},
         whatsapp_enabled = ${data.whatsappEnabled !== undefined ? data.whatsappEnabled : true},
         temporary_redirect_url = ${data.temporaryRedirectUrl || null},
         meta_title = ${data.metaTitle || null},
@@ -1519,7 +1557,7 @@ app.put('/api/faq-content', async (req, res) => {
       UPDATE faq_content
       SET
         section_title = ${data.sectionTitle || 'Perguntas Frequentes'},
-        section_subtitle = ${data.sectionSubtitle || 'Tire suas dúvidas sobre o UAIZOUK'},
+        section_subtitle = ${data.sectionSubtitle || 'Tire suas dúvidas sobre o evento'},
         updated_at = NOW()
       WHERE id = 1
       RETURNING *
@@ -1531,7 +1569,7 @@ app.put('/api/faq-content', async (req, res) => {
         INSERT INTO faq_content (section_title, section_subtitle)
         VALUES (
           ${data.sectionTitle || 'Perguntas Frequentes'},
-          ${data.sectionSubtitle || 'Tire suas dúvidas sobre o UAIZOUK'}
+          ${data.sectionSubtitle || 'Tire suas dúvidas sobre o evento'}
         )
         RETURNING *
       `;
@@ -1673,37 +1711,40 @@ function generateDataHash(data) {
 
 // Function to generate mock structured data for diagnostic mode
 function getMockStructuredData() {
+  const siteName = process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento';
+  const siteUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || '';
+
   return {
     metadata: {
       generatedAt: new Date().toISOString(),
       version: "1.0",
-      purpose: "AI-consumable structured data for UAIZOUK event information",
-      source: "UAIZOUK Mock Data (Diagnostic Mode)",
+      purpose: `AI-consumable structured data for ${siteName} event information`,
+      source: `${siteName} Mock Data (Diagnostic Mode)`,
       cacheStrategy: "smart-invalidation"
     },
     event: {
-      title: "UAIZOUK 2026",
-      subtitle: "UMA IMERSÃO NAS POSSIBILIDADES DO ZOUK BRASILEIRO",
-      tagline: "Muita aula. Muita dança. Muito Zouk.",
-      dateDisplay: "4–7 SET 2026, Uberlândia–MG",
+      title: `${siteName} 2026`,
+      subtitle: "Uma experiência única",
+      tagline: "Seu evento especial",
+      dateDisplay: "Data a definir",
       countdownTarget: "2026-09-04T20:00:00.000Z",
-      countdownText: "A experiência completa inicia em:",
-      registrationUrl: "https://uaizouk.com.br/2026",
-      whatsappNumber: "5513991737852",
-      whatsappMessage: "Oi! Quero mais informações sobre o UAIZOUK",
+      countdownText: "O evento inicia em:",
+      registrationUrl: `${siteUrl}/inscricoes`,
+      whatsappNumber: "",
+      whatsappMessage: `Oi! Quero mais informações sobre o ${siteName}`,
       whatsappEnabled: true,
-      heroVideoUrl: "https://www.youtube.com/watch?v=U2QPiVaMAVc"
+      heroVideoUrl: ""
     },
     hero: {
       ctaPrimaryText: "QUERO SABER MAIS",
       ctaSecondaryText: "ARTISTAS CONFIRMADOS"
     },
     about: {
-      sectionTitle: "Entenda o UAIZOUK",
+      sectionTitle: `Sobre o ${siteName}`,
       paragraphs: [
-        "Serão 4 dias de imersão presencial para respirar Zouk do início ao fim, com conteúdo selecionado e diversidade de professores e djs que conduzem toda a programação.",
-        "Ao longo de todos esses anos de UAIZOUK nós contamos com participantes de todos os níveis das mais diversas cidades do Brasil e do mundo.",
-        "O Congresso UAIZOUK é a junção perfeita entre aprendizado para todos os níveis em um ambiente de socialização completo."
+        "Uma experiência única com conteúdo selecionado e profissionais de qualidade.",
+        "Contamos com participantes de todos os níveis das mais diversas cidades.",
+        "A junção perfeita entre aprendizado e socialização."
       ],
       trailerVideoUrl: "https://www.youtube.com/embed/5Q7hGUc3fMY?autoplay=1&mute=1",
       trailerButtonText: "Veja um breve trailer",
@@ -1713,20 +1754,20 @@ function getMockStructuredData() {
       advancedText: "prepare-se para aprofundar as técnicas e aprender com professores que rodam o mundo levando o Zouk."
     },
     stats: {
-      sectionTitle: "Já passaram pelo UAIZOUK mais de",
-      participants: { count: 3190, label: "Participantes" },
-      teachers: { count: 56, label: "Professores" },
-      djs: { count: 25, label: "DJs" },
-      partyHours: { count: 300, label: "Horas de balada" }
+      sectionTitle: "Nossos números",
+      participants: { count: 0, label: "Participantes" },
+      teachers: { count: 0, label: "Professores" },
+      djs: { count: 0, label: "DJs" },
+      partyHours: { count: 0, label: "Horas de atividades" }
     },
     artists: {
       sectionTitle: "Artistas Confirmados",
-      sectionSubtitle: "Professores e DJs renomados que farão parte desta experiência única",
+      sectionSubtitle: "Profissionais renomados que farão parte desta experiência única",
       list: []
     },
     testimonials: {
       sectionTitle: "Depoimentos",
-      sectionSubtitle: "O que nossos participantes dizem sobre a experiência UAIZOUK",
+      sectionSubtitle: "O que nossos participantes dizem sobre a experiência",
       list: [
         { id: 1, name: "Trícia", cityState: "Belém (PA)", photoUrl: null, displayOrder: 1, isActive: true },
         { id: 2, name: "Andressa", cityState: "Uberlândia (MG)", photoUrl: null, displayOrder: 2, isActive: true },
@@ -1753,26 +1794,26 @@ function getMockStructuredData() {
     },
     faq: {
       sectionTitle: "Perguntas Frequentes",
-      sectionSubtitle: "Tire suas dúvidas sobre o UAIZOUK",
+      sectionSubtitle: "Tire suas dúvidas sobre o evento",
       questions: [
         {
           id: 1,
-          question: "Preciso ter um par para participar do UAIZOUK?",
-          answer: "<p>Não! Você pode se inscrever individualmente e será muito bem recebido(a). O UAIZOUK é conhecido pelo ambiente acolhedor e pela facilidade de integração entre os participantes.</p>",
+          question: "Preciso ter um par para participar?",
+          answer: "<p>Não! Você pode se inscrever individualmente e será muito bem recebido(a). Nosso evento é conhecido pelo ambiente acolhedor e pela facilidade de integração entre os participantes.</p>",
           displayOrder: 1,
           isActive: true
         },
         {
           id: 2,
           question: "Sou iniciante, posso participar?",
-          answer: "<p>Claro! O UAIZOUK é para <strong>participantes de todos os níveis</strong>. Temos aulas específicas para iniciantes e você terá a oportunidade de aprender com professores renomados em um ambiente totalmente inclusivo.</p>",
+          answer: "<p>Claro! O evento é para <strong>participantes de todos os níveis</strong>. Temos atividades específicas para iniciantes em um ambiente totalmente inclusivo.</p>",
           displayOrder: 2,
           isActive: true
         },
         {
           id: 3,
           question: "Onde fica o local do evento?",
-          answer: "<p>O UAIZOUK acontece no <strong>Recanto da Lua</strong>, localizado no bairro Chácaras Panorama em Uberlândia-MG. É uma chácara dentro da cidade, oferecendo um ambiente único para o evento.</p>",
+          answer: "<p>O local será divulgado em breve. Fique atento às atualizações em nosso site.</p>",
           displayOrder: 3,
           isActive: true
         },
@@ -1781,34 +1822,6 @@ function getMockStructuredData() {
           question: "Como faço para me inscrever?",
           answer: "<p>As inscrições podem ser feitas através do nosso site oficial. Clique no botão \"QUERO PARTICIPAR\" em qualquer seção da página para ser direcionado ao formulário de inscrição.</p>",
           displayOrder: 4,
-          isActive: true
-        },
-        {
-          id: 6,
-          question: "Qual é o valor da inscrição?",
-          answer: "<p>Os valores são atualizados constantemente e podem variar dependendo da época da inscrição. <strong>Há descontos especiais para inscrições em dupla!</strong></p><p>Para conferir os valores mais atuais, clique em \"QUERO PARTICIPAR\" e acesse a página oficial de inscrições.</p>",
-          displayOrder: 6,
-          isActive: true
-        },
-        {
-          id: 9,
-          question: "Como chegar em Uberlândia?",
-          answer: "<p><strong>Principais formas de chegar:</strong></p><ul><li><strong>São Paulo:</strong> 50 minutos de voo ou 8 horas de ônibus</li><li><strong>Belo Horizonte:</strong> 50 minutos de voo ou 10 horas de ônibus</li><li><strong>Rio de Janeiro:</strong> 60 minutos de voo</li></ul><p>A cidade possui excelente infraestrutura e é classificada entre as que mais sediam eventos internacionais no Brasil.</p>",
-          displayOrder: 9,
-          isActive: true
-        },
-        {
-          id: 10,
-          question: "Preciso ter experiência em Zouk para participar?",
-          answer: "<p><strong>Não é necessário!</strong> O UAIZOUK é conhecido por receber <strong>participantes de todos os níveis</strong>, desde iniciantes até avançados.</p><p>Temos aulas específicas para cada nível e o ambiente é totalmente acolhedor para quem está começando.</p>",
-          displayOrder: 10,
-          isActive: true
-        },
-        {
-          id: 12,
-          question: "Quando acontece o UAIZOUK?",
-          answer: "<p>O UAIZOUK 2026 está marcado para <strong>4–7 de Setembro de 2026</strong> em Uberlândia, MG.</p><p>O evento sempre acontece em <strong>setembro</strong> e é uma tradição anual que reúne zoukeiros de todo o Brasil e do mundo!</p>",
-          displayOrder: 12,
           isActive: true
         }
       ]
@@ -1822,7 +1835,7 @@ function getMockStructuredData() {
         tiktok: null
       },
       contactEmail: null,
-      copyrightText: "© 2025 UAIZOUK. Todos os direitos reservados."
+      copyrightText: `© 2025 ${siteName}. Todos os direitos reservados.`
     }
   };
 }
@@ -1865,14 +1878,17 @@ async function fetchFreshStructuredData() {
     client`SELECT * FROM faq_content LIMIT 1`
   ]);
 
+  // Nome do site para metadata
+  const siteName = process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento';
+
   // Create structured data optimized for AI consumption
   const structuredData = {
     // Metadata
     metadata: {
       generatedAt: new Date().toISOString(),
       version: "1.0",
-      purpose: "AI-consumable structured data for UAIZOUK event information",
-      source: "UAIZOUK Landing Page Database",
+      purpose: `AI-consumable structured data for ${siteName} event information`,
+      source: `${siteName} Landing Page Database`,
       cacheStrategy: "smart-invalidation"
     },
 
@@ -2090,7 +2106,7 @@ app.get('/api/event-summary', async (req, res) => {
       console.warn('Could not fetch AI instructions:', error.message);
     }
 
-    const summary = `🎉 PACOTE NO ESCURO - UAIZOUK 2026
+    const summary = `🎉 PACOTE NO ESCURO - ${data.event.title || 'Evento'}
 DATA: ${data.event.dateDisplay}
 LOCAL: ${data.location.city}, ${data.location.state} (4.000m² de natureza)
 INSCRIÇÕES: ${data.event.registrationUrl}
@@ -3680,7 +3696,8 @@ app.post('/api/charges/create', async (req, res) => {
     }
 
     // Construir descrição detalhada
-    const eventName = configData.eventName || 'UAIZOUK';
+    const siteName = process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento';
+    const eventName = configData.eventName || siteName;
     let itemDescription = `Inscrição para ${eventName}`;
 
     if (registration.ticketType) {
@@ -4028,7 +4045,8 @@ app.post('/api/checkout/create', async (req, res) => {
     }
 
     // Construir descrição detalhada do item
-    const eventName = configData.eventName || 'UAIZOUK';
+    const siteNameForPayment = process.env.SITE_NAME || process.env.VITE_SITE_NAME || 'Meu Evento';
+    const eventName = configData.eventName || siteNameForPayment;
     let itemDescription = `Inscrição para ${eventName}`;
 
     // Adicionar tipo de ingresso
@@ -4090,6 +4108,9 @@ app.post('/api/checkout/create', async (req, res) => {
     // Adicionar CPF se não for estrangeiro - sempre usar CPF válido para teste
     customerData.cpfCnpj = "11144477735"; // CPF válido para teste
 
+    // URLs de callback - usar variável de ambiente SITE_URL
+    const baseUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || '';
+
     // Construir payload do ASAAS
     const asaasPayload = {
       billingTypes,
@@ -4097,9 +4118,9 @@ app.post('/api/checkout/create', async (req, res) => {
       minutesToExpire: 30, // 30 minutos para expirar
       externalReference: `registration-${registrationId}`,
       callback: {
-        successUrl: `https://uaizouk.com/inscricao/confirmacao/${registrationId}`,
-        cancelUrl: `https://uaizouk.com/inscricao`,
-        expiredUrl: `https://uaizouk.com/inscricao`
+        successUrl: `${baseUrl}/inscricao/confirmacao/${registrationId}`,
+        cancelUrl: `${baseUrl}/inscricao`,
+        expiredUrl: `${baseUrl}/inscricao`
       },
       items,
       customerData: {
@@ -4470,7 +4491,17 @@ app.post('/api/webhooks/asaas', async (req, res) => {
 
     // Try to find by external reference (if we stored the registration ID there)
     if (!registrationId && payment.externalReference) {
-      registrationId = payment.externalReference;
+      // externalReference comes as "registration-196", extract the number
+      const externalRefMatch = payment.externalReference.match(/^registration-(\d+)$/);
+      if (externalRefMatch) {
+        registrationId = parseInt(externalRefMatch[1], 10);
+      } else {
+        // Fallback: try to parse as integer directly if it's just a number
+        const parsedId = parseInt(payment.externalReference, 10);
+        if (!isNaN(parsedId)) {
+          registrationId = parsedId;
+        }
+      }
     }
 
     // Try to find by customer document (CPF)

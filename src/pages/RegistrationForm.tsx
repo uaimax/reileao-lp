@@ -293,7 +293,7 @@ const RegistrationForm = () => {
     city: '',
     ticketType: '',
     partnerName: '',
-    selectedProducts: { 'Combo Alimentação': 'Sim' }, // Inicia com Combo Alimentação marcado
+    selectedProducts: {}, // Inicia sem produtos selecionados
     termsAccepted: false,
     noRefundAccepted: false,
     rescheduleAccepted: false,

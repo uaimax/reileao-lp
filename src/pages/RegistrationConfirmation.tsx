@@ -737,19 +737,28 @@ const RegistrationConfirmation = () => {
                     {registration.partnerName && ` (Dupla: ${registration.partnerName})`}
                   </span>
                 </div>
-                {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (
-                  <div>
-                    <span className="font-medium text-slate-600">Produtos:</span>
-                    <span className="ml-2 text-slate-900">
-                      {Object.entries(registration.selectedProducts)
-                        .filter(([_, option]) => option !== 'Não')
-                        .map(([productName, selectedOption]) =>
-                          selectedOption === 'Sim' ? productName : `${productName} ${selectedOption}`
-                        )
-                        .join(', ')}
-                    </span>
-                  </div>
-                )}
+                {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (() => {
+                  // Filtrar apenas produtos que existem na configuração atual
+                  const validProducts = Object.entries(registration.selectedProducts)
+                    .filter(([productName, option]) => {
+                      // Verificar se o produto existe na configuração
+                      const productExists = config?.products?.some(p => p.name === productName);
+                      // Filtrar opções "Não" e produtos que não existem mais
+                      return option !== 'Não' && productExists;
+                    })
+                    .map(([productName, selectedOption]) =>
+                      selectedOption === 'Sim' ? productName : `${productName} ${selectedOption}`
+                    );
+
+                  return validProducts.length > 0 ? (
+                    <div>
+                      <span className="font-medium text-slate-600">Produtos:</span>
+                      <span className="ml-2 text-slate-900">
+                        {validProducts.join(', ')}
+                      </span>
+                    </div>
+                  ) : null;
+                })()}
               </div>
 
               {/* Collapsed Details */}
@@ -864,28 +873,39 @@ const RegistrationConfirmation = () => {
                 </div>
               )}
 
-              {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (
-                <div>
-                  <span className="font-medium">Produtos Adicionais:</span>
-                  <div className="mt-2 space-y-2">
-                    {Object.entries(registration.selectedProducts).map(([productName, selectedOption]) => {
-                      const product = config?.products?.find(p => p.name === productName);
-                      return (
-                        <div key={productName} className="text-sm">
-                          <div className="text-slate-700">
-                            • {productName}: {selectedOption}
-                          </div>
-                          {product?.description && (
-                            <div className="text-slate-600 text-xs mt-1 ml-4">
-                              {product.description}
+              {registration.selectedProducts && Object.keys(registration.selectedProducts).length > 0 && (() => {
+                // Filtrar apenas produtos que existem na configuração atual
+                const validProducts = Object.entries(registration.selectedProducts)
+                  .filter(([productName, option]) => {
+                    // Verificar se o produto existe na configuração
+                    const productExists = config?.products?.some(p => p.name === productName);
+                    // Filtrar opções "Não" e produtos que não existem mais
+                    return option !== 'Não' && productExists;
+                  });
+
+                return validProducts.length > 0 ? (
+                  <div>
+                    <span className="font-medium">Produtos Adicionais:</span>
+                    <div className="mt-2 space-y-2">
+                      {validProducts.map(([productName, selectedOption]) => {
+                        const product = config?.products?.find(p => p.name === productName);
+                        return (
+                          <div key={productName} className="text-sm">
+                            <div className="text-slate-700">
+                              • {productName}: {selectedOption}
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                            {product?.description && (
+                              <div className="text-slate-600 text-xs mt-1 ml-4">
+                                {product.description}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                ) : null;
+              })()}
             </CardContent>
           </Card>
         </div>

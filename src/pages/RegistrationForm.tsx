@@ -758,6 +758,11 @@ const RegistrationForm = () => {
           <h1 className="text-3xl font-bold font-bebas mb-2 text-black">
             {eventConfig?.eventTitle || getSiteNameWithYear('2025')} - {t('header.title')}
           </h1>
+          {(landingData?.event?.eventDateDisplay || eventConfig?.eventDateDisplay) && (
+            <p className="text-lg font-semibold text-slate-700 mb-2">
+              📅 {(landingData?.event?.eventDateDisplay || eventConfig?.eventDateDisplay)}
+            </p>
+          )}
           <p className="text-slate-600">{t('header.subtitle')}</p>
 
           {/* Stepper melhorado */}

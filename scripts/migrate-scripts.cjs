@@ -187,3 +187,4 @@ console.log('2. Execute os scripts para testar');
 console.log('3. Configure as variáveis de ambiente necessárias');
 
 
+
